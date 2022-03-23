@@ -1,0 +1,62 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "ignorePatterns": ["dist/*", "node_modules/*", "**/*.config.js"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "airbnb-base",
+    "plugin:prettier/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "tsconfigRootDir": "./",
+    "project": "./tsconfig.json",
+    "ecmaVersion": "latest"
+  },
+  "plugins": ["@typescript-eslint", "prettier", "import"],
+  "rules": {
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
+    ],
+    "max-classes-per-file": "off",
+    "@typescript-eslint/unbound-method": "off",
+    "no-underscore-dangle": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "no-unused-labels": "error",
+    "prefer-const": "error",
+    "prettier/prettier": "error",
+    "linebreak-style": "off",
+    "no-console": "off",
+    "no-nested-ternary": "off",
+    "import/prefer-default-export": "off",
+    "no-param-reassign": 0,
+    "prefer-object-spread": 0,
+    "import/no-unresolved": "error",
+    "import/extensions": [0]
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/extensions": [".js", ".ts"],
+    "import/resolver": {
+      "typescript": {},
+      "node": {
+        "project": "./tsconfig.json",
+        "paths": ["src"],
+        "extensions": [".js", ".ts"],
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    }
+  }
+}

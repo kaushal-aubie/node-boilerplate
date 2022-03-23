@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["es2015"],
+    "rootDir": "./src",
+    "outDir": "dist",
+    "module": "ESNext",
+    "strict": true,
+    "declaration": false,
+    "sourceMap": false,
+    "inlineSources": false,
+    "types": ["node"],
+    "stripInternal": true,
+
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./",
+
+    "paths": {
+      "@utils/*": ["./src/utils/*"],
+      "@models/*": ["./src/models/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@services/*": ["./src/services/*"],
+      "@interfaces/*": ["./src/nterfaces/*"],
+      "@viewmodels/*": ["./src/view_models/*"]
+    },
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"]
+}

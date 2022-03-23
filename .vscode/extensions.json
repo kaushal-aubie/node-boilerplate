@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "CoenraadS.bracket-pair-colorizer-2",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "wix.vscode-import-cost",
+    "sdras.night-owl",
+    "streetsidesoftware.code-spell-checker",
+    "IronGeek.vscode-env",
+    "PKief.material-icon-theme"
+  ]
+}
