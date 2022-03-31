@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
+import { paths } from '@/config';
 
 /**
  * References :- https://jwt.io/
@@ -8,15 +9,12 @@ import fs from 'fs';
 export default class JwtUtil {
   private static algorithmName: jwt.Algorithm = 'HS256';
 
-  private static privateKey = fs.readFileSync(
-    process.env.JWT_PEM_PATH ?? '',
-    'utf8'
-  );
+  private static privateKey = fs.readFileSync(paths.pemPath ?? '', 'utf8');
 
   /**
-   * Encrypt data and return jwt.
-   *
+   * Encrypt data and return jwt token
    * @param {{ user_id: string }} payload
+   * @returns token
    */
   public static create(payload: { user_id: string }) {
     try {
@@ -28,15 +26,15 @@ export default class JwtUtil {
       const token = jwt.sign(payload, JwtUtil.privateKey, signOptions);
       return token || '';
     } catch (err) {
-      console.log('JwtUtil.verify() ERR::', err);
+      console.error('JwtUtil.create() ERR::', err);
       return null;
     }
   }
 
   /**
    * Decrypt JWT and extract client data.
-   *
-   * @param {string} token
+   * @param  {string}  token
+   * @returns decoded data
    */
   public static verify(token: string): Promise<{ user_id: string }> {
     return new Promise((resolve, reject) => {
@@ -44,7 +42,7 @@ export default class JwtUtil {
       const verifyOptions = { algorithms: [JwtUtil.algorithmName] };
       jwt.verify(token, JwtUtil.privateKey, verifyOptions, (err, payload) => {
         if (err) {
-          console.log('JwtUtil.verify() ERR::', err);
+          console.error('JwtUtil.verify() ERR::', err);
           reject(err);
         } else {
           resolve(payload as unknown as { user_id: string });

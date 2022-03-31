@@ -10,6 +10,7 @@
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "airbnb-base",
     "plugin:prettier/recommended",
+    "plugin:import/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript"
@@ -34,6 +35,10 @@
     // "@typescript-eslint/no-floating-promises": 0,
     // "@typescript-eslint/no-unsafe-member-access": 0,
     // "@typescript-eslint/no-unsafe-assignment": 0,
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-shadow": "error",
+    "no-unused-vars": "off",
+    "no-shadow": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
     "no-extra-boolean-cast": 0,
     "max-classes-per-file": "off",

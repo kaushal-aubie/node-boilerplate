@@ -1,16 +1,15 @@
 import { Request, Response } from 'express';
-import { IUser } from '../models/user';
-import TokenUtils from '../utils/token';
-import AuthService from '../services/auth';
-import JwtUtil from '../libs/jwt';
-import RestResponse from '../shared/rest_response';
+import { Jwt } from '@/libs';
+import { IUser } from '@/models';
+import { AuthService } from '@/services';
+import { ApiErrors, ApiResponse } from '@/shared';
+import { TokenUtils } from '@/utils';
 import {
   IUserSignupVM,
   IUserVM,
   UserSignupViewModel,
   UserViewModel,
-} from '../view_models/user_vm';
-import RestErrors from '../shared/rest_errors';
+} from '@/viewModels';
 
 class AuthController {
   public static async signup(req: Request, res: Response) {
@@ -18,7 +17,7 @@ class AuthController {
       const user = new UserSignupViewModel(req.body as IUserSignupVM);
       // validating user body
       if (!user || !user.email || !user.password) {
-        const er = RestErrors.newBadRequestError(
+        const er = ApiErrors.newBadRequestError(
           'Email or password not provided'
         );
         res.status(er.status);
@@ -34,15 +33,15 @@ class AuthController {
       }
 
       // crating a response object
-      const userVM = new UserViewModel(singupRes.result as IUserVM);
-      const r = RestResponse.newResponse({
+      const userVM = new UserViewModel(singupRes.result as unknown as IUserVM);
+      const r = ApiResponse.newResponse({
         data: userVM,
         message: 'User has signup successfully',
       });
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      const er = RestErrors.newInternalServerError('Something went wrong');
+      const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
     }
@@ -53,7 +52,7 @@ class AuthController {
       const { email, password } = req.body as IUser;
       // validating user body
       if (!email || !password) {
-        const er = RestErrors.newBadRequestError(
+        const er = ApiErrors.newBadRequestError(
           'Email or password not provided'
         );
         res.status(er.status);
@@ -68,28 +67,28 @@ class AuthController {
         return;
       }
 
-      const userVM = new UserViewModel(signinRes.result as IUserVM);
+      const userVM = new UserViewModel(signinRes.result as unknown as IUserVM);
 
       // generate jwt token
-      const token = JwtUtil.create({
-        user_id: (signinRes.result as { id: string })?.id,
+      const token = Jwt.create({
+        user_id: (signinRes.result as unknown as { id: string })?.id,
       });
       if (!token) {
-        const er = RestErrors.newInternalServerError('Something went wrong');
+        const er = ApiErrors.newInternalServerError('Something went wrong');
         res.status(er.status);
         res.json(er);
         return;
       }
       console.log('Token generated successfully');
       res = TokenUtils.setToken(req, res, token);
-      const r = RestResponse.newResponse({
+      const r = ApiResponse.newResponse({
         data: { response: userVM, token },
         message: 'User has signin successfully',
       });
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      const er = RestErrors.newInternalServerError('Something went wrong');
+      const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
     }
@@ -98,13 +97,13 @@ class AuthController {
   public static signout(_req: Request, res: Response) {
     try {
       res = TokenUtils.clearToken(res);
-      const r = RestResponse.newResponse({
+      const r = ApiResponse.newResponse({
         message: 'User has signout successfully',
       });
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      const er = RestErrors.newInternalServerError('Something went wrong');
+      const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
     }
@@ -115,7 +114,7 @@ class AuthController {
       const userVM = new UserViewModel(
         (req as Request & { user: IUserVM }).user
       );
-      const r = RestResponse.newResponse({
+      const r = ApiResponse.newResponse({
         data: userVM,
         message: 'Signed in user',
       });
@@ -123,7 +122,7 @@ class AuthController {
       res.json(r);
     } catch (err) {
       console.log('AuthController.getUser() error: ', err);
-      const er = RestErrors.newInternalServerError('Something went wrong');
+      const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
     }

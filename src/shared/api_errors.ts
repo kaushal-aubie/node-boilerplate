@@ -8,7 +8,7 @@ export interface IRestError {
   success: boolean;
 }
 
-export default class RestErrors extends Error {
+export default class ApiErrors extends Error {
   public static get types() {
     return {
       INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',

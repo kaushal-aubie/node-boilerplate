@@ -1,4 +1,4 @@
-import { IRestError } from '../shared/rest_errors';
+import { IRestError } from '@/shared';
 
 export interface IResultAndError<T = unknown> {
   result: T;

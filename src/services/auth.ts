@@ -1,11 +1,13 @@
-import { IResultAndError } from '../interfaces/result_and_error';
-import { Bcrypt } from '../libs';
-import { User } from '../models';
-import RestErrors from '../shared/rest_errors';
-import { IUserSignupVM } from '../view_models/user_vm';
+import { IResultAndError } from '@/interfaces';
+import { Bcrypt } from '@/libs';
+import { User } from '@/models';
+import { ApiErrors } from '@/shared';
+import { IUserSignupVM } from '@/viewModels';
 
 class AuthService {
-  public static async signup(user: IUserSignupVM): Promise<IResultAndError> {
+  public static async signup(
+    user: IUserSignupVM
+  ): Promise<IResultAndError<User | null>> {
     try {
       console.log('==> 1:: Checking is user exist with that email or not');
       // Unique user check
@@ -13,7 +15,7 @@ class AuthService {
       if (isExist && isExist.id) {
         return {
           result: null,
-          error: RestErrors.newBadRequestError(
+          error: ApiErrors.newBadRequestError(
             `User already exist by email ${user.email}`
           ),
         };
@@ -33,14 +35,14 @@ class AuthService {
         console.log('==> 4:: User Creation Failed');
         return {
           result: null,
-          error: RestErrors.newInternalServerError('Something went wrong'),
+          error: ApiErrors.newInternalServerError('Something went wrong'),
         };
       }
       console.log('==> 4:: User Created in DB');
       return { result: createRes, error: null };
     } catch (err) {
-      console.error('AuthService.signup() error: ', err);
-      const er = RestErrors.newInternalServerError('Something went wrong');
+      console.error('AuthService.signup() ERR: ', err);
+      const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
   }
@@ -48,7 +50,7 @@ class AuthService {
   public static async signin(
     email: string,
     password: string
-  ): Promise<IResultAndError> {
+  ): Promise<IResultAndError<User | null>> {
     try {
       console.log('==> 1:: Finding User in DB');
       // finding user in db by email id
@@ -58,7 +60,7 @@ class AuthService {
         console.log('==> 2.1 :: User Is Not Found');
         return {
           result: null,
-          error: RestErrors.newBadRequestError('Invalid credentials'),
+          error: ApiErrors.newBadRequestError('Invalid credentials'),
         };
       }
 
@@ -69,7 +71,7 @@ class AuthService {
         console.log('==> 3.1 :: Hash is undefined/null');
         return {
           result: null,
-          error: RestErrors.newBadRequestError('Something wrong with hash'),
+          error: ApiErrors.newBadRequestError('Something wrong with hash'),
         };
       }
       const isPasswordMatched = await Bcrypt.compare(password, hash);
@@ -82,11 +84,11 @@ class AuthService {
         };
       }
       console.log('==> 4:: User password does not match');
-      const er = RestErrors.newNotAuthorizedError("Credentials dosen't match");
+      const er = ApiErrors.newNotAuthorizedError("Credentials dosen't match");
       return { result: null, error: er };
     } catch (err) {
-      console.error('AuthService.signin() error: ', err);
-      const er = RestErrors.newInternalServerError('Something went wrong');
+      console.error('AuthService.signin() ERR: ', err);
+      const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
   }

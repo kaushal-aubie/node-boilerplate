@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "target": "ES2020",
     "lib": ["es2015"],
-    "rootDir": "./src",
     "outDir": "dist",
-    "module": "ESNext",
+    "module": "commonjs",
     "strict": true,
     "declaration": false,
     "sourceMap": false,
@@ -20,19 +21,27 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "./",
-
     "paths": {
-      "@utils/*": ["./src/utils/*"],
-      "@models/*": ["./src/models/*"],
-      "@routes/*": ["./src/routes/*"],
-      "@services/*": ["./src/services/*"],
-      "@interfaces/*": ["./src/nterfaces/*"],
-      "@viewmodels/*": ["./src/view_models/*"]
+      "@/config": ["./src/config/index"],
+      "@/controllers": ["./src/controllers/index"],
+      "@/db": ["./src/db/index"],
+      "@/libs": ["./src/libs/index"],
+      "@/middleware": ["./src/middleware/index"],
+      "@/shared": ["./src/shared/index"],
+      "@/views/*": ["./src/views/*"],
+      "@/utils": ["./src/utils/index"],
+      "@/models": ["./src/models/index"],
+      "@/routes": ["./src/routes/index"],
+      "@/services": ["./src/services/index"],
+      "@/interfaces": ["./src/interfaces/index"],
+      "@/viewModels": ["./src/view_models/index"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": ["./src"],
-  "exclude": ["node_modules", "dist", ".vscode", ".husky"]
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }

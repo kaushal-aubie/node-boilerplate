@@ -1,7 +1,7 @@
 import HttpStatusCodes from 'http-status-codes';
 import { WithRequired } from 'src/types';
 
-interface IRestResponse<T = unknown, U = unknown> {
+export interface IApiResponse<T = unknown, U = unknown> {
   type?: string;
   data?: T;
   message?: string;
@@ -9,15 +9,15 @@ interface IRestResponse<T = unknown, U = unknown> {
   moreInfo?: U;
 }
 
-export default class RestResponse {
+export default class ApiResponse {
   public static newResponse({
     type,
     data,
     message,
     status,
     moreInfo,
-  }: IRestResponse): WithRequired<IRestResponse, 'status'> {
-    const r: WithRequired<IRestResponse, 'status'> = {
+  }: IApiResponse): WithRequired<IApiResponse, 'status'> {
+    const r: WithRequired<IApiResponse, 'status'> = {
       type: type || 'OK_RESPONSE',
       data,
       status: status || HttpStatusCodes.OK,

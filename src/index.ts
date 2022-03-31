@@ -1,7 +1,7 @@
 import './pre-start'; // Must be the first import
+import * as Models from '@/models';
+import { DB } from '@/db';
 import server from './server';
-import * as Models from './models';
-import { DB } from './db';
 
 // Constants
 const serverStartMsg = 'Express server started on port: ';
@@ -13,7 +13,6 @@ const setUpDatabase = () => {
   DB.sync().catch(console.error);
   DB.connect().catch(console.error);
 };
-
 /**
  * Main Startup Function
  */

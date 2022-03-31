@@ -6,7 +6,7 @@
   "scripts": {
     "commit": "npx gitmoji -c",
     "start": "node -r module-alias/register ./dist --env=production",
-    "dev": "tsnd src/index.ts --rs",
+    "dev": "tsnd -r tsconfig-paths/register src/index.ts",
     "serve": "node dist/index.js",
     "kill-process": "kill $(lsof -ti:8080)",
     "build": "tsc",
@@ -14,7 +14,8 @@
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check \"./src/**/*.{js,ts,json}\"",
     "check-lint": "eslint . --ext ts --ext js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "check-all": "npm run check-types && npm run check-lint &&  npm run build"
   },
   "author": "",
   "license": "ISC",

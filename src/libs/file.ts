@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { IResultAndError } from '../interfaces/result_and_error';
+import { IResultAndError } from '@/interfaces';
 
 export const ensureDirectoryExistence = (filePath: string) => {
   try {
