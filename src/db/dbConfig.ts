@@ -1,0 +1,40 @@
+const { DB_NAME, DB_USER, DB_DIALECT, DB_PASSWORD, DB_HOST } = process.env;
+
+const DB_PORT = process.env.DB_PORT
+  ? parseInt(process.env.DB_PORT, 10)
+  : undefined;
+
+export function getDBCredentials() {
+  if (!DB_NAME) {
+    throw new Error('Database name not found');
+  }
+
+  if (!DB_USER) {
+    throw new Error('Database user not found');
+  }
+
+  if (!DB_PASSWORD) {
+    throw new Error('Database password not found');
+  }
+
+  if (!DB_HOST) {
+    throw new Error('Database host not found');
+  }
+
+  if (!DB_PORT) {
+    throw new Error('Database port not found');
+  }
+
+  if (!DB_DIALECT) {
+    throw new Error('Dialect not found');
+  }
+
+  return {
+    DB_NAME,
+    DB_DIALECT,
+    DB_USER,
+    DB_PASSWORD,
+    DB_HOST,
+    DB_PORT,
+  };
+}

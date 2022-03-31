@@ -1,15 +1,15 @@
-import { Response, Request } from 'express'
+import { Response, Request } from 'express';
 
 const mins = process.env.TOKEN_COOKIE_EXPIRE
   ? parseInt(process.env.TOKEN_COOKIE_EXPIRE, 10)
-  : 15
+  : 15;
 
-const JWT_EXPIRES_IN = 1000 * 60 * mins
+const JWT_EXPIRES_IN = 1000 * 60 * mins;
 if (process.env.JWT_EXPIRES_IN) {
-  parseInt(process.env.JWT_EXPIRES_IN, 10)
+  parseInt(process.env.JWT_EXPIRES_IN, 10);
 }
 
-class AuthHelper {
+class TokenUtils {
   public static setToken(
     req: Request,
     res: Response,
@@ -21,22 +21,22 @@ class AuthHelper {
         maxAge: options.maxAge || JWT_EXPIRES_IN,
         httpOnly: true,
         signed: true,
-      })
+      });
     }
     // Setting header also
-    res.setHeader('Authorization', `bearer ${token}`)
-    return res
+    res.setHeader('Authorization', `bearer ${token}`);
+    return res;
   }
 
   public static getToken(req: Request) {
     if (req.signedCookies) {
-      const t = (req.signedCookies as { token: string }).token
+      const t = (req.signedCookies as { token: string }).token;
       if (t) {
-        return t
+        return t;
       }
     }
-    const token = req.headers.authorization
-    return token
+    const token = req.headers.authorization;
+    return token;
   }
 
   public static clearToken(res: Response): Response {
@@ -44,10 +44,10 @@ class AuthHelper {
       maxAge: 0,
       httpOnly: true,
       signed: true,
-    })
-    res.setHeader('Authorization', 'bearer  ')
-    return res
+    });
+    res.setHeader('Authorization', 'bearer  ');
+    return res;
   }
 }
 
-export default AuthHelper
+export default TokenUtils;

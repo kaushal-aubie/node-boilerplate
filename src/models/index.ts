@@ -1,3 +1,5 @@
+// import _User from './user';
+
 function setupModelsRelation() {
   // setup relation like below
   //   Model1.belongsToMany(Model2, { through: CustomerLeads });
@@ -7,4 +9,6 @@ function setupModelsRelation() {
 
 export default {
   setupModelsRelation,
-}
+};
+
+export * from './user';

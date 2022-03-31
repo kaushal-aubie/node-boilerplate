@@ -1,6 +1,6 @@
-import { IRestError } from '../utils/rest_errors'
+import { IRestError } from '../shared/rest_errors';
 
 export interface IResultAndError<T = unknown> {
-  result: T
-  error: null | IRestError
+  result: T;
+  error: null | IRestError;
 }

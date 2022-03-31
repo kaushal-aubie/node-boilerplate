@@ -1,18 +1,18 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
 
-const SALT_ROUNDS = 10
+const SALT_ROUNDS = 10;
 
 export default class PasswordEncoder {
   public static encode(plainTextPassword: string): Promise<string> {
     return new Promise((resolve, reject) => {
       bcrypt.hash(plainTextPassword, SALT_ROUNDS, (err, hash) => {
         if (err) {
-          reject(err)
+          reject(err);
         } else {
-          resolve(hash)
+          resolve(hash);
         }
-      })
-    })
+      });
+    });
   }
 
   public static compare(
@@ -22,11 +22,11 @@ export default class PasswordEncoder {
     return new Promise((resolve, reject) => {
       bcrypt.compare(plainTextPassword, hash, (err, result) => {
         if (err) {
-          reject(err)
+          reject(err);
         } else {
-          resolve(result)
+          resolve(result);
         }
-      })
-    })
+      });
+    });
   }
 }
