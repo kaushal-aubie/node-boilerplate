@@ -7,14 +7,14 @@ const apiRouter = express.Router();
 
 // Add api routes
 apiRouter.get(
-  '/user',
-  AuthMiddleware.isAuthenticated,
-  UserController.getUserById
-);
-apiRouter.get(
-  '/user:id',
+  '/getAll',
   AuthMiddleware.isAuthenticated,
   UserController.getAllUsers
+);
+apiRouter.get(
+  '/getOne/:id',
+  AuthMiddleware.isAuthenticated,
+  UserController.getUserById
 );
 
 export default apiRouter;

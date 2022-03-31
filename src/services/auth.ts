@@ -9,7 +9,7 @@ class AuthService {
     user: IUserSignupVM
   ): Promise<IResultAndError<User | null>> {
     try {
-      console.log('==> 1:: Checking is user exist with that email or not');
+      console.log('==> 1:: Checking if user exist with that email or not');
       // Unique user check
       const isExist = await User.findOne({ where: { email: user.email } });
       if (isExist && isExist.id) {
@@ -28,7 +28,7 @@ class AuthService {
        * encoding password
        */
       const password = await Bcrypt.encode(user.password);
-      console.log('==> 3:: Password is encryped');
+      console.log('==> 3:: Password encryption done');
 
       const createRes = await User.create({ ...user, password });
       if (!createRes || !createRes.get('id')) {
