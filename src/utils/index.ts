@@ -1,1 +1,1 @@
-export { default as TokenUtils } from './token';
+export { default as TokenUtils } from './token.util';

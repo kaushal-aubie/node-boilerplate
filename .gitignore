@@ -1,9 +1,8 @@
 node_modules/
 dist/
-.env
 yarn-error*.log
 notes
 private.pem
 /public/
 /uploads/
-*.env
+env/
