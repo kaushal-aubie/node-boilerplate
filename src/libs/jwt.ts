@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import { paths } from '@/config';
+import logger from './logger';
 
 /**
  * References :- https://jwt.io/
@@ -26,7 +27,7 @@ export default class JwtUtil {
       const token = jwt.sign(payload, JwtUtil.privateKey, signOptions);
       return token || '';
     } catch (err) {
-      console.error('JwtUtil.create() ERR::', err);
+      logger.err('JwtUtil.create() ERR::', err);
       return null;
     }
   }
@@ -42,7 +43,7 @@ export default class JwtUtil {
       const verifyOptions = { algorithms: [JwtUtil.algorithmName] };
       jwt.verify(token, JwtUtil.privateKey, verifyOptions, (err, payload) => {
         if (err) {
-          console.error('JwtUtil.verify() ERR::', err);
+          logger.err('JwtUtil.verify() ERR::', err);
           reject(err);
         } else {
           resolve(payload as unknown as { user_id: string });

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Jwt } from '@/libs';
+import { Jwt, logger } from '@/libs';
 import { User } from '@/models';
 import { ApiErrors } from '@/shared';
 import { TokenUtils } from '@/utils';
@@ -26,7 +26,7 @@ export default class AuthMiddleware {
         return;
       }
       const tokenVerificationRes = await Jwt.verify(token);
-      console.log(
+      logger.info(
         'AuthMiddleware.isAuthentication() tokenVerificationRes ',
         tokenVerificationRes
       );
@@ -41,7 +41,7 @@ export default class AuthMiddleware {
       (req as Request & { user: User }).user = user;
       next();
     } catch (err) {
-      console.error('AuthMiddleware.isAuthentication() ERR: ', err);
+      logger.err('AuthMiddleware.isAuthentication() ERR: ', err);
       const er = ApiErrors.newNotAuthorizedError('Not authorized');
       res.status(er.status);
       res.json(er);

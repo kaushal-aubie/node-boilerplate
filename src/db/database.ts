@@ -1,3 +1,4 @@
+import { logger } from '@/libs';
 import { Dialect, Sequelize } from 'sequelize';
 import { getDBCredentials } from './dbConfig';
 
@@ -42,9 +43,9 @@ export default class DB {
   public static async connect() {
     try {
       await DB._sequelize.authenticate();
-      console.log('Connection to database has been established successfully.');
+      logger.info('Connection to database has been established successfully.');
     } catch (err) {
-      console.error('Unable to connect to the database:', err);
+      logger.err(`Unable to connect to the database ERR:: ${err}`);
       throw err;
     }
   }
@@ -52,10 +53,10 @@ export default class DB {
   public static async sync() {
     try {
       const result = await DB._sequelize.sync({ alter: false });
-      console.log('Database synced successfully.');
+      logger.info('Database synced successfully.');
       return result;
     } catch (err) {
-      console.error('Error when trying to sync database:', err);
+      logger.err(`Unable to connect to the database ERR:: ${err}`, true);
       throw err;
     }
   }

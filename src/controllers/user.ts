@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { ApiErrors, ApiResponse } from '@/shared';
 import { UserService } from '@/services';
+import { logger } from '@/libs';
 
 class UserController {
   public static async getUserById(req: Request, res: Response) {
@@ -26,7 +27,7 @@ class UserController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      console.log('UserController.getUser() error: ', err);
+      logger.err('UserController.getUser() error: ', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
@@ -48,7 +49,7 @@ class UserController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      console.log('UserController.getUser() error: ', err);
+      logger.err('UserController.getUser() error: ', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { IResultAndError } from '@/interfaces';
+import logger from './logger';
 
 export const ensureDirectoryExistence = (filePath: string) => {
   try {
@@ -11,7 +12,7 @@ export const ensureDirectoryExistence = (filePath: string) => {
     fs.mkdirSync(dirname);
     return true;
   } catch (err) {
-    console.log('Error::: ensureDirectoryExistence()', err);
+    logger.err('Error::: ensureDirectoryExistence()', err);
     return false;
   }
 };
@@ -29,16 +30,16 @@ export const SaveToFile = ({
     try {
       fs.writeFile(pathToFile + fileName, data, (err) => {
         if (err) {
-          console.log(err);
+          logger.err(err);
           reject(err);
         } else {
-          console.log(`Output saved to ${pathToFile}`);
+          logger.info(`Output saved to ${pathToFile}`);
           // removeLocalMediaFile(fileName);
           resolve({ result: true, error: err });
         }
       });
     } catch (err) {
-      console.log('Error::: SaveToFile()', err);
+      logger.err('Error::: SaveToFile()', err);
       reject(err);
     }
   });
@@ -55,52 +56,52 @@ export const CreateAndSaveToFile = ({
   return new Promise((resolve, reject) => {
     try {
       ensureDirectoryExistence(pathToFile);
-      console.log(pathToFile + fileName);
+      logger.info(pathToFile + fileName);
 
       fs.appendFile(pathToFile + fileName, data, (err) => {
         if (err) {
-          console.log(err);
+          logger.info(err);
           reject(err);
         } else {
-          console.log(`Output saved to ${pathToFile}`);
+          logger.info(`Output saved to ${pathToFile}`);
           // removeLocalMediaFile(fileName);
           resolve({ result: true, error: err });
         }
       });
     } catch (err) {
-      console.log('Error::: CreateAndSaveToFile()', err);
+      logger.err('Error::: CreateAndSaveToFile()', err);
     }
   });
 };
 export const removeLocalMediaFile = (filePath: string) => {
   try {
     if (fs.existsSync(filePath)) {
-      console.log('REMOVING_PATH: ', filePath);
+      logger.info('REMOVING_PATH: ', filePath);
       fs.unlinkSync(filePath);
       return true;
     }
-    console.log('PATH:', filePath);
+    logger.info('PATH:', filePath);
     return false;
   } catch (err) {
-    console.log('Error::: removeLocalMediaFile()', err);
+    logger.err('Error::: removeLocalMediaFile()', err);
     return false;
   }
 };
 export const moveFile = (src: string, dest: string) => {
-  console.log(src, dest);
+  logger.info(src, dest);
   return new Promise((resolve, reject) => {
     try {
       fs.copyFile(src, dest, (err) => {
         if (err) {
-          console.log(err);
+          logger.err(err);
           reject(err);
         } else {
-          console.log(`Output moved to ${dest}`);
+          logger.info(`Output moved to ${dest}`);
           resolve({ result: true, error: err });
         }
       });
     } catch (err) {
-      console.log('Error::: moveFile()', err);
+      logger.err('Error::: moveFile()', err);
     }
   });
 };

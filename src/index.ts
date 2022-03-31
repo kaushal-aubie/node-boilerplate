@@ -1,17 +1,17 @@
 import './pre-start'; // Must be the first import
 import * as Models from '@/models';
 import { DB } from '@/db';
+import { logger } from '@/libs';
 import server from './server';
 
 // Constants
-const serverStartMsg = 'Express server started on port: ';
 const port = process.env.PORT || 3000;
 
 const setUpDatabase = () => {
   DB.init();
   Models.default.setupModelsRelation();
-  DB.sync().catch(console.error);
-  DB.connect().catch(console.error);
+  DB.sync().catch(logger.err);
+  DB.connect().catch(logger.err);
 };
 /**
  * Main Startup Function
@@ -20,15 +20,15 @@ function main() {
   try {
     const callBack = (err: unknown) => {
       if (err) {
-        console.log('Error when starting server ', err);
+        logger.err(`Error when starting server ERR:: ${err}`);
       } else {
-        console.log(serverStartMsg, port);
+        logger.info(`Express server started on port: ${port}`);
       }
     };
     setUpDatabase();
     server.listen(port, callBack as () => void);
   } catch (err) {
-    console.log('Error when starting server ', err);
+    logger.err(`Error when starting server ERR:: ${err}`);
   }
 }
 /* Starting server */

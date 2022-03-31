@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Jwt } from '@/libs';
+import { Jwt, logger } from '@/libs';
 import { IUser } from '@/models';
 import { AuthService } from '@/services';
 import { ApiErrors, ApiResponse } from '@/shared';
@@ -79,7 +79,7 @@ class AuthController {
         res.json(er);
         return;
       }
-      console.log('Token generated successfully');
+      logger.info('Token generated successfully');
       res = TokenUtils.setToken(req, res, token);
       const r = ApiResponse.newResponse({
         data: { response: userVM, token },
@@ -121,7 +121,7 @@ class AuthController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      console.log('AuthController.getUser() error: ', err);
+      logger.err('AuthController.getUser() error: ', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
