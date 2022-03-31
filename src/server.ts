@@ -1,51 +1,38 @@
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import express from 'express';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import { ENV_MODE, paths } from '@/config';
-import { ApiErrors } from '@/shared';
+import './pre-start'; // Must be the first import
+import * as Models from '@/models';
+import { DB } from '@/db';
+import { logger } from '@/libs';
+import server from './main';
+import { ENV_MODE } from './config';
 
-/* importing routes */
-import BaseRouter from '@/routes';
+// Constants
+const port = process.env.PORT || 3000;
+const nodeEnv = process.env.NODE_ENV || ENV_MODE.DEVELOPMENT;
 
-const app = express();
-
-/*  view engine setup */
-app.set('views', paths.templatePath);
-app.set('view engine', 'jade');
-
-/* setup necessary middleware */
-app.use(cors());
-app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-// Show routes called in console during development
-if (process.env.NODE_ENV === ENV_MODE.DEVELOPMENT) {
-  app.use(morgan('dev'));
+const setUpDatabase = () => {
+  DB.init();
+  Models.default.setupModelsRelation();
+  DB.sync().catch(logger.err);
+  DB.connect().catch(logger.err);
+};
+/**
+ * Main Startup Function
+ */
+function main() {
+  try {
+    const callBack = (err: unknown) => {
+      if (err) {
+        logger.err(`Error when starting server ERR:: ${err}`);
+        logger.imp(`Running in ${nodeEnv} mode`);
+      } else {
+        logger.info(`Express server started on port: ${port}`);
+      }
+    };
+    setUpDatabase();
+    server.listen(port, callBack as () => void);
+  } catch (err) {
+    logger.err(`Error when starting server ERR:: ${err}`);
+  }
 }
-
-// Security
-if (process.env.NODE_ENV === ENV_MODE.PRODUCTION) {
-  app.use(helmet());
-}
-
-/* expose static routes */
-app.use(express.static(paths.publicPath));
-
-// Add APIs
-
-app.use('/ping', (_req, res) => {
-  res.send('pong');
-});
-
-app.use('/api', BaseRouter);
-
-/* To handle 404 */
-app.use('*', (_req, res) => {
-  const notFoundError = ApiErrors.newNotFoundError('Route not found');
-  res.json(notFoundError);
-});
-
-export default app;
+/* Starting server */
+main();

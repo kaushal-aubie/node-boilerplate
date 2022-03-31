@@ -8,10 +8,11 @@
     "module": "commonjs",
     "strict": true,
     "declaration": false,
-    "sourceMap": false,
-    "inlineSources": false,
+    "sourceMap": true,
+    "inlineSources": true,
     "types": ["node"],
     "stripInternal": true,
+    "allowJs": true,
 
     "moduleResolution": "node",
     "noImplicitAny": true,

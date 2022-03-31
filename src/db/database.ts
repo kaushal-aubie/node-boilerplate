@@ -43,7 +43,7 @@ export default class DB {
   public static async connect() {
     try {
       await DB._sequelize.authenticate();
-      logger.info('Connection to database has been established successfully.');
+      logger.imp('Connection to database has been established successfully.');
     } catch (err) {
       logger.err(`Unable to connect to the database ERR:: ${err}`);
       throw err;
@@ -53,7 +53,7 @@ export default class DB {
   public static async sync() {
     try {
       const result = await DB._sequelize.sync({ alter: false });
-      logger.info('Database synced successfully.');
+      logger.imp('Database synced successfully.');
       return result;
     } catch (err) {
       logger.err(`Unable to connect to the database ERR:: ${err}`, true);

@@ -76,7 +76,7 @@ class AuthService {
       }
       const isPasswordMatched = await Bcrypt.compare(password, hash);
 
-      logger.info('==> 3.1:: Password Matched Result is ', isPasswordMatched);
+      logger.info('==> 3.1:: Password Matched Result is', isPasswordMatched);
       if (isPasswordMatched === true) {
         return {
           result: user,

@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "commit": "npx gitmoji -c",
-    "start": "node -r module-alias/register ./dist --env=production",
-    "dev": "tsnd -r tsconfig-paths/register src/index.ts",
-    "serve": "node dist/index.js",
-    "kill-process": "kill $(lsof -ti:8080)",
+    "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js --env=production",
+    "dev": "tsnd -r tsconfig-paths/register src/server.ts --env=development",
+    "kill-process": "kill $(lsof -ti:5000)",
     "build": "tsc",
     "format": "prettier --write \"./src/**/*.{js,ts,json}\"",
     "check-types": "tsc --pretty --noEmit",

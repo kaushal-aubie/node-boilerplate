@@ -3,9 +3,9 @@
  * This is useful for environment variables, command-line arguments, and cron-jobs.
  */
 
-import path from 'path';
 import dotenv from 'dotenv';
 import commandLineArgs from 'command-line-args';
+import { paths } from '@/config';
 
 (() => {
   // Setup command line options
@@ -19,7 +19,7 @@ import commandLineArgs from 'command-line-args';
   ]);
   // Set the env file
   const result2 = dotenv.config({
-    path: path.join(__dirname, `env/${options.env}.env`),
+    path: `${paths.envPath}/${options.env}.env`,
   });
   if (result2.error) {
     throw result2.error;
