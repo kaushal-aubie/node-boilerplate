@@ -1,7 +1,7 @@
 import { IResultAndError } from '@/interfaces';
+import { logger } from '@/libs';
 import { User } from '@/models';
 import { ApiErrors } from '@/shared';
-import { logger } from '@/libs';
 
 class UserService {
   public static async getUserById(

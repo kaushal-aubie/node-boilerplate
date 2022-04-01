@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
 import fs from 'fs';
+import jwt from 'jsonwebtoken';
 import { envVars, paths } from '@/config';
 import logger from './logger';
 

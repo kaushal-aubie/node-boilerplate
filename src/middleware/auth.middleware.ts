@@ -26,10 +26,6 @@ export default class AuthMiddleware {
         return;
       }
       const tokenVerificationRes = await Jwt.verify(token);
-      logger.info(
-        'AuthMiddleware.isAuthentication() tokenVerificationRes ',
-        tokenVerificationRes
-      );
       const user = await User.findByPk(tokenVerificationRes.user_id);
       if (!user || !user.id) {
         const er = ApiErrors.newNotAuthorizedError('Not authorized');

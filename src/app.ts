@@ -1,16 +1,16 @@
-import { errorMiddleware } from '@/middleware';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import * as Models from '@/models';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
 import { envVars, ENV_MODE, paths } from '@/config';
 import { DB } from '@/db';
 import { logger } from '@/libs';
-import { ApiErrors } from '@/shared';
+import { errorMiddleware } from '@/middleware';
+import * as Models from '@/models';
 import BaseRouter from '@/routes';
-import compression from 'compression';
+import { ApiErrors } from '@/shared';
 
 class App {
   public app: Express;
@@ -43,7 +43,7 @@ class App {
   public setUpDatabase() {
     this.db.init();
     Models.default.setupModelsRelation();
-    this.db.sync().catch(logger.err);
+    this.db.sync({ alter: false }).catch(logger.err);
     this.db.connect().catch(logger.err);
   }
 
@@ -94,7 +94,7 @@ class App {
 
     this.app.use('/v1', BaseRouter);
 
-    /* To handle 404 */
+    // To handle 404
     this.app.use('*', (_req, res) => {
       const notFoundError = ApiErrors.newNotFoundError('Route not found');
       res.json(notFoundError);

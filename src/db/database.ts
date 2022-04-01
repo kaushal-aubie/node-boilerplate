@@ -1,5 +1,5 @@
+import { Dialect, Sequelize, SyncOptions } from 'sequelize';
 import { logger } from '@/libs';
-import { Dialect, Sequelize } from 'sequelize';
 import { getDBCredentials } from './dbConfig';
 
 export default class DB {
@@ -50,9 +50,9 @@ export default class DB {
     }
   }
 
-  public static async sync() {
+  public static async sync(options?: SyncOptions) {
     try {
-      const result = await DB._sequelize.sync({ alter: false });
+      const result = await DB._sequelize.sync(options);
       logger.imp('Database synced successfully.');
       return result;
     } catch (err) {

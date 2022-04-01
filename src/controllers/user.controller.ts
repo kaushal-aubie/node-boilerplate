@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { ApiErrors, ApiResponse } from '@/shared';
-import { userService } from '@/services';
 import { logger } from '@/libs';
+import { userService } from '@/services';
+import { ApiErrors, ApiResponse } from '@/shared';
 
 class UserController {
   public static async getUserById(req: Request, res: Response) {

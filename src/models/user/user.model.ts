@@ -1,22 +1,21 @@
 import { Model } from 'sequelize';
+import { IUser } from './user.interface';
 
-export class User extends Model {
-  public id!: number; // Note that the `null assertion` `!` is required in strict mode.
+export class User extends Model<IUser> {
+  declare id: number; // Note that the `null assertion` `!` is required in strict mode.
 
-  public firstName!: string | null;
+  declare firstName?: string | null;
 
-  public lastName!: string | null;
+  declare lastName?: string | null;
 
-  public email!: string;
+  declare email?: string | null;
 
-  public password!: string | null; // for nullable fields
+  declare password?: string | null; // for nullable fields
 
-  public mobile!: string | null; // for nullable fields
-
-  public role!: string;
+  declare mobile?: string | null; // for nullable fields
 
   // timestamps!
-  public readonly createdAt!: Date;
+  declare readonly createdAt: Date;
 
-  public readonly updatedAt!: Date;
+  declare readonly updatedAt: Date;
 }

@@ -14,7 +14,9 @@
     "check-format": "prettier --check \"./src/**/*.{js,ts,json}\"",
     "check-lint": "eslint . --ext ts --ext js",
     "prepare": "husky install",
-    "check-all": "npm run check-types && npm run check-lint &&  npm run build"
+    "check-all": "npm run check-types && npm run check-lint &&  npm run build",
+    "seed": "tsnd -r tsconfig-paths/register src/seeds/index.ts",
+    "seed:prod": "node -r ts-node/register -r tsconfig-paths/register dist/seeds/index.js"
   },
   "author": "",
   "license": "ISC",

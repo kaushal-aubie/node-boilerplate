@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { NextFunction, Request, Response } from 'express';
 import { logger } from '@/libs';
 import { ApiErrors } from '@/shared';
-import { NextFunction, Request, Response } from 'express';
 
 function errorMiddleware(
   err: Error | ApiErrors,

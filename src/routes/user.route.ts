@@ -7,17 +7,19 @@ import { userValidation } from '@/validations';
 const apiRouter = express.Router();
 
 // Add api routes
-apiRouter.get(
-  '/getAll',
-  validate(userValidation.getAll),
-  authMiddleware.isAuthenticated,
-  userController.getAllUsers
-);
-apiRouter.get(
-  '/getOne/:id',
-  validate(userValidation.getOne),
-  authMiddleware.isAuthenticated,
-  userController.getUserById
-);
+apiRouter
+  .route('/getAll')
+  .get(
+    validate(userValidation.getAll),
+    authMiddleware.isAuthenticated,
+    userController.getAllUsers
+  );
+apiRouter
+  .route('/getOne/:id')
+  .get(
+    validate(userValidation.getOne),
+    authMiddleware.isAuthenticated,
+    userController.getUserById
+  );
 
 export default apiRouter;

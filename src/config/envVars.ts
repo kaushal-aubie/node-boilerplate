@@ -1,6 +1,6 @@
-import Joi from 'joi';
-import dotenv from 'dotenv';
 import commandLineArgs from 'command-line-args';
+import dotenv from 'dotenv';
+import Joi from 'joi';
 import { paths } from './paths';
 
 (() => {

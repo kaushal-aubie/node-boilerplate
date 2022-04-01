@@ -1,8 +1,8 @@
+import { NextFunction, Request, Response } from 'express';
+import Joi from 'joi';
 import { logger } from '@/libs';
 import { ApiErrors } from '@/shared';
 import { Pick } from '@/utils';
-import { NextFunction, Request, Response } from 'express';
-import Joi from 'joi';
 
 type ISchema = {
   body?: Joi.ObjectSchema;
@@ -11,6 +11,10 @@ type ISchema = {
 };
 
 class ValidateMiddleware {
+  /**
+   * Validates the Body, Params, Query with the Schema
+   * @param {ISchema} schema
+   */
   public static validate =
     (schema: ISchema) => (req: Request, res: Response, next: NextFunction) => {
       try {

@@ -1,5 +1,5 @@
-import { envVars } from '@/config';
 import { Response, Request } from 'express';
+import { envVars } from '@/config';
 
 const mins = envVars.jwt.cookieExpire
   ? parseInt(envVars.jwt.cookieExpire, 10)
