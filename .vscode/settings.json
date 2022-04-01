@@ -17,5 +17,6 @@
   "files.autoSave": "off", // let this be off,
   "html.format.wrapAttributes": "aligned-multiple",
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "typescript.updateImportsOnFileMove.enabled": "always"
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "cSpell.words": ["gitmoji", "tsnd", "commitlint"]
 }

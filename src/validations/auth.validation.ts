@@ -17,7 +17,7 @@ class AuthValidation {
         password: Joi.string().required().custom(password),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
-        mobile: Joi.number().min(10).max(10).required(),
+        mobile: Joi.number().required(),
       }),
     };
 

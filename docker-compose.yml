@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  app:
+    container_name: app
+    restart: always
+    # env_file: production.env
+    image: node-app
+    build: .
+    ports:
+      - 8080:5000
+      # - ["${PORT}:${PORT}""]
+    depends_on:
+      - db
+  db:
+    container_name: db
+    # env_file: production.env
+    image: 'postgres'
+    ports:
+      - 4321:5432
+      # - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=mydb
+    volumes:
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data:
