@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ApiErrors, ApiResponse } from '@/shared';
-import { UserService } from '@/services';
+import { userService } from '@/services';
 import { logger } from '@/libs';
 
 class UserController {
@@ -14,7 +14,7 @@ class UserController {
         return;
       }
 
-      const userRes = await UserService.getUserById(userId);
+      const userRes = await userService.getUserById(userId);
       if (userRes.error) {
         res.status(userRes.error.status);
         res.json(userRes.error);
@@ -36,7 +36,7 @@ class UserController {
 
   public static async getAllUsers(_req: Request, res: Response) {
     try {
-      const userRes = await UserService.getAllUsers();
+      const userRes = await userService.getAllUsers();
       if (userRes.error) {
         res.status(userRes.error.status);
         res.json(userRes.error);

@@ -1,6 +1,16 @@
-import logger from 'jet-logger';
+import { envVars } from '@/config';
+import logger, { Formats, JetLogger, LoggerModes } from 'jet-logger';
 
 class Logger {
+  constructor() {
+    JetLogger(
+      envVars.logger.JET_LOGGER_MODE as LoggerModes,
+      envVars.logger.JET_LOGGER_FILEPATH,
+      envVars.logger.JET_LOGGER_TIMESTAMP,
+      envVars.logger.JET_LOGGER_FORMAT as Formats
+    );
+  }
+
   public static info(...msg: unknown[]): void {
     logger.info(msg);
   }

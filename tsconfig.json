@@ -35,7 +35,8 @@
       "@/routes": ["./src/routes/index"],
       "@/services": ["./src/services/index"],
       "@/interfaces": ["./src/interfaces/index"],
-      "@/viewModels": ["./src/view_models/index"]
+      "@/viewModels": ["./src/view_models/index"],
+      "@/validations": ["./src/validations/index"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true

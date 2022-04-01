@@ -1,4 +1,4 @@
-import { ErrorMiddleware } from '@/middleware';
+import { errorMiddleware } from '@/middleware';
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -83,7 +83,7 @@ class App {
 
   // initialize the error middleware lastly to not override the others
   private initializeErrorHandling() {
-    this.app.use(ErrorMiddleware);
+    this.app.use(errorMiddleware);
   }
 
   // initialize the 404 and ping Routes

@@ -5,7 +5,7 @@ import { ApiErrors } from '@/shared';
 import { IUserSignupVM } from '@/viewModels';
 
 class AuthService {
-  public static async signup(
+  public static async register(
     user: IUserSignupVM
   ): Promise<IResultAndError<User | null>> {
     try {
@@ -24,7 +24,7 @@ class AuthService {
 
       /**
        * email id is not registered yet
-       * process signup
+       * process register
        * encoding password
        */
       const password = await Bcrypt.encode(user.password);
@@ -41,13 +41,13 @@ class AuthService {
       logger.info('==> 4:: User Created in DB');
       return { result: createRes, error: null };
     } catch (err) {
-      logger.err('AuthService.signup() ERR: ', err);
+      logger.err('AuthService.register() ERR: ', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
   }
 
-  public static async signin(
+  public static async login(
     email: string,
     password: string
   ): Promise<IResultAndError<User | null>> {
@@ -84,10 +84,10 @@ class AuthService {
         };
       }
       logger.info('==> 4:: User password does not match');
-      const er = ApiErrors.newNotAuthorizedError("Credentials dosen't match");
+      const er = ApiErrors.newNotAuthorizedError("Credentials doesn't match");
       return { result: null, error: er };
     } catch (err) {
-      logger.err('AuthService.signin() ERR: ', err);
+      logger.err('AuthService.login() ERR: ', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }

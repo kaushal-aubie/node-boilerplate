@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Jwt, logger } from '@/libs';
 import { IUser } from '@/models';
-import { AuthService } from '@/services';
+import { authService } from '@/services';
 import { ApiErrors, ApiResponse } from '@/shared';
 import { TokenUtils } from '@/utils';
 import {
@@ -12,7 +12,7 @@ import {
 } from '@/viewModels';
 
 class AuthController {
-  public static async signup(req: Request, res: Response) {
+  public static async register(req: Request, res: Response) {
     try {
       const user = new UserSignupViewModel(req.body as IUserSignupVM);
       // validating user body
@@ -25,18 +25,20 @@ class AuthController {
         return;
       }
       // user signup call
-      const singupRes = await AuthService.signup(user);
-      if (singupRes.error) {
-        res.status(singupRes.error.status);
-        res.json(singupRes.error);
+      const registerRes = await authService.register(user);
+      if (registerRes.error) {
+        res.status(registerRes.error.status);
+        res.json(registerRes.error);
         return;
       }
 
       // crating a response object
-      const userVM = new UserViewModel(singupRes.result as unknown as IUserVM);
+      const userVM = new UserViewModel(
+        registerRes.result as unknown as IUserVM
+      );
       const r = ApiResponse.newResponse({
         data: userVM,
-        message: 'User has signup successfully',
+        message: 'User has Registered successfully',
       });
       res.status(r.status);
       res.json(r);
@@ -47,7 +49,7 @@ class AuthController {
     }
   }
 
-  public static async signin(req: Request, res: Response) {
+  public static async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body as IUser;
       // validating user body
@@ -60,18 +62,18 @@ class AuthController {
         return;
       }
 
-      const signinRes = await AuthService.signin(email, password);
-      if (signinRes.error) {
-        res.status(signinRes.error.status);
-        res.json(signinRes.error);
+      const loginRes = await authService.login(email, password);
+      if (loginRes.error) {
+        res.status(loginRes.error.status);
+        res.json(loginRes.error);
         return;
       }
 
-      const userVM = new UserViewModel(signinRes.result as unknown as IUserVM);
+      const userVM = new UserViewModel(loginRes.result as unknown as IUserVM);
 
       // generate jwt token
       const token = Jwt.create({
-        user_id: (signinRes.result as unknown as { id: string })?.id,
+        user_id: (loginRes.result as unknown as { id: string })?.id,
       });
       if (!token) {
         const er = ApiErrors.newInternalServerError('Something went wrong');
@@ -83,7 +85,7 @@ class AuthController {
       res = TokenUtils.setToken(req, res, token);
       const r = ApiResponse.newResponse({
         data: { response: userVM, token },
-        message: 'User has signin successfully',
+        message: 'User has logged in successfully',
       });
       res.status(r.status);
       res.json(r);
@@ -94,11 +96,11 @@ class AuthController {
     }
   }
 
-  public static signout(_req: Request, res: Response) {
+  public static logout(_req: Request, res: Response) {
     try {
       res = TokenUtils.clearToken(res);
       const r = ApiResponse.newResponse({
-        message: 'User has signout successfully',
+        message: 'User has logout successfully',
       });
       res.status(r.status);
       res.json(r);

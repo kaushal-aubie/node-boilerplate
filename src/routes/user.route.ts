@@ -1,6 +1,7 @@
 import express from 'express';
-import { UserController } from '@/controllers';
-import { AuthMiddleware } from '@/middleware';
+import { userController } from '@/controllers';
+import { authMiddleware, validate } from '@/middleware';
+import { userValidation } from '@/validations';
 
 // Init
 const apiRouter = express.Router();
@@ -8,13 +9,15 @@ const apiRouter = express.Router();
 // Add api routes
 apiRouter.get(
   '/getAll',
-  AuthMiddleware.isAuthenticated,
-  UserController.getAllUsers
+  validate(userValidation.getAll),
+  authMiddleware.isAuthenticated,
+  userController.getAllUsers
 );
 apiRouter.get(
   '/getOne/:id',
-  AuthMiddleware.isAuthenticated,
-  UserController.getUserById
+  validate(userValidation.getOne),
+  authMiddleware.isAuthenticated,
+  userController.getUserById
 );
 
 export default apiRouter;

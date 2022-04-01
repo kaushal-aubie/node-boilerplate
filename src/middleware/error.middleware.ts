@@ -9,7 +9,7 @@ function errorMiddleware(
   _res: Response,
   _next: NextFunction
 ) {
-  logger.err(err, true);
+  logger.err('ERROR Cached in Error Middleware', err, true);
 }
 
 export default errorMiddleware;

@@ -39,6 +39,10 @@ type IEnv = {
   SMTP_USERNAME: string;
   SMTP_PASSWORD: string;
   EMAIL_FROM: string;
+  JET_LOGGER_TIMESTAMP: boolean;
+  JET_LOGGER_MODE: string;
+  JET_LOGGER_FILEPATH: string;
+  JET_LOGGER_FORMAT: string;
 };
 
 const envVarsSchema = Joi.object<IEnv>()
@@ -82,6 +86,16 @@ const envVarsSchema = Joi.object<IEnv>()
     EMAIL_FROM: Joi.string().description(
       'the from field in the emails sent by the app'
     ),
+    JET_LOGGER_TIMESTAMP: Joi.boolean()
+      .default(false)
+      .description('JET_LOGGER_TIMESTAMP'),
+    JET_LOGGER_MODE: Joi.string()
+      .default('CONSOLE')
+      .description('JET_LOGGER_MODE'),
+    JET_LOGGER_FILEPATH: Joi.string().description('JET_LOGGER_FILEPATH'),
+    JET_LOGGER_FORMAT: Joi.string()
+      .default('LINE')
+      .description('JET_LOGGER_FORMAT'),
   })
   .unknown();
 
@@ -120,6 +134,11 @@ const envVars = {
     },
     from: value.EMAIL_FROM,
   },
+  logger: {
+    JET_LOGGER_TIMESTAMP: value.JET_LOGGER_TIMESTAMP,
+    JET_LOGGER_MODE: value.JET_LOGGER_MODE,
+    JET_LOGGER_FILEPATH: value.JET_LOGGER_FILEPATH,
+    JET_LOGGER_FORMAT: value.JET_LOGGER_FORMAT,
+  },
 };
-
 export { envVars };
