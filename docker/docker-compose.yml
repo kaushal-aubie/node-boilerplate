@@ -3,13 +3,18 @@ version: '3.3'
 services:
   app:
     container_name: app
+    command: npm run start
     restart: always
     # env_file: production.env
     image: node-app
-    build: .
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
     ports:
       - 8080:5000
       # - ["${PORT}:${PORT}""]
+    links:
+      - db
     depends_on:
       - db
   db:
@@ -27,4 +32,5 @@ services:
       - data:/var/lib/postgresql/data
 
 volumes:
+  # nodemodules: {}
   data:
