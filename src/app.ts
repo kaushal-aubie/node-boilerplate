@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import * as Models from '@/models';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { ENV_MODE, paths } from '@/config';
+import { envVars, ENV_MODE, paths } from '@/config';
 import { DB } from '@/db';
 import { logger } from '@/libs';
 import { ApiErrors } from '@/shared';
@@ -17,13 +17,10 @@ class App {
 
   public db: typeof DB;
 
-  public port: number | string;
-
   constructor() {
     // initialize express
     this.app = express();
     this.db = DB;
-    this.port = process.env.PORT || 5000;
 
     this.initializeMiddleware();
     this.initializeRoutes();
@@ -33,9 +30,9 @@ class App {
   // start express
   public listen() {
     try {
-      this.app.listen(this.port, () => {
-        logger.imp(`Running in ${process.env.NODE_ENV} mode`);
-        logger.imp(`Express server started on port: ${this.port}`);
+      this.app.listen(envVars.port, () => {
+        logger.imp(`Running in ${envVars.env} mode`);
+        logger.imp(`Express server started on port: ${envVars.port}`);
       });
     } catch (err) {
       logger.err(`Error when starting server ERR:: ${err}`);
@@ -59,7 +56,7 @@ class App {
     // enable cors
     this.app.use(cors());
 
-    this.app.use(cookieParser(process.env.COOKIE_SECRET));
+    this.app.use(cookieParser(envVars.jwt.cookieSecret));
 
     // parse json request body
     this.app.use(express.json());
@@ -74,12 +71,12 @@ class App {
     this.app.use(compression());
 
     // Show routes called in console during development
-    if (process.env.NODE_ENV === ENV_MODE.DEVELOPMENT) {
+    if (envVars.env === ENV_MODE.DEVELOPMENT) {
       this.app.use(morgan('dev'));
     }
 
     // Security
-    if (process.env.NODE_ENV === ENV_MODE.PRODUCTION) {
+    if (envVars.env === ENV_MODE.PRODUCTION) {
       this.app.use(helmet());
     }
   }

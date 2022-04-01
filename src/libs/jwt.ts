@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import { paths } from '@/config';
+import { envVars, paths } from '@/config';
 import logger from './logger';
 
 /**
@@ -19,7 +19,7 @@ export default class JwtUtil {
    */
   public static create(payload: { user_id: string }) {
     try {
-      const exp = process.env.JWT_EXPIRES_IN || '1h';
+      const exp = envVars.jwt.jwtExpireIn || '1h';
       const signOptions: jwt.SignOptions = {
         algorithm: JwtUtil.algorithmName,
         expiresIn: exp,

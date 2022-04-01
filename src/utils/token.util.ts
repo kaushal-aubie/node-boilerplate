@@ -1,10 +1,13 @@
+import { envVars } from '@/config';
 import { Response, Request } from 'express';
 
-const mins = process.env.COOKIE_EXP ? parseInt(process.env.COOKIE_EXP, 10) : 15;
+const mins = envVars.jwt.cookieExpire
+  ? parseInt(envVars.jwt.cookieExpire, 10)
+  : 15;
 
 const JWT_EXPIRES_IN = 1000 * 60 * mins;
-if (process.env.JWT_EXPIRES_IN) {
-  parseInt(process.env.JWT_EXPIRES_IN, 10);
+if (envVars.jwt.jwtExpireIn) {
+  parseInt(envVars.jwt.jwtExpireIn, 10);
 }
 
 class TokenUtils {

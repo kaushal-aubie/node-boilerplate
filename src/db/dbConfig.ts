@@ -1,8 +1,15 @@
-const { DB_NAME, DB_USER, DB_DIALECT, DB_PASSWORD, DB_HOST } = process.env;
+import { envVars } from '@/config';
 
-const DB_PORT = process.env.DB_PORT
-  ? parseInt(process.env.DB_PORT, 10)
-  : undefined;
+const {
+  dialect: DB_DIALECT,
+  host: DB_HOST,
+  name: DB_NAME,
+  password: DB_PASSWORD,
+  port,
+  user: DB_USER,
+} = envVars.db;
+
+const DB_PORT = port ? parseInt(`${port}`, 10) : undefined;
 
 export function getDBCredentials() {
   if (!DB_NAME) {
