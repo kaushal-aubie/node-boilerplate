@@ -2,6 +2,7 @@ import path from 'path';
 import multer, { StorageEngine } from 'multer';
 import { FILE_UPLOADS_DIR, storageType, uploadType } from '@/config';
 import { File } from 'src/types';
+// import aws from 'aws-sdk';
 
 class Uploader {
   storage!: StorageEngine;
@@ -16,6 +17,10 @@ class Uploader {
         this.storage = this.diskStorage;
         break;
 
+      // case storageType.AWS:
+      //   this.storage = this.awsStorage;
+      //   break;
+
       default:
         this.storage = this.diskStorage;
         break;
@@ -25,7 +30,9 @@ class Uploader {
   // eslint-disable-next-line class-methods-use-this
   get diskStorage() {
     return multer.diskStorage({
-      destination: FILE_UPLOADS_DIR,
+      destination(_req, _file, cb) {
+        cb(null, FILE_UPLOADS_DIR);
+      },
       filename: (_req, file, cb) => {
         cb(
           null,
@@ -34,6 +41,25 @@ class Uploader {
       },
     });
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  // get awsStorage() {
+  //   return new aws.S3({
+  //     params: {
+  //       dirname: '/temp/',
+  //       bucket: process.env.AWS_S3_BUCKET_NAME,
+  //       secretAccessKey: process.env.AWS_ACCESS_KEY_ID,
+  //       accessKeyId: process.env.AWS_SECRET_ACCESS_KEY,
+  //       region: process.env.AWS_REGION,
+  //       filename: (_req, file, cb) => {
+  //         cb(
+  //           null,
+  //           `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
+  //         );
+  //       },
+  //     },
+  //   });
+  // }
 
   public upload(storage: storageType, type: uploadType, ...params: never[]) {
     this.initUploader(storage);
