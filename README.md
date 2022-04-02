@@ -1,5 +1,7 @@
-<img src="https://github.com/TheSoftwareHouse/express-boilerplate/raw/main/data/logo.svg" alt="react boilerplate banner" align="center" />
+<img src="https://repository-images.githubusercontent.com/162537377/9c807700-9828-11ea-8a3b-47411956130e" alt="react boilerplate banner" align="center" />
 
+<!-- <img src="https://camo.githubusercontent.com/bc9c0841cf049b82998b297cdd159f89fe5cecbc29c645ed1a90a0a25f201cb5/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f6d61782f323634302f312a4a6e2d4b51384d706e484255585a47333463706961412e706e67" alt="react boilerplate banner
+" align="center" /> -->
 <br />
 
 <div align="center"><strong>Start a new application in seconds!
@@ -14,11 +16,9 @@
 - [Features](#features)
 - [Configuration](#configuration)
 - [Scripts](#scripts)
-- [Git-Publish-Changes](#Git-Publish-Changes)
-- [React-CLI-Commands](#React-CLI-Commands)
-- [Project structure](#project-structure)
-- [Dependencies](#dependencies)
-- [DevDependencies](#devdependencies)
+- [Git Commitization](#git-commitization)
+- [Project Structure](#project-structure)
+- [Important Packages](#important-packages)
 - [Authors](#authors)
 
 ## Quick-start
@@ -201,7 +201,7 @@ Git commit message format will be :- git commit -m ":gitmoji: title" -m "message
 │
 ```
 
-## Important Dependencies/DevDependencies
+## Important Packages
 
 ### Server/Framework
 
