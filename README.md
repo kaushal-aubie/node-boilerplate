@@ -23,11 +23,12 @@
 
 ## Quick-start
 
-1.  Make sure that you have Node.js v8.15.1 and npm v5 or above installed.
+1.  Make sure that you have Node.js v12.x.x and npm v5 or above installed.
 2.  Clone this repo using `git clone https://github.com/kaushal-aubie/node-boilerplate.git <YOUR_PROJECT_NAME>`
 3.  Move to the appropriate directory: `cd <YOUR_PROJECT_NAME>`.<br />
 4.  Run `npm run install` in order to install dependencies.<br />
-    _At this point you can run `npm start` to see the example app at `http://localhost:5000`._
+    _At this point you can run `npm run dev` to see the app running at `http://localhost:5000`._
+5.  Got to `http://localhost:5000/ping` to receive a pong from the server.
 
 Now you're ready to rumble!
 
@@ -62,7 +63,7 @@ Now you're ready to rumble!
   <dd>Awesome Command line Git Commitization integrated with husky</dd>
 
   <dt>Logging</dt>
-  <dd>Jet Logger For great logging and morgan added for apo request logging</dd>
+  <dd>Jet Logger For great logging and morgan added for api request logging</dd>
 
   <dt>Validation</dt>
   <dd>Request data validation using JOI</dd>
@@ -74,10 +75,10 @@ Now you're ready to rumble!
   <dd>Included CORS</dd>
 
   <!-- <dt>Email helper</dt>
-  <dd>Email helper ready just import and use</dd> -->
+  <dd>Email helper ready just to import and use</dd> -->
 
   <dt>File Upload helper</dt>
-  <dd>File Upload helper ready just import and use</dd>
+  <dd>File Upload helper ready to just import and use</dd>
 
   <dt>Response Structure</dt>
   <dd>Pre-defined response structures with proper status codes.
@@ -92,6 +93,9 @@ Now you're ready to rumble!
 - Prettier config `/.prettierc`.
 - Typescript config `/tsconfig.json`.
 - ESLint config `/.eslintrc.js`.
+- Commitlint config `/commitlint.config.js`.
+- Husky config `/.husky`.
+- VScode config `/.vscode`.
 
 ## Scripts
 
@@ -164,38 +168,39 @@ Git commit message format will be :- git commit -m ":gitmoji: title" -m "message
 ## Project structure
 
 ```
-├───.husky             # Husky hooks
-│───.vscode            # VS Code Settings
-│─── docker            # Docker configs
-│─── dist              # Production Build
-│─── env               # Environment files
-│───src\
-│   |--config\         # Environment variables and configuration related things
-│   |--controllers\    # Route controllers (controller layer)
-│   |--db\             # Database Configuration
-│   |--middlewares\    # Custom express middlewares
-│   |--interfaces\     # All Shared Global Interfaces
-│   |--libs\           # External Libs Config
-│   |--models\         # Sequelize models (data layer)
-│   |--routes\         # Routes
-│   |--services\       # Business logic (service layer)
-│   |--utils\          # Utility classes and functions
-│   |--validations\    # Request data validation schemas
-│   |--shared\         # Shared Things go under this
-│   |--seeds\          # Dummy Data Generation Files
-│   |--types\          # Global Typescript Types Definitions
-│   |--app.ts          # Express app
-│   |--server.ts       # App entry point
+├───.husky                  # Husky hooks
+│───.vscode                 # VS Code Settings
+│─── docker                 # Docker configs
+│─── dist                   # Production Build
+│─── env                    # Environment files
+│─── src\
+│    |--config\             # Environment variables and configuration related things
+│    |--controllers\        # Route controllers (controller layer)
+│    |--db\                 # Database Configuration
+│    |--middlewares\        # Custom express middlewares
+│    |--interfaces\         # All Shared Global Interfaces
+│    |--libs\               # External Libs Config
+│    |--models\             # Sequelize models (data layer)
+│    |--routes\             # Routes
+│    |--services\           # Business logic (service layer)
+│    |--utils\              # Utility classes and functions
+│    |--validations\        # Request data validation schemas
+│    |--shared\             # Shared Things go under this
+│    |--seeds\              # Dummy Data Generation Files
+│    |--types\              # Global Typescript Types Definitions
+│    |--app.ts              # Express app
+│    |--server.ts           # App entry point
 │
-├── .dockerignore
-├── .prettierrc
-├── .commitlint.congig.js
-├── nodemon.json
-├── package.json
-├── package-lock.json
-├── private.pem
-├── README.md
-└── tsconfig.json
+├── .gitignore              # git ignore
+├── .dockerignore           # docker ignore
+├── .prettierrc             # Prettier Config
+├── .commitlint.config.js   # Commitlint Configuration
+├── nodemon.json            # nodemon config
+├── package.json            # blue print of app
+├── package-lock.json       # package lock file for bindings of packages
+├── private.pem             # pem file for JWT
+├── README.md               # Readme File
+└── tsconfig.json           # Type Script Configuration File
 ```
 
 ## Important Packages
@@ -224,7 +229,7 @@ Git commit message format will be :- git commit -m ":gitmoji: title" -m "message
 - [`eslint-import-resolver-typescript`](https://www.npmjs.com/package/eslint-import-resolver-typescript) -TypeScript .ts .tsx module resolver for `eslint-plugin-import`.
 - [`eslint-config-airbnb-base`](https://www.npmjs.com/package/eslint-plugin-babel) - an eslint rule plugin companion to babel-eslint.
 - [`eslint-plugin-import`](https://www.npmjs.com/package/eslint-plugin-import) - This plugin intends to support linting of ES2015+ (ES6+) import/export syntax, and prevent issues with misspelling of file paths and import names.
-- [`eslint-config-airbnb-base`](https://www.npmjs.com/package/eslint-config-airbnb-base) -
+- [`eslint-config-airbnb-base`](https://www.npmjs.com/package/eslint-config-airbnb-base) - Airbnb's base JS ESLint config, following our styleguide
 - [`eslint-plugin-prettier`](https://www.npmjs.com/package/eslint-plugin-prettier) - Runs prettier as an eslint rule.
 - [`@typescript-eslint/eslint-plugin`](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin) - TypeScript plugin for ESLint.
 - [`@typescript-eslint/parser`](https://www.npmjs.com/package/@typescript-eslint/parser) - An ESLint custom parser which leverages TypeScript ESTree.
