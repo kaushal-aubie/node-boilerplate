@@ -4,6 +4,10 @@ import { userService } from '@/services';
 import { ApiErrors, ApiResponse } from '@/shared';
 
 class UserController {
+  /**
+   * GET /getOne/:id
+   * Get a user by ID.
+   */
   public static async getUserById(req: Request, res: Response) {
     try {
       const userId = req.params.id;
@@ -34,6 +38,10 @@ class UserController {
     }
   }
 
+  /**
+   * GET/getAllUsers
+   * Get all users.
+   */
   public static async getAllUsers(_req: Request, res: Response) {
     try {
       const userRes = await userService.getAllUsers();

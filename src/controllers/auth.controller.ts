@@ -12,6 +12,10 @@ import {
 } from '@/viewModels';
 
 class AuthController {
+  /**
+   * POST /register
+   * Register a user.
+   */
   public static async register(req: Request, res: Response) {
     try {
       const user = new UserSignupViewModel(req.body as IUserSignupVM);
@@ -49,6 +53,10 @@ class AuthController {
     }
   }
 
+  /**
+   * POST /login
+   * login's a user.
+   */
   public static async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body as IUser;
@@ -96,6 +104,10 @@ class AuthController {
     }
   }
 
+  /**
+   * POST /logout
+   * logout's a user.
+   */
   public static logout(_req: Request, res: Response) {
     try {
       res = TokenUtils.clearToken(res);
@@ -111,6 +123,10 @@ class AuthController {
     }
   }
 
+  /**
+   * get /authenticate
+   * To get Logged in User Details.
+   */
   public static getUser(req: Request, res: Response) {
     try {
       const userVM = new UserViewModel(
