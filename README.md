@@ -76,6 +76,9 @@ Now you're ready to rumble!
   <!-- <dt>Email helper</dt>
   <dd>Email helper ready just import and use</dd> -->
 
+  <dt>File Upload helper</dt>
+  <dd>File Upload helper ready just import and use</dd>
+
   <dt>Response Structure</dt>
   <dd>Pre-defined response structures with proper status codes.
 </dd>

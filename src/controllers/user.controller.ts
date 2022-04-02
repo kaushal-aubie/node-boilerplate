@@ -39,7 +39,7 @@ class UserController {
   }
 
   /**
-   * GET/getAllUsers
+   * GET /getAllUsers
    * Get all users.
    */
   public static async getAllUsers(_req: Request, res: Response) {
@@ -58,6 +58,35 @@ class UserController {
       res.json(r);
     } catch (err) {
       logger.err('UserController.getUser() error: ', err);
+      const er = ApiErrors.newInternalServerError('Something went wrong');
+      res.status(er.status);
+      res.json(er);
+    }
+  }
+
+  /**
+   * POST /fille/upload
+   * Upload A File.
+   */
+  public static uploadFiles(req: Request, res: Response) {
+    try {
+      if (!req.file) {
+        const err = ApiErrors.newBadRequestError('File not found');
+        res.status(err.status);
+        res.json(err);
+        return;
+      }
+      const fileData = { fileName: req.file.filename, filePath: req.file.path };
+
+      const r = ApiResponse.newResponse({
+        data: fileData,
+        message: 'File uploaded successfully!',
+      });
+
+      res.status(r.status);
+      res.json(r);
+    } catch (err) {
+      logger.err('UserController.uploadFiles() error: ', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);

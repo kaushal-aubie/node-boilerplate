@@ -18,5 +18,5 @@
   "html.format.wrapAttributes": "aligned-multiple",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "cSpell.words": ["gitmoji", "tsnd", "commitlint"]
+  "cSpell.words": ["commitlint", "fieldname", "gitmoji", "originalname", "tsnd"]
 }

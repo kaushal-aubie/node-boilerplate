@@ -1,10 +1,14 @@
 import express from 'express';
+import { storageType, uploadType } from '@/config';
 import { userController } from '@/controllers';
-import { authMiddleware, validate } from '@/middleware';
+import { authMiddleware, uploader, validate } from '@/middleware';
 import { userValidation } from '@/validations';
 
 // Init
 const apiRouter = express.Router();
+
+// Constants
+const FILE_KEY = 'myFile';
 
 // Add api routes
 apiRouter
@@ -22,4 +26,10 @@ apiRouter
     userController.getUserById
   );
 
+apiRouter
+  .route('/fille/upload')
+  .post(
+    uploader.upload(storageType.DISK, uploadType.SINGLE, FILE_KEY as never),
+    userController.uploadFiles
+  );
 export default apiRouter;
