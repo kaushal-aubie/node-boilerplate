@@ -24,23 +24,18 @@
 ## Quick-start
 
 1.  Make sure that you have Node.js v8.15.1 and npm v5 or above installed.
-2.  Clone this repo using `git clone https://github.com/kaushalshah-98/react-boilerplate.git <YOUR_PROJECT_NAME>`
+2.  Clone this repo using `git clone https://github.com/kaushal-aubie/node-boilerplate.git <YOUR_PROJECT_NAME>`
 3.  Move to the appropriate directory: `cd <YOUR_PROJECT_NAME>`.<br />
 4.  Run `npm run install` in order to install dependencies.<br />
-    _At this point you can run `npm start` to see the example app at `http://localhost:8090`._
+    _At this point you can run `npm start` to see the example app at `http://localhost:5000`._
 
 Now you're ready to rumble!
-
-> Please note that this boilerplate is **production-ready and not meant for beginners**!. If you want a solid, battle-tested base to build your next product upon and have some experience with react, this is the perfect start for you.
-
-> You **don’t** need to install or configure tools like webpack or Babel.<br>
-> They are pre-configured so that you can focus on the code.
 
 ## Features
 
 <dl>
-  <dt>Quick scaffolding</dt>
-  <dd>Create components, pages, stores and services - right from the CLI!</dd>
+  <!-- <dt>Quick scaffolding</dt>
+  <dd>Create components, pages, stores and services - right from the CLI!</dd> -->
 
   <dt>TypeScript</dt>
   <dd>The best way to write modern applications. Code is easier to understand. It is now way more difficult to write invalid code as was the case in dynamically typed languages</dd>
@@ -78,8 +73,8 @@ Now you're ready to rumble!
   <dt>CORS</dt>
   <dd>Included CORS</dd>
 
-  <dt>Email helper</dt>
-  <dd>Email helper ready just import and use</dd>
+  <!-- <dt>Email helper</dt>
+  <dd>Email helper ready just import and use</dd> -->
 
   <dt>Response Structure</dt>
   <dd>Pre-defined response structures with proper status codes.
@@ -97,17 +92,17 @@ Now you're ready to rumble!
 
 ## Scripts
 
-- `npm run docker:up` - To remove previous stats created.
-- `npm run docker:stop` - To generate the stats report.
-- `npm run docker:down` - To scan your project for vulnerabilities.
-- `npm run docker:remove-dangling` - To get the detailed audit report in JSON format.
-- `npm run docker:compose` - To scan your project for vulnerabilities skipping devDependencies.
-- `npm run docker:compose:d` - To scan your project for vulnerabilities skipping dependencies.
-- `npm run docker:logs` - To start in development mode.\*
-- `npm run docker:restart` - To build the code.
-- `npm run docker:exec` - To Measure + analyze the speed of your webpack loaders and plugins
-- `npm run docker:logs:follow` - To build tailwind css.
-- `npm run docker:seed` - To remove previous coverage created.
+- `npm run docker:up` - Starts the Docker app.
+- `npm run docker:stop` - Stops the Docker app.
+- `npm run docker:down` - Stop the Docker Compose Process.
+- `npm run docker:remove-dangling` - Remove/Delete Dangling Images.
+- `npm run docker:compose` - Start the App.
+- `npm run docker:compose:d` - Start the App in detached mode.
+- `npm run docker:logs` - Start Logs in Docker for app.
+- `npm run docker:restart` - Restart the Docker app.
+- `npm run docker:exec` - Open path to the repo inside Docker as bash
+- `npm run docker:logs:follow` - Start Logs in Docker for app.
+- `npm run docker:seed` - To add dummy data in Database in development mode inside docker app.
 - `npm run start` - To run app in production mode.
 - `npm run dev` - To run app in development mode.
 - `npm run kill-process` - To kill process at running port.
@@ -198,28 +193,27 @@ Git commit message format will be :- git commit -m ":gitmoji: title" -m "message
 ├── private.pem
 ├── README.md
 └── tsconfig.json
-│
 ```
 
 ## Important Packages
 
 ### Server/Framework
 
-- [`express`](https://www.npmjs.com/package/express) -
+- [`express`](https://www.npmjs.com/package/express) - Fast, unopinionated, minimalist web framework
 
 ### Middleware
 
-- [`compression`](https://www.npmjs.com/package/compression) -
-- [`cookie-parser`](https://www.npmjs.com/package/cookie-parser) -
-- [`cors`](https://www.npmjs.com/package/cors) -
-- [`morgan`](https://www.npmjs.com/package/morgan) -
-- [`helmet`](https://www.npmjs.com/package/helmet) -
+- [`compression`](https://www.npmjs.com/package/compression) - Node.js compression middleware
+- [`cookie-parser`](https://www.npmjs.com/package/cookie-parser) - Parse HTTP request cookies
+- [`cors`](https://www.npmjs.com/package/cors) - Node.js CORS middleware
+- [`morgan`](https://www.npmjs.com/package/morgan) - HTTP request logger middleware for node.js
+- [`helmet`](https://www.npmjs.com/package/helmet) - Help secure Express/Connect apps with various HTTP headers
 
 ### Database
 
-- [`pg`](https://www.npmjs.com/package/pg) -
-- [`pg-hstore`](https://www.npmjs.com/package/@storybook/pg-hstore) -
-- [`sequelize`](https://www.npmjs.com/package/sequelize) -
+- [`pg`](https://www.npmjs.com/package/pg) - PostgreSQL client - pure javascript & libpq with the same API
+- [`pg-hstore`](https://www.npmjs.com/package/@storybook/pg-hstore) - A module for serializing and deserializing JSON data into hstore format
+- [`sequelize`](https://www.npmjs.com/package/sequelize) - Sequelize is a promise-based Node.js ORM tool for Postgres, MySQL, MariaDB, SQLite, Microsoft SQL Server, Amazon Redshift and Snowflake’s Data Cloud. It features solid transaction support, relations, eager and lazy loading, read replication and more.
 
 ### Eslint
 
@@ -234,12 +228,12 @@ Git commit message format will be :- git commit -m ":gitmoji: title" -m "message
 
 ### Others
 
-- [`command-line-args`](https://www.npmjs.com/package/command-line-args) -
-- [`bcrypt`](https://www.npmjs.com/package/bcrypt) -
-- [`dotenv`](https://www.npmjs.com/package/dotenv) -
-- [`jet-logger`](https://www.npmjs.com/package/jet-logger) -
-- [`joi`](https://www.npmjs.com/package/joi) -
-- [`jsonwebtoken`](https://www.npmjs.com/package/jsonwebtoken) -
+- [`command-line-args`](https://www.npmjs.com/package/command-line-args) - A mature, feature-complete library to parse command-line options.
+- [`bcrypt`](https://www.npmjs.com/package/bcrypt) - A bcrypt(encryption) library for NodeJS.
+- [`dotenv`](https://www.npmjs.com/package/dotenv) - Loads environment variables from .env file
+- [`jet-logger`](https://www.npmjs.com/package/jet-logger) - A super quick, easy to setup logging tool for NodeJS/TypeScript.
+- [`joi`](https://www.npmjs.com/package/joi) - Object schema validation
+- [`jsonwebtoken`](https://www.npmjs.com/package/jsonwebtoken) - JSON Web Token implementation (symmetric and asymmetric)
 
 ## Authors
 
