@@ -12,11 +12,7 @@ export default class AuthMiddleware {
    * @param {NextFunction} next
    * @returns Request with User Object
    */
-  public static async isAuthenticated(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public static async isAuthenticated(req: Request, res: Response, next: NextFunction) {
     try {
       const token = TokenUtils.getToken(req);
       if (!token) {

@@ -1,9 +1,7 @@
 import { Response, Request } from 'express';
 import { envVars } from '@/config';
 
-const mins = envVars.jwt.cookieExpire
-  ? parseInt(envVars.jwt.cookieExpire, 10)
-  : 15;
+const mins = envVars.jwt.cookieExpire ? parseInt(envVars.jwt.cookieExpire, 10) : 15;
 
 const JWT_EXPIRES_IN = 1000 * 60 * mins;
 if (envVars.jwt.jwtExpireIn) {

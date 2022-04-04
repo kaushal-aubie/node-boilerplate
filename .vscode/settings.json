@@ -18,5 +18,15 @@
   "html.format.wrapAttributes": "aligned-multiple",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "cSpell.words": ["commitlint", "fieldname", "gitmoji", "originalname", "tsnd"]
+  "cSpell.words": [
+    "commitlint",
+    "fieldname",
+    "gitmoji",
+    "officedocument",
+    "openxmlformats",
+    "originalname",
+    "sendgrid",
+    "spreadsheetml",
+    "tsnd"
+  ]
 }

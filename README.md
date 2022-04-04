@@ -74,8 +74,8 @@ Now you're ready to rumble!
   <dt>CORS</dt>
   <dd>Included CORS</dd>
 
-  <!-- <dt>Email helper</dt>
-  <dd>Email helper ready just to import and use</dd> -->
+  <dt>Email helper</dt>
+  <dd>Email helper ready just to import and use</dd>
 
   <dt>File Upload helper</dt>
   <dd>File Upload helper ready to just import and use</dd>

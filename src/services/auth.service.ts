@@ -5,9 +5,7 @@ import { ApiErrors } from '@/shared';
 import { IUserSignupVM } from '@/viewModels';
 
 class AuthService {
-  public static async register(
-    user: IUserSignupVM
-  ): Promise<IResultAndError<User | null>> {
+  public static async register(user: IUserSignupVM): Promise<IResultAndError<User | null>> {
     try {
       logger.info('==> 1:: Checking if user exist with that email or not');
       // Unique user check
@@ -15,9 +13,7 @@ class AuthService {
       if (isExist && isExist.id) {
         return {
           result: null,
-          error: ApiErrors.newBadRequestError(
-            `User already exist by email ${user.email}`
-          ),
+          error: ApiErrors.newBadRequestError(`User already exist by email ${user.email}`),
         };
       }
       logger.info('==> 2:: User does not exist with that email.');

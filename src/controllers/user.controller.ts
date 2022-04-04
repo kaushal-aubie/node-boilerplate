@@ -11,13 +11,6 @@ class UserController {
   public static async getUserById(req: Request, res: Response) {
     try {
       const userId = req.params.id;
-      if (!userId) {
-        const er = ApiErrors.newBadRequestError('UserID not provided');
-        res.status(er.status);
-        res.json(er);
-        return;
-      }
-
       const userRes = await userService.getUserById(userId);
       if (userRes.error) {
         res.status(userRes.error.status);

@@ -4,9 +4,7 @@ import { User } from '@/models';
 import { ApiErrors } from '@/shared';
 
 class UserService {
-  public static async getUserById(
-    userId: string
-  ): Promise<IResultAndError<User | null>> {
+  public static async getUserById(userId: string): Promise<IResultAndError<User | null>> {
     try {
       logger.info('==> 1:: Finding User in DB');
       const user = await User.findOne({ where: { id: userId } });

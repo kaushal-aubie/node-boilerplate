@@ -13,23 +13,16 @@ const FILE_KEY = 'myFile';
 // Add api routes
 apiRouter
   .route('/getAll')
-  .get(
-    validate(userValidation.getAll),
-    authMiddleware.isAuthenticated,
-    userController.getAllUsers
-  );
+  .get(validate(userValidation.getAll), authMiddleware.isAuthenticated, userController.getAllUsers);
 apiRouter
   .route('/getOne/:id')
-  .get(
-    validate(userValidation.getOne),
-    authMiddleware.isAuthenticated,
-    userController.getUserById
-  );
+  .get(validate(userValidation.getOne), authMiddleware.isAuthenticated, userController.getUserById);
 
 apiRouter
   .route('/fille/upload')
   .post(
-    uploader.upload(storageType.DISK, uploadType.SINGLE, FILE_KEY as never),
+    authMiddleware.isAuthenticated,
+    uploader.upload(storageType.DISK, uploadType.SINGLE, FILE_KEY),
     userController.uploadFiles
   );
 export default apiRouter;

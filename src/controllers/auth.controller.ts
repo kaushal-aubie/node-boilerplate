@@ -1,15 +1,11 @@
 import { Request, Response } from 'express';
-import { Jwt, logger } from '@/libs';
+import { emailSender, Jwt, logger } from '@/libs';
+import type { IEmailOptions } from '@/libs';
 import { IUser } from '@/models';
 import { authService } from '@/services';
 import { ApiErrors, ApiResponse } from '@/shared';
 import { TokenUtils } from '@/utils';
-import {
-  IUserSignupVM,
-  IUserVM,
-  UserSignupViewModel,
-  UserViewModel,
-} from '@/viewModels';
+import { IUserSignupVM, IUserVM, UserSignupViewModel, UserViewModel } from '@/viewModels';
 
 class AuthController {
   /**
@@ -19,17 +15,16 @@ class AuthController {
   public static async register(req: Request, res: Response) {
     try {
       const user = new UserSignupViewModel(req.body as IUserSignupVM);
-      // validating user body
-      if (!user || !user.email || !user.password) {
-        const er = ApiErrors.newBadRequestError(
-          'Email or password not provided'
-        );
-        res.status(er.status);
-        res.json(er);
-        return;
-      }
+
       // user signup call
       const registerRes = await authService.register(user);
+
+      // send a email to new user
+      const emailOptions: IEmailOptions = {
+        subject: 'Welcome',
+        html: `<h1>Welcome to boilerplate ${user.firstName}</h1>`,
+      };
+      emailSender.sendMail(emailOptions).catch(logger.err);
       if (registerRes.error) {
         res.status(registerRes.error.status);
         res.json(registerRes.error);
@@ -37,9 +32,7 @@ class AuthController {
       }
 
       // crating a response object
-      const userVM = new UserViewModel(
-        registerRes.result as unknown as IUserVM
-      );
+      const userVM = new UserViewModel(registerRes.result as unknown as IUserVM);
       const r = ApiResponse.newResponse({
         data: userVM,
         message: 'User has Registered successfully',
@@ -60,17 +53,8 @@ class AuthController {
   public static async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body as IUser;
-      // validating user body
-      if (!email || !password) {
-        const er = ApiErrors.newBadRequestError(
-          'Email or password not provided'
-        );
-        res.status(er.status);
-        res.json(er);
-        return;
-      }
 
-      const loginRes = await authService.login(email, password);
+      const loginRes = await authService.login(email as string, password as string);
       if (loginRes.error) {
         res.status(loginRes.error.status);
         res.json(loginRes.error);
@@ -129,9 +113,7 @@ class AuthController {
    */
   public static getUser(req: Request, res: Response) {
     try {
-      const userVM = new UserViewModel(
-        (req as Request & { user: IUserVM }).user
-      );
+      const userVM = new UserViewModel((req as Request & { user: IUserVM }).user);
       const r = ApiResponse.newResponse({
         data: userVM,
         message: 'Signed in user',

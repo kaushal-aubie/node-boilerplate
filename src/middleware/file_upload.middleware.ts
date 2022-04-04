@@ -1,5 +1,5 @@
 import path from 'path';
-import multer, { StorageEngine } from 'multer';
+import multer, { Field, StorageEngine } from 'multer';
 import { FILE_UPLOADS_DIR, storageType, uploadType } from '@/config';
 import { File } from 'src/types';
 // import aws from 'aws-sdk';
@@ -34,10 +34,7 @@ class Uploader {
         cb(null, FILE_UPLOADS_DIR);
       },
       filename: (_req, file, cb) => {
-        cb(
-          null,
-          `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
-        );
+        cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
       },
     });
   }
@@ -61,7 +58,7 @@ class Uploader {
   //   });
   // }
 
-  public upload(storage: storageType, type: uploadType, ...params: never[]) {
+  public upload(storage: storageType, type: uploadType, ...params: Field[] | string[]) {
     this.initUploader(storage);
 
     const multerOptions: multer.Options = {
@@ -75,22 +72,22 @@ class Uploader {
     };
     switch (type) {
       case uploadType.SINGLE:
-        return multer(multerOptions).single(params[0]);
+        return multer(multerOptions).single(params[0] as string);
 
       case uploadType.ARRAY:
         if (params.length > 1) {
-          return multer(multerOptions).array(params[0], params[1]);
+          return multer(multerOptions).array(params[0] as string, params[1] as unknown as number);
         }
-        return multer(multerOptions).array(params[0]);
+        return multer(multerOptions).array(params[0] as string);
 
       case uploadType.FIELDS:
-        return multer(multerOptions).fields(params);
+        return multer(multerOptions).fields(params as readonly Field[]);
 
       case uploadType.NONE:
         return multer(multerOptions).none();
 
       default:
-        return multer(multerOptions).single(params[0]);
+        return multer(multerOptions).single(params[0] as string);
     }
   }
 
@@ -100,16 +97,14 @@ class Uploader {
     const filetypes =
       /image\/jpg|image\/jpeg|jpeg|txt|text|ppt|pptx|pdf|docx|doc|jpg|png|mp4|xlsx|sheet/;
     // Check ext
-    const extname = filetypes.test(
-      path.extname(file.originalname).toLowerCase()
-    );
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     // Check mime
     const mimetype = filetypes.test(file.mimetype);
 
     if (mimetype && extname) {
       return cb(null, true);
     }
-    return cb('File type not allowed' as unknown as null, false);
+    return cb(new Error('File type not allowed') as unknown as null, false);
   }
 }
 

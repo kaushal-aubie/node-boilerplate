@@ -7,19 +7,11 @@ import { authValidation } from '@/validations';
 const apiRouter = express.Router();
 
 // Add api routes
-apiRouter
-  .route('/login')
-  .post(validate(authValidation.login), authController.login);
-apiRouter
-  .route('/register')
-  .post(validate(authValidation.register), authController.register);
+apiRouter.route('/login').post(validate(authValidation.login), authController.login);
+apiRouter.route('/register').post(validate(authValidation.register), authController.register);
 apiRouter
   .route('/logout')
-  .post(
-    validate(authValidation.logout),
-    authMiddleware.isAuthenticated,
-    authController.logout
-  );
+  .post(validate(authValidation.logout), authMiddleware.isAuthenticated, authController.logout);
 apiRouter
   .route('/authenticate')
   .post(

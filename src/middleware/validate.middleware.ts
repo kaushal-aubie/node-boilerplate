@@ -25,9 +25,7 @@ class ValidateMiddleware {
           .validate(object);
 
         if (error) {
-          const errorMessage = error.details
-            .map((details) => details.message)
-            .join(', ');
+          const errorMessage = error.details.map((details) => details.message).join(', ');
 
           const er = ApiErrors.newBadRequestError(errorMessage);
           res.status(er.status);
@@ -38,9 +36,7 @@ class ValidateMiddleware {
         next();
       } catch (err) {
         logger.err('ValidateMiddleware.validate() ERR: ', err);
-        const er = ApiErrors.newInternalServerError(
-          'Something went wrong during Validation'
-        );
+        const er = ApiErrors.newInternalServerError('Something went wrong during Validation');
         res.status(er.status);
         res.json(er);
       }
