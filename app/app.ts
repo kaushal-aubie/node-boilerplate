@@ -1,4 +1,5 @@
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import type { Express } from 'express';
 import express from 'express';
@@ -74,6 +75,9 @@ class App {
 
       // * parse json request body
       this.app.use(express.json());
+
+      // * add cookie in request
+      this.app.use(cookieParser(envVars.jwt.cookieSecret));
 
       // * parse urlencoded request body
       this.app.use(express.urlencoded({ extended: false }));
