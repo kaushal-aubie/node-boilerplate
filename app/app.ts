@@ -1,7 +1,8 @@
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { Express } from 'express';
+import type { Express } from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { envVars, ENV_MODE, paths } from '@/config';

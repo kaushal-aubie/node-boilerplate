@@ -1,4 +1,5 @@
-import logger, { Formats, JetLogger, LoggerModes } from 'jet-logger';
+import logger, { JetLogger } from 'jet-logger';
+import type { Formats, LoggerModes } from 'jet-logger';
 import { envVars } from '@/config';
 
 class Logger {

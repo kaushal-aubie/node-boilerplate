@@ -1,11 +1,12 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { emailSender, Jwt, logger } from '@/libs';
 import type { IEmailOptions } from '@/libs';
-import { IUser } from '@/models';
+import type { IUser } from '@/models';
 import { authService } from '@/services';
 import { ApiErrors, ApiResponse } from '@/shared';
 import { TokenUtils } from '@/utils';
-import { IUserSignupVM, IUserVM, UserSignupViewModel, UserViewModel } from '@/viewModels';
+import type { IUserSignupVM, IUserVM } from '@/viewModels';
+import { UserSignupViewModel, UserViewModel } from '@/viewModels';
 
 class AuthController {
   /**

@@ -1,5 +1,5 @@
 import HttpStatusCodes from 'http-status-codes';
-import { WithRequired } from 'src/types';
+import type { WithRequired } from 'app/types';
 
 export interface IApiResponse<T = unknown, U = unknown> {
   type?: string;

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { logger } from '@/libs';
 import { userService } from '@/services';
 import { ApiErrors, ApiResponse } from '@/shared';

@@ -1,8 +1,8 @@
-import { IResultAndError } from '@/interfaces';
+import type { IResultAndError } from '@/interfaces';
 import { Bcrypt, logger } from '@/libs';
 import { User } from '@/models';
 import { ApiErrors } from '@/shared';
-import { IUserSignupVM } from '@/viewModels';
+import type { IUserSignupVM } from '@/viewModels';
 
 class AuthService {
   public static async register(user: IUserSignupVM): Promise<IResultAndError<User | null>> {

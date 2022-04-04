@@ -1,4 +1,4 @@
-import { IResultAndError } from '@/interfaces';
+import type { IResultAndError } from '@/interfaces';
 import { logger } from '@/libs';
 import { User } from '@/models';
 import { ApiErrors } from '@/shared';

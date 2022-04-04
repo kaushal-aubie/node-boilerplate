@@ -1,6 +1,6 @@
 import sgMail from '@sendgrid/mail';
 import { envVars } from '@/config';
-import { IResultAndError } from '@/interfaces';
+import type { IResultAndError } from '@/interfaces';
 import { ApiErrors } from '@/shared';
 import logger from './logger';
 

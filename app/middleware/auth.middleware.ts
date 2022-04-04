@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { Jwt, logger } from '@/libs';
 import { User } from '@/models';
 import { ApiErrors } from '@/shared';

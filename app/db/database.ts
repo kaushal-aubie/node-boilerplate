@@ -1,4 +1,5 @@
-import { Dialect, Sequelize, SyncOptions } from 'sequelize';
+import type { Dialect, SyncOptions } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import { logger } from '@/libs';
 import { getDBCredentials } from './dbConfig';
 

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "typeRoots": ["./node_modules/@types", "./app/types"],
     "target": "ES2020",
     "lib": ["es2015"],
     "outDir": "dist",
@@ -24,24 +24,24 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/config": ["./src/config/index"],
-      "@/controllers": ["./src/controllers/index"],
-      "@/db": ["./src/db/index"],
-      "@/libs": ["./src/libs/index"],
-      "@/middleware": ["./src/middleware/index"],
-      "@/shared": ["./src/shared/index"],
-      "@/views/*": ["./src/views/*"],
-      "@/utils": ["./src/utils/index"],
-      "@/models": ["./src/models/index"],
-      "@/routes": ["./src/routes/index"],
-      "@/services": ["./src/services/index"],
-      "@/interfaces": ["./src/interfaces/index"],
-      "@/viewModels": ["./src/view_models/index"],
-      "@/validations": ["./src/validations/index"]
+      "@/config": ["./app/config/index"],
+      "@/controllers": ["./app/controllers/index"],
+      "@/db": ["./app/db/index"],
+      "@/libs": ["./app/libs/index"],
+      "@/middleware": ["./app/middleware/index"],
+      "@/shared": ["./app/shared/index"],
+      "@/views/*": ["./app/views/*"],
+      "@/utils": ["./app/utils/index"],
+      "@/models": ["./app/models/index"],
+      "@/routes": ["./app/routes/index"],
+      "@/services": ["./app/services/index"],
+      "@/interfaces": ["./app/interfaces/index"],
+      "@/viewModels": ["./app/view_models/index"],
+      "@/validations": ["./app/validations/index"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["app/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

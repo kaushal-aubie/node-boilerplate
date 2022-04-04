@@ -1,7 +1,8 @@
 import path from 'path';
-import multer, { Field, StorageEngine } from 'multer';
+import multer from 'multer';
+import type { Field, StorageEngine } from 'multer';
 import { FILE_UPLOADS_DIR, storageType, uploadType } from '@/config';
-import { File } from 'src/types';
+import type { File } from 'app/types';
 // import aws from 'aws-sdk';
 
 class Uploader {

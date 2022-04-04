@@ -1,4 +1,5 @@
-import Joi, { LanguageMessages } from 'joi';
+import Joi from 'joi';
+import type { LanguageMessages } from 'joi';
 
 const objectId = (value: string, helpers: Joi.CustomHelpers<string>) => {
   if (!value.match(/^[0-9a-fA-F]{24}$/)) {
