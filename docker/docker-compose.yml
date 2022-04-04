@@ -4,6 +4,7 @@ services:
   app:
     container_name: app
     command: npm run start
+    stdin_open: true
     restart: always
     # env_file: production.env
     image: node-app
