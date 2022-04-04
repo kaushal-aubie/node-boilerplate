@@ -6,22 +6,23 @@ import { userValidation } from '@/validations';
 
 // Init
 const apiRouter = express.Router();
-
+const { isAuthenticated } = authMiddleware;
+const { isValid } = validate;
 // Constants
 const FILE_KEY = 'myFile';
 
 // Add api routes
 apiRouter
   .route('/getAll')
-  .get(validate(userValidation.getAll), authMiddleware.isAuthenticated, userController.getAllUsers);
+  .get(isValid(userValidation.getAll), isAuthenticated, userController.getAllUsers);
 apiRouter
   .route('/getOne/:id')
-  .get(validate(userValidation.getOne), authMiddleware.isAuthenticated, userController.getUserById);
+  .get(isValid(userValidation.getOne), isAuthenticated, userController.getUserById);
 
 apiRouter
   .route('/fille/upload')
   .post(
-    authMiddleware.isAuthenticated,
+    isAuthenticated,
     uploader.upload(storageType.DISK, uploadType.SINGLE, FILE_KEY),
     userController.uploadFiles
   );

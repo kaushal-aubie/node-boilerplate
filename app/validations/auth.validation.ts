@@ -1,39 +1,41 @@
-import Joi from 'joi';
-import { password } from './custom.validation';
+import { CustomValidationSchema } from '@/interfaces';
+
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 class AuthValidation {
-  register: { body: Joi.ObjectSchema };
+  register: CustomValidationSchema;
 
-  login: { body: Joi.ObjectSchema };
+  login: CustomValidationSchema;
 
-  logout: { body: Joi.ObjectSchema };
+  logout: CustomValidationSchema;
 
-  authenticate: { body: Joi.ObjectSchema };
+  authenticate: CustomValidationSchema;
 
   constructor() {
     this.register = {
-      body: Joi.object().keys({
-        email: Joi.string().required().email(),
-        password: Joi.string().required().custom(password),
-        firstName: Joi.string().required(),
-        lastName: Joi.string().required(),
-        mobile: Joi.number().required(),
-      }),
+      body: {
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'email' },
+        password: { type: 'string' },
+        mobile: { type: 'number', pattern: phoneRegExp, optional: true },
+      },
     };
 
     this.login = {
-      body: Joi.object().keys({
-        email: Joi.string().required().email(),
-        password: Joi.string().required(),
-      }),
+      body: {
+        email: { type: 'email' },
+        password: { type: 'string' },
+      },
     };
 
     this.logout = {
-      body: Joi.object().keys({}),
+      body: {},
     };
 
     this.authenticate = {
-      body: Joi.object().keys({}),
+      body: {},
     };
   }
 }

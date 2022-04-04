@@ -1,46 +1,69 @@
 import type { NextFunction, Request, Response } from 'express';
-import Joi from 'joi';
-import { logger } from '@/libs';
+import Validator, {
+  ValidationError,
+  ValidationRuleObject,
+  ValidationSchema,
+} from 'fastest-validator';
 import { ApiErrors } from '@/response_builder';
-import { Pick } from '@/utils';
 
-type ISchema = {
-  body?: Joi.ObjectSchema;
-  query?: Joi.ObjectSchema;
-  params?: Joi.ObjectSchema;
-};
+const v = new Validator();
 
-class ValidateMiddleware {
-  /**
-   * Validates the Body, Params, Query with the Schema
-   * @param {ISchema} schema
-   */
-  public static validate =
-    (schema: ISchema) => (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const validSchema = Pick(schema, ['params', 'query', 'body']);
-        const object = Pick(req, Object.keys(validSchema));
-        const { error, value } = Joi.compile(validSchema)
-          .prefs({ errors: { label: 'key' }, abortEarly: false })
-          .validate(object);
+/**
+ * Validate that a resource being POSTed or PUT
+ * has a valid shape, else return 400 Bad Request
+ * @param {*} resourceSchema is a yup schema
+ */
 
-        if (error) {
-          const errorMessage = error.details.map((details) => details.message).join(', ');
+export default class ValidationMiddleware {
+  public static isValid =
+    (resourceSchema: ValidationSchema) => (req: Request, res: Response, next: NextFunction) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const errors: Record<string, any> = {};
+      const propertiesToValidate = Object.keys(resourceSchema);
 
-          const er = ApiErrors.newBadRequestError(errorMessage);
-          res.status(er.status);
-          res.json(er);
-          return;
+      // throws an error if not valid
+      for (const propertyToValidate of propertiesToValidate) {
+        const schema: ValidationRuleObject = resourceSchema[propertyToValidate];
+        const check = v.compile(schema);
+        const validationError = check(req[propertyToValidate as never]) as ValidationError[];
+
+        if (validationError && validationError.length > 0) {
+          for (const error of validationError) {
+            if (error.type === 'objectStrict') {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              let keys = error.expected.split(',');
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              keys = keys.map((i: string) => i.trim());
+              for (const key of keys) {
+                const errorIS = validationError.find(
+                  (i: ValidationError) => i.field === `user.${key}`
+                );
+                errors[propertyToValidate] = {
+                  ...errors[propertyToValidate],
+                  [error.field]: {
+                    ...errors[propertyToValidate][error.field],
+                    [key]: errorIS,
+                  },
+                };
+              }
+            }
+            // else if (error.field.includes('.')) {
+            // }
+            else {
+              errors[propertyToValidate] = {
+                ...errors[propertyToValidate],
+                [error.field]: error,
+              };
+            }
+          }
         }
-        Object.assign(req, value);
-        next();
-      } catch (err) {
-        logger.err('# Error while validating in ValidateMiddleware.validate()', err);
-        const er = ApiErrors.newInternalServerError('Something went wrong during Validation');
-        res.status(er.status);
-        res.json(er);
       }
+      if (errors && Object.keys(errors).length > 0) {
+        const er = ApiErrors.newBadRequestError('Schema Invalid');
+        res.status(er.status);
+        res.json(errors);
+        return;
+      }
+      next();
     };
 }
-
-export default ValidateMiddleware.validate;

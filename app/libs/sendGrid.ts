@@ -18,7 +18,7 @@ class EmailService {
       let msg: sgMail.MailDataRequired;
       const requiredProperties: Omit<sgMail.MailDataRequired, 'content'> = {
         to: envVars.email.from,
-        from: envVars.email.from,
+        from: envVars.email.from as string,
         subject: subject || 'Sample Email',
       };
       if (attachment) {

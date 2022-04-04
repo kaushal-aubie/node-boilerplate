@@ -7,7 +7,7 @@ class Logger {
     JetLogger(
       envVars.logger.JET_LOGGER_MODE as LoggerModes,
       envVars.logger.JET_LOGGER_FILEPATH,
-      envVars.logger.JET_LOGGER_TIMESTAMP,
+      envVars.logger.JET_LOGGER_TIMESTAMP as unknown as boolean,
       envVars.logger.JET_LOGGER_FORMAT as Formats
     );
   }

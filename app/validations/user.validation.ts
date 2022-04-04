@@ -1,19 +1,19 @@
-import Joi from 'joi';
+import { CustomValidationSchema } from '@/interfaces';
 
 class UserValidation {
-  getOne: { params: Joi.ObjectSchema };
+  getOne: CustomValidationSchema;
 
-  getAll: { body: Joi.ObjectSchema };
+  getAll: CustomValidationSchema;
 
   constructor() {
     this.getOne = {
-      params: Joi.object().keys({
-        id: Joi.number().required(),
-      }),
+      params: {
+        id: { type: 'number' },
+      },
     };
 
     this.getAll = {
-      body: Joi.object().keys({}),
+      body: {},
     };
   }
 }
