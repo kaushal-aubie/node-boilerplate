@@ -1,19 +1,20 @@
 import type { Request, Response } from 'express';
 import { emailSender, Jwt, logger } from '@/libs';
 import type { IEmailOptions } from '@/libs';
-import type { IUser } from '@/models';
+import { IUser } from '@/models';
 import { ApiErrors, ApiResponse } from '@/response_builder';
-import { authService } from '@/services';
 import { TokenUtils } from '@/utils';
-import type { IUserSignupVM, IUserVM } from '@/viewModels';
-import { UserSignupViewModel, UserViewModel } from '@/viewModels';
+import type { IUserSignupVM, IUserVM } from '../user';
+import { UserSignupViewModel, UserViewModel } from '../user';
+import authService from './auth.service';
 
 class AuthController {
   /**
-   * POST /register
-   * Register a user.
+   ** POST /register
+   ** Register a user.
    */
-  public static async register(req: Request, res: Response) {
+
+  public static register = async (req: Request, res: Response) => {
     try {
       const user = new UserSignupViewModel(req.body as IUserSignupVM);
 
@@ -46,13 +47,13 @@ class AuthController {
       res.status(er.status);
       res.json(er);
     }
-  }
+  };
 
   /**
-   * POST /login
-   * login's a user.
+   ** POST /login
+   ** login's a user.
    */
-  public static async login(req: Request, res: Response) {
+  public static login = async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body as IUser;
 
@@ -89,13 +90,13 @@ class AuthController {
       res.status(er.status);
       res.json(er);
     }
-  }
+  };
 
   /**
-   * POST /logout
-   * logout's a user.
+   ** POST /logout
+   ** logout's a user.
    */
-  public static logout(_req: Request, res: Response) {
+  public static logout = (_req: Request, res: Response) => {
     try {
       res = TokenUtils.clearToken(res);
       const r = ApiResponse.newResponse({
@@ -109,13 +110,13 @@ class AuthController {
       res.status(er.status);
       res.json(er);
     }
-  }
+  };
 
   /**
-   * get /authenticate
-   * To get Logged in User Details.
+   ** get /authenticate
+   ** To get Logged in User Details.
    */
-  public static getUser(req: Request, res: Response) {
+  public static getUser = (req: Request, res: Response) => {
     try {
       const userVM = new UserViewModel((req as Request & { user: IUserVM }).user);
       const r = ApiResponse.newResponse({
@@ -130,7 +131,7 @@ class AuthController {
       res.status(er.status);
       res.json(er);
     }
-  }
+  };
 }
 
 export default AuthController;

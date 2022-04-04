@@ -1,7 +1,7 @@
 import express from 'express';
-import { authController } from '@/controllers';
 import { authMiddleware, validate } from '@/middleware';
-import { authValidation } from '@/validations';
+import authController from './auth.controller';
+import authValidation from './auth.validation';
 
 // Init
 const apiRouter = express.Router();

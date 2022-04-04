@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { logger } from '@/libs';
 import { ApiErrors, ApiResponse } from '@/response_builder';
-import { userService } from '@/services';
+import userService from './user.service';
 
 class UserController {
   /**

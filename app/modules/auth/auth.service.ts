@@ -2,10 +2,13 @@ import type { IResultAndError } from '@/interfaces';
 import { Bcrypt, logger } from '@/libs';
 import { User } from '@/models';
 import { ApiErrors } from '@/response_builder';
-import type { IUserSignupVM } from '@/viewModels';
+import type { IUserSignupVM } from '../user';
 
 class AuthService {
-  public static async register(user: IUserSignupVM): Promise<IResultAndError<User | null>> {
+  /**
+   ** Register a user.
+   */
+  public static register = async (user: IUserSignupVM): Promise<IResultAndError<User | null>> => {
     try {
       logger.info('==> 1:: Checking if user exist with that email or not');
       // Unique user check
@@ -41,12 +44,15 @@ class AuthService {
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
-  }
+  };
 
-  public static async login(
+  /**
+   ** login's a user.
+   */
+  public static login = async (
     email: string,
     password: string
-  ): Promise<IResultAndError<User | null>> {
+  ): Promise<IResultAndError<User | null>> => {
     try {
       logger.info('==> 1:: Finding User in DB');
       // finding user in db by email id
@@ -87,7 +93,7 @@ class AuthService {
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
-  }
+  };
 }
 
 export default AuthService;

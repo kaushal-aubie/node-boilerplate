@@ -1,14 +1,14 @@
 import Joi from 'joi';
 import type { LanguageMessages } from 'joi';
 
-const objectId = (value: string, helpers: Joi.CustomHelpers<string>) => {
+const objectIdValidate = (value: string, helpers: Joi.CustomHelpers<string>) => {
   if (!value.match(/^[0-9a-fA-F]{24}$/)) {
     return helpers.message('"{{#label}}" must be a valid mongo id' as unknown as LanguageMessages);
   }
   return value;
 };
 
-const password = (value: string, helpers: Joi.CustomHelpers<string>) => {
+const passwordValidate = (value: string, helpers: Joi.CustomHelpers<string>) => {
   if (value.length < 8) {
     return helpers.message('password must be at least 8 characters' as unknown as LanguageMessages);
   }
@@ -20,4 +20,4 @@ const password = (value: string, helpers: Joi.CustomHelpers<string>) => {
   return value;
 };
 
-export { objectId, password };
+export { objectIdValidate, passwordValidate };

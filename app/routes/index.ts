@@ -1,20 +1,11 @@
 import { Router } from 'express';
-import authRoute from './auth.route';
-import userRoute from './user.route';
+import { authRoute } from '@/modules/auth';
+import { userRoute } from '@/modules/user';
 
 // Init
 const apiRouter = Router();
 
-const allRoutes = [
-  {
-    path: '/auth',
-    route: authRoute,
-  },
-  {
-    path: '/user',
-    route: userRoute,
-  },
-];
+const allRoutes = [authRoute, userRoute];
 
 allRoutes.forEach((route) => {
   apiRouter.use(route.path, route.route);

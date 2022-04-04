@@ -25,19 +25,16 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/config": ["./app/config/index"],
-      "@/controllers": ["./app/controllers/index"],
       "@/db": ["./app/db/index"],
       "@/libs": ["./app/libs/index"],
       "@/middleware": ["./app/middleware/index"],
       "@/response_builder": ["./app/response_builder/index"],
       "@/views/*": ["./app/views/*"],
       "@/utils": ["./app/utils/index"],
-      "@/models": ["./app/models/index"],
       "@/routes": ["./app/routes/index"],
-      "@/services": ["./app/services/index"],
-      "@/interfaces": ["./app/interfaces/index"],
-      "@/viewModels": ["./app/view_models/index"],
-      "@/validations": ["./app/validations/index"]
+      "@/models": ["./app/models/index"],
+      "@/modules/*": ["./app/modules/*"],
+      "@/interfaces": ["./app/interfaces/index"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true

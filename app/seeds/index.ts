@@ -1,6 +1,6 @@
 import { DB } from '@/db';
 import { logger } from '@/libs';
-import UserFactory from './user.seed';
+import UserFactory from '@/modules/user/user.seed';
 
 const main = async () => {
   try {

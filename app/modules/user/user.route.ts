@@ -1,8 +1,8 @@
 import express from 'express';
 import { storageType, uploadType } from '@/config';
-import { userController } from '@/controllers';
 import { authMiddleware, uploader, validate } from '@/middleware';
-import { userValidation } from '@/validations';
+import userController from './user.controller';
+import userValidation from './user.validation';
 
 // Init
 const apiRouter = express.Router();
@@ -25,4 +25,5 @@ apiRouter
     uploader.upload(storageType.DISK, uploadType.SINGLE, FILE_KEY),
     userController.uploadFiles
   );
+
 export default apiRouter;
