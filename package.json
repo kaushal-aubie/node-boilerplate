@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "commit": "npx gitmoji -c",
+    "build-image": "docker build -f docker/Dockerfile -t node-app .",
     "docker:up": "docker-compose -f docker/docker-compose.yml up -d",
     "docker:stop": "docker-compose -f docker/docker-compose.yml stop",
     "docker:down": "docker-compose -f docker/docker-compose.yml down",

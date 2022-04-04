@@ -6,3 +6,5 @@ private.pem
 /public/
 /uploads/
 env/
+.vscode
+package-lock.json
