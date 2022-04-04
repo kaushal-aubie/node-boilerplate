@@ -4,26 +4,37 @@ import { userController } from '@/controllers';
 import { authMiddleware, uploader, validate } from '@/middleware';
 import { userValidation } from '@/validations';
 
-// * Init
-const apiRouter = express.Router();
+class UserRouter {
+  private static apiRouter = express.Router();
 
-// * Constants
-const FILE_KEY = 'myFile';
+  private static FILE_KEY = 'myFile';
 
-// * Add api routes
-apiRouter
-  .route('/getAll')
-  .get(validate(userValidation.getAll), authMiddleware.isAuthenticated, userController.getAllUsers);
-apiRouter
-  .route('/getOne/:id')
-  .get(validate(userValidation.getOne), authMiddleware.isAuthenticated, userController.getUserById);
+  public static createRoutes = () => {
+    this.apiRouter
+      .route('/getAll')
+      .get(
+        validate(userValidation.getAll),
+        authMiddleware.isAuthenticated,
+        userController.getAllUsers
+      );
+    this.apiRouter
+      .route('/getOne/:id')
+      .get(
+        validate(userValidation.getOne),
+        authMiddleware.isAuthenticated,
+        userController.getUserById
+      );
 
-apiRouter
-  .route('/fille/upload')
-  .post(
-    authMiddleware.isAuthenticated,
-    uploader.upload(storageType.DISK, uploadType.SINGLE, FILE_KEY),
-    userController.uploadFiles
-  );
+    this.apiRouter
+      .route('/fille/upload')
+      .post(
+        authMiddleware.isAuthenticated,
+        uploader.upload(storageType.DISK, uploadType.SINGLE, this.FILE_KEY),
+        userController.uploadFiles
+      );
 
-export default apiRouter;
+    return this.apiRouter;
+  };
+}
+
+export default UserRouter;

@@ -1,7 +1,7 @@
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import type { Express } from 'express';
+import type { Express, Router } from 'express';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -11,18 +11,20 @@ import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
 import * as Models from '@/models';
 import { ApiErrors } from '@/response_builder';
-import BaseRouter from '@/routes';
+import RootRouter from '@/routes';
 
 class App {
   public app: Express;
 
   public db: typeof DB;
 
+  public allRoutes: Router;
+
   constructor() {
     // * initialize express
     this.app = express();
     this.db = DB;
-
+    this.allRoutes = RootRouter.createAllRoutes();
     this.initializeMiddleware();
     this.initializeRoutes();
     this.initializeErrorHandling();
@@ -124,7 +126,7 @@ class App {
         res.send('pong');
       });
 
-      this.app.use(ROUTE_PREFIX, BaseRouter);
+      this.app.use(ROUTE_PREFIX, this.allRoutes);
 
       // * To handle 404
       this.app.use('*', (_req, res) => {

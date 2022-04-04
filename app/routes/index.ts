@@ -2,24 +2,32 @@ import { Router } from 'express';
 import authRoute from './auth.route';
 import userRoute from './user.route';
 
-// * Init
-const apiRouter = Router();
+class RootRouter {
+  private static apiRouter = Router();
 
-// * Accumulate All Routes of Application
-const allRoutes = [
-  {
-    path: '/auth',
-    route: authRoute,
-  },
-  {
-    path: '/user',
-    route: userRoute,
-  },
-];
+  private static userRouter = userRoute.createRoutes();
 
-// * Attach all paths and route to main API Router
-allRoutes.forEach((route) => {
-  apiRouter.use(route.path, route.route);
-});
+  private static authRouter = authRoute.createRoutes();
 
-export default apiRouter;
+  // * Accumulate All Routes of Application
+  private static allRoutes = [
+    {
+      path: '/auth',
+      route: this.authRouter,
+    },
+    {
+      path: '/user',
+      route: this.userRouter,
+    },
+  ];
+
+  public static createAllRoutes = () => {
+    // * Attach all paths and route to main API Router
+    this.allRoutes.forEach((route) => {
+      this.apiRouter.use(route.path, route.route);
+    });
+
+    return this.apiRouter;
+  };
+}
+export default RootRouter;
