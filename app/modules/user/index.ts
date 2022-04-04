@@ -1,7 +1,9 @@
 import { USER_ROUTE_PREFIX } from './user.constants';
-import apiRouter from './user.route';
+import UserRouter from './user.route';
 
-const userRoute = { path: USER_ROUTE_PREFIX, route: apiRouter };
+const apiRouter = UserRouter.createRoutes();
 
-export * from './user.vm';
+const userRoute = { path: USER_ROUTE_PREFIX, router: apiRouter };
+
 export { userRoute };
+export * from './user.vm';

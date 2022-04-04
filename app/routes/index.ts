@@ -10,7 +10,7 @@ const allRoutes = [authRoute, userRoute];
 
 // * Attach all paths and route to main API Router
 allRoutes.forEach((route) => {
-  apiRouter.use(route.path, route.route);
+  apiRouter.use(route.path, route.router);
 });
 
 export default apiRouter;

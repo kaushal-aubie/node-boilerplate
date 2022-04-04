@@ -1,6 +1,8 @@
 import { AUTH_ROUTE_PREFIX } from './auth.constants';
-import apiRouter from './auth.route';
+import AuthRouter from './auth.route';
 
-const authRoute = { path: AUTH_ROUTE_PREFIX, route: apiRouter };
+const apiRouter = AuthRouter.createRoutes();
+
+const authRoute = { path: AUTH_ROUTE_PREFIX, router: apiRouter };
 
 export { authRoute };
