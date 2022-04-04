@@ -46,7 +46,7 @@ export default class DB {
       await DB._sequelize.authenticate();
       logger.imp('Connection to database has been established successfully.');
     } catch (err) {
-      logger.err(`Unable to connect to the database ERR:: ${err}`);
+      logger.err('# Error while connect to the database in DB.connect()', err);
       throw err;
     }
   }
@@ -57,7 +57,7 @@ export default class DB {
       logger.imp('Database synced successfully.');
       return result;
     } catch (err) {
-      logger.err(`Unable to connect to the database ERR:: ${err}`, true);
+      logger.err('# Error while sync to the database in DB.sync()', err);
       throw err;
     }
   }

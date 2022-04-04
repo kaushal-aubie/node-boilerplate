@@ -39,7 +39,7 @@ export const SaveToFile = ({
         }
       });
     } catch (err) {
-      logger.err('Error::: SaveToFile()', err);
+      logger.err('# Error while saving a file in FileHelper.SaveToFile()', err);
       reject(err);
     }
   });

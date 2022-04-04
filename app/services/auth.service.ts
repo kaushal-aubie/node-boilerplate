@@ -1,7 +1,7 @@
 import type { IResultAndError } from '@/interfaces';
 import { Bcrypt, logger } from '@/libs';
 import { User } from '@/models';
-import { ApiErrors } from '@/shared';
+import { ApiErrors } from '@/response_builder';
 import type { IUserSignupVM } from '@/viewModels';
 
 class AuthService {
@@ -37,7 +37,7 @@ class AuthService {
       logger.info('==> 4:: User Created in DB');
       return { result: createRes, error: null };
     } catch (err) {
-      logger.err('AuthService.register() ERR: ', err);
+      logger.err('# Error while registering a user in a AuthService.register()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
@@ -83,7 +83,7 @@ class AuthService {
       const er = ApiErrors.newNotAuthorizedError("Credentials doesn't match");
       return { result: null, error: er };
     } catch (err) {
-      logger.err('AuthService.login() ERR: ', err);
+      logger.err('# Error while login a user in a AuthService.login()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }

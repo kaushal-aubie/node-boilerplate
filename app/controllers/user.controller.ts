@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { logger } from '@/libs';
+import { ApiErrors, ApiResponse } from '@/response_builder';
 import { userService } from '@/services';
-import { ApiErrors, ApiResponse } from '@/shared';
 
 class UserController {
   /**
@@ -24,7 +24,7 @@ class UserController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      logger.err('UserController.getUser() error: ', err);
+      logger.err('# Error while getting user by id in UserController.getUser()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
@@ -50,7 +50,7 @@ class UserController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      logger.err('UserController.getUser() error: ', err);
+      logger.err('# Error while getting all users in UserController.getAllUsers()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
@@ -79,7 +79,7 @@ class UserController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      logger.err('UserController.uploadFiles() error: ', err);
+      logger.err('# Error while file upload in UserController.uploadFiles()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);

@@ -8,6 +8,7 @@
     "sdras.night-owl",
     "streetsidesoftware.code-spell-checker",
     "IronGeek.vscode-env",
-    "PKief.material-icon-theme"
+    "PKief.material-icon-theme",
+    "aaron-bond.better-comments"
   ]
 }

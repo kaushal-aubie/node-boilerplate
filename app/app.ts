@@ -1,17 +1,16 @@
 import compression from 'compression';
-import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import type { Express } from 'express';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { envVars, ENV_MODE, paths } from '@/config';
+import { envVars, ENV_MODE, paths, ROUTE_PREFIX } from '@/config';
 import { DB } from '@/db';
 import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
 import * as Models from '@/models';
+import { ApiErrors } from '@/response_builder';
 import BaseRouter from '@/routes';
-import { ApiErrors } from '@/shared';
 
 class App {
   public app: Express;
@@ -19,7 +18,7 @@ class App {
   public db: typeof DB;
 
   constructor() {
-    // initialize express
+    // * initialize express
     this.app = express();
     this.db = DB;
 
@@ -28,78 +27,111 @@ class App {
     this.initializeErrorHandling();
   }
 
-  // start express
+  // * start express
   public listen() {
     try {
       this.app.listen(envVars.port, () => {
+        logger.imp('+-------------------------------------------------------------+');
         logger.imp(`Running in ${envVars.env} mode`);
         logger.imp(`Express server started on port: ${envVars.port}`);
       });
     } catch (err) {
-      logger.err(`Error when starting server ERR:: ${err}`);
+      logger.info('+-------------------------------------------------------------+');
+      logger.err('# Error while starting server', err);
+      logger.info('+-------------------------------------------------------------+');
     }
   }
 
-  // setup Database Connection
+  // * setup Database Connection
   public setUpDatabase() {
-    this.db.init();
-    Models.default.setupModelsRelation();
-    this.db.sync({ alter: false }).catch(logger.err);
-    this.db.connect().catch(logger.err);
+    try {
+      this.db.init();
+      Models.default.setupModelsRelation();
+      this.db.sync({ alter: false }).catch(logger.err);
+      this.db.connect().catch(logger.err);
+    } catch (err) {
+      logger.info('+-------------------------------------------------------------+');
+      logger.err('# Error while setting up Database', err);
+      logger.info('+-------------------------------------------------------------+');
+    }
   }
 
-  // initialize the parsing middleware
+  // * initialize the parsing middleware
   private initializeMiddleware() {
-    /*  view engine setup */
-    this.app.set('views', paths.templatePath);
-    this.app.set('view engine', 'jade');
+    try {
+      // * view engine setup
+      this.app.set('views', paths.templatePath);
+      this.app.set('view engine', 'ejs');
 
-    // enable cors
-    this.app.use(cors());
+      // * Enable Cross Origin requests
+      this.app.use(
+        cors({
+          origin: ['http://localhost:3000'],
+          methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+          allowedHeaders: ['Content-Type', 'Authorization'],
+        })
+      );
 
-    this.app.use(cookieParser(envVars.jwt.cookieSecret));
+      // * parse json request body
+      this.app.use(express.json());
 
-    // parse json request body
-    this.app.use(express.json());
+      // * parse urlencoded request body
+      this.app.use(express.urlencoded({ extended: false }));
 
-    // parse urlencoded request body
-    this.app.use(express.urlencoded({ extended: false }));
+      // * expose static routes
+      this.app.use('/public', express.static(paths.publicPath));
 
-    // expose static routes
-    this.app.use(express.static(paths.publicPath));
+      // * Compacting requests using GZIP middleware
+      this.app.use(compression());
 
-    // gzip compression
-    this.app.use(compression());
+      // * Show routes called in console during development
+      if (envVars.env === ENV_MODE.DEVELOPMENT) {
+        // * Requests Logger
+        this.app.use(morgan('dev'));
+      }
 
-    // Show routes called in console during development
-    if (envVars.env === ENV_MODE.DEVELOPMENT) {
-      this.app.use(morgan('dev'));
-    }
-
-    // Security
-    if (envVars.env === ENV_MODE.PRODUCTION) {
-      this.app.use(helmet());
+      // * Armoring the API with Helmet
+      if (envVars.env === ENV_MODE.PRODUCTION) {
+        this.app.use(helmet());
+      }
+    } catch (err) {
+      logger.info('+-------------------------------------------------------------+');
+      logger.err('# Error while initializing middlewares', err);
+      logger.info('+-------------------------------------------------------------+');
     }
   }
 
-  // initialize the error middleware lastly to not override the others
+  // * initialize the error middleware lastly to not override the others
   private initializeErrorHandling() {
     this.app.use(errorMiddleware);
   }
 
-  // initialize the 404 and ping Routes
+  // * initialize the 404 and ping Routes
   private initializeRoutes() {
-    this.app.use('/ping', (_req, res) => {
-      res.send('pong');
-    });
+    try {
+      // * Home route
+      this.app.route('/').get((_req, res) => {
+        res.status(200).send({
+          message: 'Server working successfully!',
+        });
+      });
 
-    this.app.use('/v1', BaseRouter);
+      this.app.use('/ping', (_req, res) => {
+        res.send('pong');
+      });
 
-    // To handle 404
-    this.app.use('*', (_req, res) => {
-      const notFoundError = ApiErrors.newNotFoundError('Route not found');
-      res.json(notFoundError);
-    });
+      this.app.use(ROUTE_PREFIX, BaseRouter);
+
+      // * To handle 404
+      this.app.use('*', (_req, res) => {
+        const notFoundError = ApiErrors.newNotFoundError('Route not found');
+        res.json(notFoundError);
+      });
+    } catch (err) {
+      logger.info('+-------------------------------------------------------------+');
+      logger.err('# Error while initializing routes', err);
+      logger.info('+-------------------------------------------------------------+');
+    }
   }
 }
 

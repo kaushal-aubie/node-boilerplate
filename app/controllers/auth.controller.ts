@@ -2,8 +2,8 @@ import type { Request, Response } from 'express';
 import { emailSender, Jwt, logger } from '@/libs';
 import type { IEmailOptions } from '@/libs';
 import type { IUser } from '@/models';
+import { ApiErrors, ApiResponse } from '@/response_builder';
 import { authService } from '@/services';
-import { ApiErrors, ApiResponse } from '@/shared';
 import { TokenUtils } from '@/utils';
 import type { IUserSignupVM, IUserVM } from '@/viewModels';
 import { UserSignupViewModel, UserViewModel } from '@/viewModels';
@@ -41,6 +41,7 @@ class AuthController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
+      logger.err('# Error while register user in AuthController.register()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
@@ -83,6 +84,7 @@ class AuthController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
+      logger.err('# Error while login user in AuthController.login()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
@@ -102,6 +104,7 @@ class AuthController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
+      logger.err('# Error while logout user in AuthController.logout()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);
@@ -122,7 +125,7 @@ class AuthController {
       res.status(r.status);
       res.json(r);
     } catch (err) {
-      logger.err('AuthController.getUser() error: ', err);
+      logger.err('# Error while getting user in AuthController.getUser()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       res.status(er.status);
       res.json(er);

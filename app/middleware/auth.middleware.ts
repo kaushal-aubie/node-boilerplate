@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { Jwt, logger } from '@/libs';
 import { User } from '@/models';
-import { ApiErrors } from '@/shared';
+import { ApiErrors } from '@/response_builder';
 import { TokenUtils } from '@/utils';
 
 export default class AuthMiddleware {
@@ -33,7 +33,7 @@ export default class AuthMiddleware {
       (req as Request & { user: User }).user = user;
       next();
     } catch (err) {
-      logger.err('AuthMiddleware.isAuthentication() ERR: ', err);
+      logger.err('# Error while authenticating a user in AuthMiddleware.isAuthenticated()', err);
       const er = ApiErrors.newNotAuthorizedError('Not authorized');
       res.status(er.status);
       res.json(er);

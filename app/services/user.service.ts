@@ -1,7 +1,7 @@
 import type { IResultAndError } from '@/interfaces';
 import { logger } from '@/libs';
 import { User } from '@/models';
-import { ApiErrors } from '@/shared';
+import { ApiErrors } from '@/response_builder';
 
 class UserService {
   public static async getUserById(userId: string): Promise<IResultAndError<User | null>> {
@@ -18,7 +18,7 @@ class UserService {
       logger.info('==> 2:: User Data Fetched');
       return { result: user, error: null };
     } catch (err) {
-      logger.err('UserService.getUserById() ERR: ', err);
+      logger.err('# Error while getting a user by id in a UserService.getUserById()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
@@ -43,7 +43,7 @@ class UserService {
       logger.info('==> 2:: Users Data Fetched');
       return { result: user, error: null };
     } catch (err) {
-      logger.err('UserService.getAllUsers() ERR: ', err);
+      logger.err('# Error while getting all users in a UserService.getAllUsers()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }

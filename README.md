@@ -185,7 +185,7 @@ Git commit message format will be :- git commit -m ":gitmoji: title" -m "message
 │    |--services\           # Business logic (service layer)
 │    |--utils\              # Utility classes and functions
 │    |--validations\        # Request data validation schemas
-│    |--shared\             # Shared Things go under this
+│    |--response_builder\   # Generic Response Builder logic
 │    |--seeds\              # Dummy Data Generation Files
 │    |--types\              # Global Typescript Types Definitions
 │    |--app.ts              # Express app

@@ -18,8 +18,8 @@ const main = async () => {
     // generate seeds
     const user = await UserFactory().catch(logger.err);
     logger.info('5 :: User Seed Generation Completed', user);
-  } catch (error) {
-    logger.err('Error In Generating a Seed');
+  } catch (err) {
+    logger.err('# Error while generating a Seed()', err);
   }
 };
 

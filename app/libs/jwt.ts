@@ -27,7 +27,7 @@ export default class JwtUtil {
       const token = jwt.sign(payload, JwtUtil.privateKey, signOptions);
       return token || '';
     } catch (err) {
-      logger.err('JwtUtil.create() ERR::', err);
+      logger.err('# Error while generating a token in JwtUtil.create()', err);
       return null;
     }
   }
@@ -39,11 +39,10 @@ export default class JwtUtil {
    */
   public static verify(token: string): Promise<{ user_id: string }> {
     return new Promise((resolve, reject) => {
-      // const verifyOptions = { algorithm: JwtUtil.algorithmName };
       const verifyOptions = { algorithms: [JwtUtil.algorithmName] };
       jwt.verify(token, JwtUtil.privateKey, verifyOptions, (err, payload) => {
         if (err) {
-          logger.err('JwtUtil.verify() ERR::', err);
+          logger.err('# Error while verifying a token in JwtUtil.verify()', err);
           reject(err);
         } else {
           resolve(payload as unknown as { user_id: string });

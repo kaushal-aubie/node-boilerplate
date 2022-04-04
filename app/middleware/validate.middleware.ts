@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 import { logger } from '@/libs';
-import { ApiErrors } from '@/shared';
+import { ApiErrors } from '@/response_builder';
 import { Pick } from '@/utils';
 
 type ISchema = {
@@ -35,7 +35,7 @@ class ValidateMiddleware {
         Object.assign(req, value);
         next();
       } catch (err) {
-        logger.err('ValidateMiddleware.validate() ERR: ', err);
+        logger.err('# Error while validating in ValidateMiddleware.validate()', err);
         const er = ApiErrors.newInternalServerError('Something went wrong during Validation');
         res.status(er.status);
         res.json(er);

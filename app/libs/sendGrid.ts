@@ -1,7 +1,7 @@
 import sgMail from '@sendgrid/mail';
 import { envVars } from '@/config';
 import type { IResultAndError } from '@/interfaces';
-import { ApiErrors } from '@/shared';
+import { ApiErrors } from '@/response_builder';
 import logger from './logger';
 
 sgMail.setApiKey(envVars.email.smtp.auth.pass || '');
@@ -48,8 +48,8 @@ class EmailService {
         return { result: null, error: err };
       }
       return { result: mailRes, error: null };
-    } catch (error) {
-      logger.err('Error occurred while sending mail!', error);
+    } catch (err) {
+      logger.err('# Error while sending mail! in EmailService.sendMail()', err);
       return {
         error: ApiErrors.newInternalServerError('Something went wrong!'),
         result: null,
