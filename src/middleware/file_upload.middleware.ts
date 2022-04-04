@@ -63,29 +63,34 @@ class Uploader {
 
   public upload(storage: storageType, type: uploadType, ...params: never[]) {
     this.initUploader(storage);
+
+    const multerOptions: multer.Options = {
+      storage: this.storage,
+      fileFilter: (_req, file, cb) => {
+        this.checkFileType(file, cb);
+      },
+      // limits: {
+      //   fileSize: 100000,
+      // },
+    };
     switch (type) {
       case uploadType.SINGLE:
-        return multer({
-          storage: this.storage,
-          fileFilter: (_req, file, cb) => {
-            this.checkFileType(file, cb);
-          },
-        }).single(params[0]);
+        return multer(multerOptions).single(params[0]);
 
       case uploadType.ARRAY:
         if (params.length > 1) {
-          return multer({ storage: this.storage }).array(params[0], params[1]);
+          return multer(multerOptions).array(params[0], params[1]);
         }
-        return multer({ storage: this.storage }).array(params[0]);
+        return multer(multerOptions).array(params[0]);
 
       case uploadType.FIELDS:
-        return multer({ storage: this.storage }).fields(params);
+        return multer(multerOptions).fields(params);
 
       case uploadType.NONE:
-        return multer({ storage: this.storage }).none();
+        return multer(multerOptions).none();
 
       default:
-        return multer({ storage: this.storage }).single(params[0]);
+        return multer(multerOptions).single(params[0]);
     }
   }
 

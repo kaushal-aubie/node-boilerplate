@@ -41,9 +41,6 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["./src"],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  }
+  "include": ["**/src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
