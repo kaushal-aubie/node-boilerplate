@@ -6,7 +6,7 @@ import { TokenUtils } from '@/utils';
 
 export default class AuthMiddleware {
   /**
-   *
+   ** Checks whether user is Authenticated or not
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -17,16 +17,14 @@ export default class AuthMiddleware {
       const token = TokenUtils.getToken(req);
       if (!token) {
         const er = ApiErrors.newNotAuthorizedError('Token not Found');
-        res.status(er.status);
-        res.json(er);
+        ApiErrors.sendError(res, er);
         return;
       }
       const tokenVerificationRes = await Jwt.verify(token);
       const user = await User.findByPk(tokenVerificationRes.user_id);
       if (!user || !user.id) {
         const er = ApiErrors.newNotAuthorizedError('Not authorized');
-        res.status(er.status);
-        res.json(er);
+        ApiErrors.sendError(res, er);
         return;
       }
       // append user data to request object
@@ -35,8 +33,7 @@ export default class AuthMiddleware {
     } catch (err) {
       logger.err('# Error while authenticating a user in AuthMiddleware.isAuthenticated()', err);
       const er = ApiErrors.newNotAuthorizedError('Not authorized');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
   }
 }

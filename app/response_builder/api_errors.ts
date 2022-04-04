@@ -9,7 +9,7 @@ enum apiErrorTypes {
   NOT_AUTHENTICATED = 'NOT_AUTHENTICATED',
 }
 
-export interface IRestError {
+export interface IApiError {
   type: apiErrorTypes;
   message: string;
   status: number;
@@ -17,7 +17,12 @@ export interface IRestError {
 }
 
 export default class ApiErrors extends Error {
-  public static newInternalServerError(message: string): IRestError {
+  /**
+   ** Throws new InternalServerError
+   * @param {string} message
+   * @returns  IApiError
+   */
+  public static newInternalServerError(message: string): IApiError {
     return {
       type: apiErrorTypes.INTERNAL_SERVER_ERROR,
       message,
@@ -26,7 +31,12 @@ export default class ApiErrors extends Error {
     };
   }
 
-  public static newBadRequestError(message: string): IRestError {
+  /**
+   ** Throws new BadRequestError
+   * @param {string} message
+   * @returns  IApiError
+   */
+  public static newBadRequestError(message: string): IApiError {
     return {
       type: apiErrorTypes.BAD_REQUEST,
       message,
@@ -35,7 +45,12 @@ export default class ApiErrors extends Error {
     };
   }
 
-  public static newNotFoundError(message: string): IRestError {
+  /**
+   ** Throws new NotFoundError
+   * @param {string} message
+   * @returns  IApiError
+   */
+  public static newNotFoundError(message: string): IApiError {
     return {
       type: apiErrorTypes.NOT_FOUND,
       message,
@@ -44,7 +59,12 @@ export default class ApiErrors extends Error {
     };
   }
 
-  public static newNotAuthorizedError(message: string): IRestError {
+  /**
+   ** Throws new NotAuthorizedError
+   * @param {string} message
+   * @returns  IApiError
+   */
+  public static newNotAuthorizedError(message: string): IApiError {
     return {
       type: apiErrorTypes.UNAUTHORIZED,
       message,
@@ -53,7 +73,12 @@ export default class ApiErrors extends Error {
     };
   }
 
-  public static newNoAccessError(message: string): IRestError {
+  /**
+   ** Throws new NoAccessError
+   * @param {string} message
+   * @returns  IApiError
+   */
+  public static newNoAccessError(message: string): IApiError {
     return {
       type: apiErrorTypes.NOT_AUTHENTICATED,
       message,
@@ -62,7 +87,12 @@ export default class ApiErrors extends Error {
     };
   }
 
-  public static sendError(res: Response, error: IRestError) {
+  /**
+   ** sends Error
+   * @param {Response} res
+   * @returns res
+   */
+  public static sendError(res: Response, error: IApiError) {
     res.status(error.status);
     res.json(error);
     return res;

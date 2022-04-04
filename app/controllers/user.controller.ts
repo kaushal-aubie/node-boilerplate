@@ -5,16 +5,15 @@ import { userService } from '@/services';
 
 class UserController {
   /**
-   * GET /getOne/:id
-   * Get a user by ID.
+   ** GET /getOne/:id
+   ** Get a user by ID.
    */
   public static async getUserById(req: Request, res: Response) {
     try {
       const userId = req.params.id;
       const userRes = await userService.getUserById(userId);
       if (userRes.error) {
-        res.status(userRes.error.status);
-        res.json(userRes.error);
+        ApiErrors.sendError(res, userRes.error);
         return;
       }
       const r = ApiResponse.newResponse({
@@ -26,47 +25,42 @@ class UserController {
     } catch (err) {
       logger.err('# Error while getting user by id in UserController.getUser()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
   }
 
   /**
-   * GET /getAllUsers
-   * Get all users.
+   ** GET /getAllUsers
+   ** Get all users.
    */
   public static async getAllUsers(_req: Request, res: Response) {
     try {
       const userRes = await userService.getAllUsers();
       if (userRes.error) {
-        res.status(userRes.error.status);
-        res.json(userRes.error);
+        ApiErrors.sendError(res, userRes.error);
         return;
       }
       const r = ApiResponse.newResponse({
         data: userRes,
         message: 'Fetched All Users',
       });
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while getting all users in UserController.getAllUsers()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
   }
 
   /**
-   * POST /fille/upload
-   * Upload A File.
+   ** POST /fille/upload
+   ** Upload A File.
    */
   public static uploadFiles(req: Request, res: Response) {
     try {
       if (!req.file) {
         const err = ApiErrors.newBadRequestError('File not found');
-        res.status(err.status);
-        res.json(err);
+        ApiErrors.sendError(res, err);
         return;
       }
       const fileData = { fileName: req.file.filename, filePath: req.file.path };
@@ -75,14 +69,11 @@ class UserController {
         data: fileData,
         message: 'File uploaded successfully!',
       });
-
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while file upload in UserController.uploadFiles()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
   }
 }

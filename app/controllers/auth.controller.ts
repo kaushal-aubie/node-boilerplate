@@ -10,10 +10,11 @@ import { UserSignupViewModel, UserViewModel } from '@/viewModels';
 
 class AuthController {
   /**
-   * POST /register
-   * Register a user.
+   ** POST /register
+   ** Register a user.
    */
-  public static async register(req: Request, res: Response) {
+
+  public static register = async (req: Request, res: Response) => {
     try {
       const user = new UserSignupViewModel(req.body as IUserSignupVM);
 
@@ -27,8 +28,7 @@ class AuthController {
       };
       emailSender.sendMail(emailOptions).catch(logger.err);
       if (registerRes.error) {
-        res.status(registerRes.error.status);
-        res.json(registerRes.error);
+        ApiErrors.sendError(res, registerRes.error);
         return;
       }
 
@@ -38,28 +38,25 @@ class AuthController {
         data: userVM,
         message: 'User has Registered successfully',
       });
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while register user in AuthController.register()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
-  }
+  };
 
   /**
-   * POST /login
-   * login's a user.
+   ** POST /login
+   ** login's a user.
    */
-  public static async login(req: Request, res: Response) {
+  public static login = async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body as IUser;
 
       const loginRes = await authService.login(email as string, password as string);
       if (loginRes.error) {
-        res.status(loginRes.error.status);
-        res.json(loginRes.error);
+        ApiErrors.sendError(res, loginRes.error);
         return;
       }
 
@@ -71,8 +68,7 @@ class AuthController {
       });
       if (!token) {
         const er = ApiErrors.newInternalServerError('Something went wrong');
-        res.status(er.status);
-        res.json(er);
+        ApiErrors.sendError(res, er);
         return;
       }
       logger.info('Token generated successfully');
@@ -81,56 +77,50 @@ class AuthController {
         data: { response: userVM, token },
         message: 'User has logged in successfully',
       });
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while login user in AuthController.login()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
-  }
+  };
 
   /**
-   * POST /logout
-   * logout's a user.
+   ** POST /logout
+   ** logout's a user.
    */
-  public static logout(_req: Request, res: Response) {
+  public static logout = (_req: Request, res: Response) => {
     try {
       res = TokenUtils.clearToken(res);
       const r = ApiResponse.newResponse({
         message: 'User has logout successfully',
       });
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while logout user in AuthController.logout()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
-  }
+  };
 
   /**
-   * get /authenticate
-   * To get Logged in User Details.
+   ** get /authenticate
+   ** To get Logged in User Details.
    */
-  public static getUser(req: Request, res: Response) {
+  public static getUser = (req: Request, res: Response) => {
     try {
       const userVM = new UserViewModel((req as Request & { user: IUserVM }).user);
       const r = ApiResponse.newResponse({
         data: userVM,
         message: 'Signed in user',
       });
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while getting user in AuthController.getUser()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
-  }
+  };
 }
 
 export default AuthController;

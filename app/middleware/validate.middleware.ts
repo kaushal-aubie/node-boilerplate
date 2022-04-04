@@ -26,10 +26,8 @@ class ValidateMiddleware {
 
         if (error) {
           const errorMessage = error.details.map((details) => details.message).join(', ');
-
           const er = ApiErrors.newBadRequestError(errorMessage);
-          res.status(er.status);
-          res.json(er);
+          ApiErrors.sendError(res, er);
           return;
         }
         Object.assign(req, value);
@@ -37,8 +35,7 @@ class ValidateMiddleware {
       } catch (err) {
         logger.err('# Error while validating in ValidateMiddleware.validate()', err);
         const er = ApiErrors.newInternalServerError('Something went wrong during Validation');
-        res.status(er.status);
-        res.json(er);
+        ApiErrors.sendError(res, er);
       }
     };
 }

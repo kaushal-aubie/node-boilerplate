@@ -2,9 +2,10 @@ import { Router } from 'express';
 import authRoute from './auth.route';
 import userRoute from './user.route';
 
-// Init
+// * Init
 const apiRouter = Router();
 
+// * Accumulate All Routes of Application
 const allRoutes = [
   {
     path: '/auth',
@@ -16,6 +17,7 @@ const allRoutes = [
   },
 ];
 
+// * Attach all paths and route to main API Router
 allRoutes.forEach((route) => {
   apiRouter.use(route.path, route.route);
 });

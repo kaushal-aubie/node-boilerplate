@@ -4,7 +4,10 @@ import { User } from '@/models';
 import { ApiErrors } from '@/response_builder';
 
 class UserService {
-  public static async getUserById(userId: string): Promise<IResultAndError<User | null>> {
+  /**
+   ** Get a user by ID.
+   */
+  public static getUserById = async (userId: string): Promise<IResultAndError<User | null>> => {
     try {
       logger.info('==> 1:: Finding User in DB');
       const user = await User.findOne({ where: { id: userId } });
@@ -22,14 +25,17 @@ class UserService {
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
-  }
+  };
 
-  public static async getAllUsers(): Promise<
+  /**
+   ** Get all users.
+   */
+  public static getAllUsers = async (): Promise<
     IResultAndError<{
       rows: User[];
       count: number;
     } | null>
-  > {
+  > => {
     try {
       logger.info('==> 1:: Fetching Users in DB');
       const user = await User.findAndCountAll();
@@ -47,7 +53,7 @@ class UserService {
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
-  }
+  };
 }
 
 export default UserService;
