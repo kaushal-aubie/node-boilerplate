@@ -4,13 +4,13 @@ import { authMiddleware, uploader, validate } from '@/middleware';
 import userController from './user.controller';
 import userValidation from './user.validation';
 
-// Init
+// * Init
 const apiRouter = express.Router();
 
-// Constants
+// * Constants
 const FILE_KEY = 'myFile';
 
-// Add api routes
+// * Add api routes
 apiRouter
   .route('/getAll')
   .get(validate(userValidation.getAll), authMiddleware.isAuthenticated, userController.getAllUsers);

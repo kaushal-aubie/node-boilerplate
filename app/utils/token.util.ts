@@ -9,6 +9,14 @@ if (envVars.jwt.jwtExpireIn) {
 }
 
 class TokenUtils {
+  /**
+   ** Set a token from the response header
+   * @param {Request}  req
+   * @param {Response}  res
+   * @param {string}  token
+   * @param options
+   * @returns res
+   */
   public static setToken(
     req: Request,
     res: Response,
@@ -22,11 +30,16 @@ class TokenUtils {
         signed: true,
       });
     }
-    // Setting header also
+    // * Setting header also
     res.setHeader('Authorization', `bearer ${token}`);
     return res;
   }
 
+  /**
+   ** Retrieves a token from the request body
+   * @param {Request} req
+   * @returns token
+   */
   public static getToken(req: Request) {
     if (req.signedCookies) {
       const t = (req.signedCookies as { token: string }).token;
@@ -38,6 +51,11 @@ class TokenUtils {
     return token;
   }
 
+  /**
+   ** Clears a token from response header
+   * @param {Response} req
+   * @returns res
+   */
   public static clearToken(res: Response): Response {
     res.cookie('token', '', {
       maxAge: 0,

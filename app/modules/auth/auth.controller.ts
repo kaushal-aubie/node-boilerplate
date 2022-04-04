@@ -28,8 +28,7 @@ class AuthController {
       };
       emailSender.sendMail(emailOptions).catch(logger.err);
       if (registerRes.error) {
-        res.status(registerRes.error.status);
-        res.json(registerRes.error);
+        ApiErrors.sendError(res, registerRes.error);
         return;
       }
 
@@ -39,13 +38,11 @@ class AuthController {
         data: userVM,
         message: 'User has Registered successfully',
       });
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while register user in AuthController.register()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
   };
 
@@ -59,8 +56,7 @@ class AuthController {
 
       const loginRes = await authService.login(email as string, password as string);
       if (loginRes.error) {
-        res.status(loginRes.error.status);
-        res.json(loginRes.error);
+        ApiErrors.sendError(res, loginRes.error);
         return;
       }
 
@@ -72,8 +68,7 @@ class AuthController {
       });
       if (!token) {
         const er = ApiErrors.newInternalServerError('Something went wrong');
-        res.status(er.status);
-        res.json(er);
+        ApiErrors.sendError(res, er);
         return;
       }
       logger.info('Token generated successfully');
@@ -82,13 +77,11 @@ class AuthController {
         data: { response: userVM, token },
         message: 'User has logged in successfully',
       });
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while login user in AuthController.login()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
   };
 
@@ -102,13 +95,11 @@ class AuthController {
       const r = ApiResponse.newResponse({
         message: 'User has logout successfully',
       });
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while logout user in AuthController.logout()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
   };
 
@@ -123,13 +114,11 @@ class AuthController {
         data: userVM,
         message: 'Signed in user',
       });
-      res.status(r.status);
-      res.json(r);
+      ApiResponse.sendResponse(res, r);
     } catch (err) {
       logger.err('# Error while getting user in AuthController.getUser()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');
-      res.status(er.status);
-      res.json(er);
+      ApiErrors.sendError(res, er);
     }
   };
 }

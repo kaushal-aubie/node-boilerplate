@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { passwordValidate } from '@/utils';
+import { ValidationUtils } from '@/utils';
 
 class AuthValidation {
   register: { body: Joi.ObjectSchema };
@@ -14,7 +14,7 @@ class AuthValidation {
     this.register = {
       body: Joi.object().keys({
         email: Joi.string().required().email(),
-        password: Joi.string().required().custom(passwordValidate),
+        password: Joi.string().required().custom(ValidationUtils.passwordValidate),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         mobile: Joi.number().required(),
