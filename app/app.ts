@@ -131,9 +131,10 @@ class App {
       this.app.use(ROUTE_PREFIX, this.allRoutes);
 
       // * To handle 404
-      this.app.use('*', (_req, res) => {
-        const notFoundError = ApiErrors.newNotFoundError('Route not found');
-        res.json(notFoundError);
+      this.app.use('*', (req, res) => {
+        const message = `Route with METHOD:${req.method} and URL:${req.baseUrl} not found`;
+        const err = ApiErrors.newNotFoundError(message);
+        ApiErrors.sendError(res, err);
       });
     } catch (err) {
       logger.info('+-------------------------------------------------------------+');
