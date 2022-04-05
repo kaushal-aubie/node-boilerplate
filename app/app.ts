@@ -1,7 +1,7 @@
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import type { Express } from 'express';
+import type { Express, Router } from 'express';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -11,17 +11,21 @@ import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
 import * as Models from '@/models';
 import { ApiErrors } from '@/response_builder';
-import BaseRouter from '@/routes';
+import RootRouter from '@/routes';
 
 class App {
   public app: Express;
 
   public db: typeof DB;
 
+  public allRoutes: Router;
+
+  public router = express.Router();
+
   constructor() {
-    // * initialize express
     this.app = express();
     this.db = DB;
+    this.allRoutes = RootRouter.createAllRoutes(this.router);
 
     this.initializeMiddleware();
     this.initializeRoutes();
@@ -120,16 +124,19 @@ class App {
         });
       });
 
+      // * Ping Route
       this.app.use('/ping', (_req, res) => {
         res.send('pong');
       });
 
-      this.app.use(ROUTE_PREFIX, BaseRouter);
+      // * Add Main Route Prefix over all routes
+      this.app.use(ROUTE_PREFIX, this.allRoutes);
 
       // * To handle 404
-      this.app.use('*', (_req, res) => {
-        const notFoundError = ApiErrors.newNotFoundError('Route not found');
-        res.json(notFoundError);
+      this.app.use('*', (req, res) => {
+        const message = `Route with METHOD:${req.method} and URL:${req.baseUrl} not found`;
+        const err = ApiErrors.newNotFoundError(message);
+        ApiErrors.sendError(res, err);
       });
     } catch (err) {
       logger.info('+-------------------------------------------------------------+');

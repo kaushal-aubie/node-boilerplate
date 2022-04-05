@@ -1,16 +1,38 @@
 import { Router } from 'express';
-import { authRoute } from '@/modules/auth';
-import { userRoute } from '@/modules/user';
+import type { IRoutes } from '@/interfaces';
+import { AuthRouter } from '@/modules/auth';
+import { UserRouter } from '@/modules/user';
 
-// * Init
-const apiRouter = Router();
+class RootRouter {
+  public static prepareAllRoutes(router: Router) {
+    // * get All Module Router and their prefix
+    const { router: userRouter, apiPrefix: userPrefix } = UserRouter.createRoutes(router);
+    const { router: adminRouter, apiPrefix: adminPrefix } = AuthRouter.createRoutes(router);
 
-// * Accumulate All Routes of Application
-const allRoutes = [authRoute, userRoute];
+    // * Accumulate All Routes of Application
+    const allRoutes: IRoutes[] = [
+      {
+        path: adminPrefix,
+        route: adminRouter,
+      },
+      {
+        path: userPrefix,
+        route: userRouter,
+      },
+    ];
 
-// * Attach all paths and route to main API Router
-allRoutes.forEach((route) => {
-  apiRouter.use(route.path, route.router);
-});
+    return allRoutes;
+  }
 
-export default apiRouter;
+  public static createAllRoutes = (router: Router) => {
+    const allRoutes = this.prepareAllRoutes(router);
+
+    // * Attach all paths and route to main API Router
+    allRoutes.forEach((route) => {
+      router.use(route.path, route.route);
+    });
+
+    return router;
+  };
+}
+export default RootRouter;

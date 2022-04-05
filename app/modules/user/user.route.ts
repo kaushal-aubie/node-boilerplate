@@ -1,23 +1,25 @@
-import express from 'express';
+import type { Router } from 'express';
 import { storageType, uploadType } from '@/config';
+import type { IApiRoute } from '@/interfaces';
 import { authMiddleware, uploader, validate } from '@/middleware';
+import { USER_ROUTE_PREFIX } from './user.constants';
 import userController from './user.controller';
 import userValidation from './user.validation';
 
-class AuthRouter {
-  private static apiRouter = express.Router();
-
+class UserRouter {
   private static FILE_KEY = 'myFile';
 
-  public static createRoutes = () => {
-    this.apiRouter
+  private static PREFIX = USER_ROUTE_PREFIX;
+
+  public static createRoutes = (apiRouter: Router): IApiRoute => {
+    apiRouter
       .route('/getAll')
       .get(
         validate(userValidation.getAll),
         authMiddleware.isAuthenticated,
         userController.getAllUsers
       );
-    this.apiRouter
+    apiRouter
       .route('/getOne/:id')
       .get(
         validate(userValidation.getOne),
@@ -25,7 +27,7 @@ class AuthRouter {
         userController.getUserById
       );
 
-    this.apiRouter
+    apiRouter
       .route('/fille/upload')
       .post(
         authMiddleware.isAuthenticated,
@@ -33,8 +35,8 @@ class AuthRouter {
         userController.uploadFiles
       );
 
-    return this.apiRouter;
+    return { router: apiRouter, apiPrefix: this.PREFIX };
   };
 }
 
-export default AuthRouter;
+export default UserRouter;
