@@ -21,10 +21,10 @@ class App {
   public allRoutes: Router;
 
   constructor() {
-    // * initialize express
     this.app = express();
     this.db = DB;
     this.allRoutes = RootRouter.createAllRoutes();
+
     this.initializeMiddleware();
     this.initializeRoutes();
     this.initializeErrorHandling();
