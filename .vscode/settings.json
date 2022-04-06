@@ -53,7 +53,8 @@
     "originalname",
     "sendgrid",
     "spreadsheetml",
-    "tsnd"
+    "tsnd",
+    "typeorm"
   ],
   "workbench.colorTheme": "Night Owl",
   "workbench.iconTheme": "material-icon-theme",

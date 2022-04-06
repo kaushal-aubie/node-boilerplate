@@ -7,7 +7,7 @@ const main = async () => {
     DB.init();
     logger.info('1 :: DB Initialized');
 
-    await DB.sync({ force: true });
+    await DB.sync(true);
     logger.info('2 :: DB Sync Completed');
 
     await DB.connect().catch(logger.err);

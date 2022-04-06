@@ -180,7 +180,7 @@ Git commit message format will be :- git commit -m ":gitmoji: title" -m "message
 │    |--middlewares\        # Custom express middlewares
 │    |--interfaces\         # All Shared Global Interfaces
 │    |--libs\               # External Libs Config
-│    |--models\             # Sequelize models (data layer)
+│    |--entity\             # TypeORM entity (data layer)
 │    |--routes\             # Routes
 │    |--services\           # Business logic (service layer)
 │    |--utils\              # Utility classes and functions

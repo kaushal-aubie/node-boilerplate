@@ -1,6 +1,6 @@
+import { User } from '@/entity';
 import type { IResultAndError } from '@/interfaces';
 import { logger } from '@/libs';
-import { User } from '@/models';
 import { ApiErrors } from '@/response_builder';
 
 class UserService {
@@ -38,8 +38,9 @@ class UserService {
   > => {
     try {
       logger.info('==> 1:: Fetching Users in DB');
-      const user = await User.findAndCountAll();
-      if (!user) {
+      const [users, count] = await User.findAndCount();
+      const data = { rows: users, count };
+      if (!users) {
         logger.info('==> 2:: Users Not Found');
         return {
           result: null,
@@ -47,7 +48,7 @@ class UserService {
         };
       }
       logger.info('==> 2:: Users Data Fetched');
-      return { result: user, error: null };
+      return { result: data, error: null };
     } catch (err) {
       logger.err('# Error while getting all users in a UserService.getAllUsers()', err);
       const er = ApiErrors.newInternalServerError('Something went wrong');

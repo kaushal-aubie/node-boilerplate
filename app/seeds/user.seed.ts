@@ -1,4 +1,4 @@
-import { User } from '@/models';
+import { User } from '@/entity';
 
 export default async () => {
   /*
@@ -12,15 +12,14 @@ export default async () => {
 
   await user.save();
 */
-  const userObj = {
+
+  const user = User.create({
     email: 'kaushal@gmail1.com',
     password: 'Password@12',
     firstName: 'Kaushal',
     lastName: 'Shah',
     mobile: '1234567890',
-  };
-
-  const user = User.build(userObj);
+  });
   await user.save();
   return user;
 };
