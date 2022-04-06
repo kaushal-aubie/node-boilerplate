@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
+import { IUser } from '@/entity';
 import { emailSender, Jwt, logger } from '@/libs';
 import type { IEmailOptions } from '@/libs';
-import { IUser } from '@/models';
 import { ApiErrors, ApiResponse } from '@/response_builder';
 import { TokenUtils } from '@/utils';
 import type { IUserSignupVM, IUserVM } from '../user';

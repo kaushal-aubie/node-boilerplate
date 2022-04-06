@@ -32,12 +32,14 @@
       "@/views/*": ["./app/views/*"],
       "@/utils": ["./app/utils/index"],
       "@/routes": ["./app/routes/index"],
-      "@/models": ["./app/models/index"],
+      "@/entity": ["app/entity/index"],
       "@/modules/*": ["./app/modules/*"],
       "@/interfaces": ["./app/interfaces/index"]
     },
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": ["app/**/*.ts"],
   "exclude": ["node_modules", "dist"]

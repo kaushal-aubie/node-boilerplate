@@ -3,8 +3,7 @@ import { logger } from '@/libs';
 
 const main = async () => {
   try {
-    await DB.sequelize.dropSchema('mydb', {});
-    await DB.sequelize.createSchema('mydb', {});
+    await DB.dropDatabase();
     process.exit(0);
   } catch (err) {
     logger.err(err);

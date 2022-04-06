@@ -1,14 +1,11 @@
+import { User } from '@/entity';
 import type { IResultAndError } from '@/interfaces';
 import { Bcrypt, logger } from '@/libs';
-import { User } from '@/models';
 import { ApiErrors } from '@/response_builder';
 import type { IUserSignupVM } from '../user';
 
 class AuthService {
-  /**
-   ** Register a user.
-   */
-  public static register = async (user: IUserSignupVM): Promise<IResultAndError<User | null>> => {
+  public static async register(user: IUserSignupVM): Promise<IResultAndError<User | null>> {
     try {
       logger.info('==> 1:: Checking if user exist with that email or not');
       // Unique user check
@@ -29,8 +26,9 @@ class AuthService {
       const password = await Bcrypt.encode(user.password);
       logger.info('==> 3:: Password encryption done');
 
-      const createRes = await User.create({ ...user, password });
-      if (!createRes || !createRes.get('id')) {
+      const createObj = User.create({ ...user, password } as unknown as User);
+      const createRes = await createObj.save();
+      if (!createRes || !createRes.id) {
         logger.info('==> 4:: User Creation Failed');
         return {
           result: null,
@@ -44,15 +42,12 @@ class AuthService {
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
-  };
+  }
 
-  /**
-   ** login's a user.
-   */
-  public static login = async (
+  public static async login(
     email: string,
     password: string
-  ): Promise<IResultAndError<User | null>> => {
+  ): Promise<IResultAndError<User | null>> {
     try {
       logger.info('==> 1:: Finding User in DB');
       // finding user in db by email id
@@ -68,7 +63,7 @@ class AuthService {
 
       logger.info('==> 3:: Comparing Current Password with user one');
       // comparing password
-      const hash = user.get('password');
+      const hash = user.password;
       if (!hash) {
         logger.info('==> 3.1 :: Hash is undefined/null');
         return {
@@ -93,7 +88,7 @@ class AuthService {
       const er = ApiErrors.newInternalServerError('Something went wrong');
       return { result: null, error: er };
     }
-  };
+  }
 }
 
 export default AuthService;
