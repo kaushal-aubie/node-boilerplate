@@ -1,4 +1,5 @@
-import { DataSource, EntityTarget, Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
+import type { EntityTarget, Repository } from 'typeorm';
 import { User } from '@/entity';
 import { logger } from '@/libs';
 import { getDBCredentials } from './dbConfig';
