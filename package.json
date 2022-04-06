@@ -29,7 +29,7 @@
     "check-all": "npm run check-format && npm run check-types && npm run check-lint &&  npm run build",
     "seed": "tsnd -r tsconfig-paths/register app/seeds/index.ts",
     "seed:prod": "node -r ts-node/register -r tsconfig-paths/register dist/seeds/index.js",
-    "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n"
+    "migration:generate": "npx typeorm migration:create app/migrations/"
   },
   "author": "",
   "license": "ISC",

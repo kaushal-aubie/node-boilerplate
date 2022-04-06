@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import type { EntityTarget, Repository } from 'typeorm';
+import type { EntityTarget, QueryRunner, Repository } from 'typeorm';
 import { User } from '@/entity';
 import { logger } from '@/libs';
 import { getDBCredentials } from './dbConfig';
@@ -33,6 +33,10 @@ export default class DB {
 
   public static get dataSource(): DataSource {
     return this._dataSource;
+  }
+
+  public static get queryRunner(): QueryRunner {
+    return this._dataSource.createQueryRunner();
   }
 
   public static async connect(): Promise<void> {
