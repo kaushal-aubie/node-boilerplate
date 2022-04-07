@@ -19,12 +19,10 @@ class App {
 
   public allRoutes: Router;
 
-  public router = express.Router();
-
   constructor() {
     this.app = express();
     this.db = DB;
-    this.allRoutes = RootRouter.createAllRoutes(this.router);
+    this.allRoutes = RootRouter.createAllRoutes();
 
     this.initializeMiddleware();
     this.initializeRoutes();

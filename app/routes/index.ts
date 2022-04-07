@@ -1,13 +1,15 @@
-import type { Router } from 'express';
+import { Router } from 'express';
 import { IRoutes } from '@/interfaces';
 import authRoute from './auth.route';
 import userRoute from './user.route';
 
 class RootRouter {
-  public static prepareAllRoutes(router: Router) {
+  private static apiRouter: Router = Router();
+
+  public static prepareAllRoutes() {
     // * get All Module Router and their prefix
-    const { router: userRouter, apiPrefix: userPrefix } = userRoute.createRoutes(router);
-    const { router: adminRouter, apiPrefix: adminPrefix } = authRoute.createRoutes(router);
+    const { router: userRouter, apiPrefix: userPrefix } = userRoute.createRoutes();
+    const { router: adminRouter, apiPrefix: adminPrefix } = authRoute.createRoutes();
 
     // * Accumulate All Routes of Application
     const allRoutes: IRoutes[] = [
@@ -24,15 +26,15 @@ class RootRouter {
     return allRoutes;
   }
 
-  public static createAllRoutes = (router: Router) => {
-    const allRoutes = this.prepareAllRoutes(router);
+  public static createAllRoutes = () => {
+    const allRoutes = this.prepareAllRoutes();
 
     // * Attach all paths and route to main API Router
     allRoutes.forEach((route) => {
-      router.use(route.path, route.route);
+      this.apiRouter.use(route.path, route.route);
     });
 
-    return router;
+    return this.apiRouter;
   };
 }
 export default RootRouter;
