@@ -6,6 +6,9 @@ const paths = {
   publicPath: path.resolve(root, 'public'),
   pemPath: path.resolve(root, './private.pem'),
   envPath: path.resolve(root, './env'),
+  modelsPath: path.resolve(root, './src/models'),
+  seedersPath: path.resolve(root, './src/seeders'),
+  migrationsPath: path.resolve(root, './src/migrations'),
 };
 
 export { paths };

@@ -4,25 +4,49 @@ import { User } from './user.model';
 
 User.init(
   {
-    firstName: { type: DataTypes.STRING },
-    lastName: { type: DataTypes.STRING },
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    firstName: {
+      type: new DataTypes.STRING(128),
+    },
+    lastName: { type: new DataTypes.STRING(128) },
     email: {
-      type: DataTypes.STRING,
+      type: new DataTypes.STRING(128),
       unique: true,
       allowNull: false,
       validate: {
-        isEmail: true,
+        isEmail: {
+          msg: 'Email must be in valid format',
+        },
       },
     },
-    password: { type: DataTypes.STRING },
-    mobile: { type: DataTypes.STRING },
+    password: { type: new DataTypes.STRING(128) },
+    mobile: { type: new DataTypes.STRING(128) },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   },
   {
     timestamps: true,
     underscored: true,
     sequelize: DB.sequelize,
     modelName: 'users',
+    // indexes: [{ unique: true, fields: ['firstName', 'email'] }],
+    // hooks: {
+    //   beforeValidate: (instance: User): HookReturn => {
+    //     instance.email = '';
+    //   },
+    //   afterValidate: (instance: User): HookReturn => {
+    //     instance.password = 'Toni';
+    //   },
+    // },
   }
 );
+
+// User.addHook('afterValidate', 'someCustomName', () => {
+//   return Promise.reject(new Error("I'm afraid I can't let you do that!"));
+// });
 
 export default User;

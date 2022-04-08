@@ -51,6 +51,16 @@ export default class DB {
     }
   }
 
+  public static async dopTables() {
+    try {
+      await DB._sequelize.drop();
+      logger.imp('All tables dropped successfully.');
+    } catch (err) {
+      logger.err('# Error while dropping tables in DB.dopTables()', err);
+      throw err;
+    }
+  }
+
   public static async sync(options?: SyncOptions) {
     try {
       const result = await DB._sequelize.sync(options);
