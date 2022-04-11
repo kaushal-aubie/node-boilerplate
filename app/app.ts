@@ -9,7 +9,7 @@ import { envVars, ENV_MODE, paths, ROUTE_PREFIX } from '@/config';
 import { DB } from '@/db';
 import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
-import { ApiErrors } from '@/response_builder';
+import { ApiErrors, ApiResponse } from '@/response_builder';
 import RootRouter from '@/routes';
 
 class App {
@@ -115,11 +115,10 @@ class App {
   // * initialize the 404 and ping Routes
   private initializeRoutes() {
     try {
-      // * Home route
       this.app.route('/').get((_req, res) => {
-        res.status(200).send({
-          message: 'Server working successfully!',
-        });
+        const message = `Server working successfully`;
+        const apiRes = ApiResponse.newResponse({ message });
+        ApiResponse.sendResponse(res, apiRes);
       });
 
       this.app.use('/ping', (_req, res) => {
