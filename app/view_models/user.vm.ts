@@ -6,7 +6,7 @@ export interface IUserVM {
   lastName: string;
   createdAt: Date;
   updatedAt: Date;
-  role: string;
+  // role: string;
 }
 
 export interface IUserSignupVM {
@@ -15,7 +15,7 @@ export interface IUserSignupVM {
   mobile?: string | null;
   email: string;
   password: string;
-  role: string;
+  // role: string;
 }
 
 class UserViewModel {
@@ -33,14 +33,14 @@ class UserViewModel {
 
   public updatedAt: Date;
 
-  public role: string;
+  // public role: string;
 
   constructor(user: IUserVM) {
     this.id = user.id;
     this.email = user.email;
     this.mobile = user.mobile;
     this.firstName = user.firstName;
-    this.role = user.role;
+    // this.role = user.role;
     this.lastName = user.lastName;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
@@ -58,7 +58,7 @@ class UserSignupViewModel implements IUserSignupVM {
 
   public password: string;
 
-  public role: string;
+  // public role: string;
 
   constructor(user: IUserSignupVM) {
     this.email = user.email;
@@ -66,7 +66,7 @@ class UserSignupViewModel implements IUserSignupVM {
     this.lastName = user.lastName || null;
     this.mobile = user.mobile || null;
     this.password = user.password;
-    this.role = user.role || 'User'; // Default role is 'User';
+    // this.role = user.role || 'User'; // Default role is 'User';
   }
 }
 

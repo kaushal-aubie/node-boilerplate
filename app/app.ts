@@ -50,8 +50,7 @@ class App {
   public setUpDbConnection() {
     try {
       this.db.init();
-      this.db.sync({ alter: false }).catch(logger.err);
-      this.db.connect().catch(logger.err);
+      this.db.connect();
     } catch (err) {
       logger.info('+-------------------------------------------------------------+');
       logger.err('# Error while setting up Database', err);

@@ -1,14 +1,8 @@
-import {
-  Model,
-  InferAttributes,
-  InferCreationAttributes,
-  CreationOptional,
-  NonAttribute,
-} from 'sequelize';
+import { Model, snakeCaseMappers } from 'objection';
 
 // eslint-disable-next-line no-use-before-define
-export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare id: CreationOptional<number>; // Note that the `null assertion` `!` is required in strict mode.
+class User extends Model {
+  declare id: number; // Note that the `null assertion` `!` is required in strict mode.
 
   declare firstName: string | null;
 
@@ -21,13 +15,30 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
   declare mobile: string | null; // for nullable fields
 
   // timestamps!
-  declare readonly createdAt?: CreationOptional<Date>;
+  declare readonly createdAt?: Date;
 
-  declare readonly updatedAt?: CreationOptional<Date>;
+  declare readonly updatedAt?: Date;
 
-  // getters that are not attributes should be tagged using NonAttribute
-  // to remove them from the model's Attribute Typings.
-  get fullName(): NonAttribute<string> {
-    return [this.firstName, this.lastName].join(' ');
+  static tableName = 'users';
+
+  static get columnNameMappers() {
+    return snakeCaseMappers();
   }
+
+  // Optional JSON schema. This is not the database schema! Nothing is generated
+  // based on this. This is only used for validation. Whenever a model instance
+  // is created it is checked against this schema. http://json-schema.org/.
+  static jsonSchema = {
+    type: 'object',
+    required: ['firstName', 'lastName', 'email', 'password'],
+
+    properties: {
+      firstName: { type: 'string' },
+      lastName: { type: 'string' },
+      email: { type: 'string' },
+      password: { type: 'string' },
+    },
+  };
 }
+
+export default User;

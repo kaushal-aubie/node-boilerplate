@@ -17,7 +17,7 @@ class UserController {
         return;
       }
       const r = ApiResponse.newResponse({
-        data: userRes,
+        data: userRes.result,
         message: 'Fetched User Successfully',
       });
       res.status(r.status);
@@ -41,7 +41,7 @@ class UserController {
         return;
       }
       const r = ApiResponse.newResponse({
-        data: userRes,
+        data: userRes.result,
         message: 'Fetched All Users',
       });
       ApiResponse.sendResponse(res, r);

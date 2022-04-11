@@ -1,49 +1,47 @@
-import type { Dialect, SyncOptions } from 'sequelize';
-import { Sequelize } from 'sequelize';
+import Knexx, { Knex } from 'knex';
+import { Model } from 'objection';
 import { logger } from '@/libs';
 import { getDBCredentials } from './dbConfig';
 
 export default class DB {
-  private static _sequelize: Sequelize = DB.newConnection();
+  private static _knex: Knex<any, unknown[]>;
 
-  private static newConnection(): Sequelize {
+  private static newConnection(): Knex<any, unknown[]> {
     const dbCredentials = getDBCredentials();
-    const seq = new Sequelize(
-      dbCredentials.DB_NAME,
-      dbCredentials.DB_USER,
-      dbCredentials.DB_PASSWORD,
-      {
-        dialectOptions: {
-          multipleStatements: true,
-        },
-        dialect: dbCredentials.DB_DIALECT as Dialect,
+    const _knex = Knexx({
+      client: 'pg',
+      connection: {
         host: dbCredentials.DB_HOST,
-        logging: false,
         port: dbCredentials.DB_PORT,
-        pool: {
-          max: 50,
-          min: 0,
-          acquire: 1200000,
-          idle: 1000000,
-        },
-      }
-    );
-    return seq;
+        user: dbCredentials.DB_USER,
+        password: dbCredentials.DB_PASSWORD,
+        database: dbCredentials.DB_NAME,
+      },
+      pool: {
+        max: 50,
+        min: 0,
+        idleTimeoutMillis: 1000000,
+        acquireTimeoutMillis: 1200000,
+      },
+      dialect: dbCredentials.DB_DIALECT,
+    });
+
+    return _knex;
   }
 
   public static init() {
-    if (!DB._sequelize) {
-      DB._sequelize = DB.newConnection();
+    if (!DB._knex) {
+      DB._knex = DB.newConnection();
     }
   }
 
-  public static get sequelize(): Sequelize {
-    return DB._sequelize;
+  public static get sequelize(): Knex<any, unknown[]> {
+    return DB._knex;
   }
 
-  public static async connect() {
+  public static connect() {
     try {
-      await DB._sequelize.authenticate();
+      Model.knex(DB._knex);
       logger.imp('Connection to database has been established successfully.');
     } catch (err) {
       logger.err('# Error while connect to the database in DB.connect()', err);
@@ -51,24 +49,24 @@ export default class DB {
     }
   }
 
-  public static async dopTables() {
+  public static async dropConnection() {
     try {
-      await DB._sequelize.drop();
-      logger.imp('All tables dropped successfully.');
+      await DB._knex.destroy();
+      logger.imp('Connection Destroyed successfully.');
     } catch (err) {
-      logger.err('# Error while dropping tables in DB.dopTables()', err);
+      logger.err('# Error while destroying Connection in DB.dopTables()', err);
       throw err;
     }
   }
 
-  public static async sync(options?: SyncOptions) {
-    try {
-      const result = await DB._sequelize.sync(options);
-      logger.imp('Database synced successfully.');
-      return result;
-    } catch (err) {
-      logger.err('# Error while sync to the database in DB.sync()', err);
-      throw err;
-    }
-  }
+  // public static async sync(options?: SyncOptions) {
+  //   try {
+  //     const result = await DB._sequelize.sync(options);
+  //     logger.imp('Database synced successfully.');
+  //     return result;
+  //   } catch (err) {
+  //     logger.err('# Error while sync to the database in DB.sync()', err);
+  //     throw err;
+  //   }
+  // }
 }

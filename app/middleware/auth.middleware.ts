@@ -21,7 +21,10 @@ export default class AuthMiddleware {
         return;
       }
       const tokenVerificationRes = await Jwt.verify(token);
-      const user = await User.findByPk(tokenVerificationRes.user_id);
+      const user = await User.query().findById(tokenVerificationRes.user_id);
+      // eslint-disable-next-line no-console
+      console.log('user', user);
+
       if (!user || !user.id) {
         const er = ApiErrors.newNotAuthorizedError('Not authorized');
         ApiErrors.sendError(res, er);
