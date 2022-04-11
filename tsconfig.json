@@ -32,7 +32,7 @@
       "@/response_builder": ["./app/response_builder/index"],
       "@/views/*": ["./app/views/*"],
       "@/utils": ["./app/utils/index"],
-      "@/models": ["./app/models/index"],
+      "@/models": ["./app/db/models/index"],
       "@/routes": ["./app/routes/index"],
       "@/services": ["./app/services/index"],
       "@/interfaces": ["./app/interfaces/index"],

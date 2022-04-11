@@ -9,7 +9,6 @@ import { envVars, ENV_MODE, paths, ROUTE_PREFIX } from '@/config';
 import { DB } from '@/db';
 import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
-import * as Models from '@/models';
 import { ApiErrors } from '@/response_builder';
 import RootRouter from '@/routes';
 
@@ -48,10 +47,9 @@ class App {
   }
 
   // * setup Database Connection
-  public setUpDatabase() {
+  public setUpDbConnection() {
     try {
       this.db.init();
-      Models.default.setupModelsRelation();
       this.db.sync({ alter: false }).catch(logger.err);
       this.db.connect().catch(logger.err);
     } catch (err) {

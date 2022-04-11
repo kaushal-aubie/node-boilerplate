@@ -27,8 +27,8 @@
     "check-lint": "eslint . --ext ts --ext js",
     "prepare": "husky install",
     "check-all": "npm run check-format && npm run check-types && npm run check-lint &&  npm run build",
-    "seed": "tsnd -r tsconfig-paths/register app/seeders/index.ts",
-    "seed:prod": "node -r ts-node/register -r tsconfig-paths/register dist/seeders/index.js"
+    "seed": "tsnd -r tsconfig-paths/register app/db/seeders/index.ts",
+    "seed:prod": "node -r ts-node/register -r tsconfig-paths/register dist/db/seeders/index.js"
   },
   "author": "",
   "license": "ISC",
