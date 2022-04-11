@@ -1,3 +1,2 @@
-import DB from './database';
-
-export { DB };
+export { default as DB } from './database';
+export * from './models';
