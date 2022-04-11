@@ -10,7 +10,7 @@ import { DB } from '@/db';
 import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
 import * as Models from '@/models';
-import { ApiErrors } from '@/response_builder';
+import { ApiErrors, ApiResponse } from '@/response_builder';
 import RootRouter from '@/routes';
 
 class App {
@@ -119,9 +119,9 @@ class App {
     try {
       // * Home route
       this.app.route('/').get((_req, res) => {
-        res.status(200).send({
-          message: 'Server working successfully!',
-        });
+        const message = `Server working successfully`;
+        const apiRes = ApiResponse.newResponse({ message });
+        ApiResponse.sendResponse(res, apiRes);
       });
 
       // * Ping Route
