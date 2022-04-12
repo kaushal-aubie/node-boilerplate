@@ -23,7 +23,7 @@ class TokenUtils {
       });
     }
     // Setting header also
-    res.setHeader('Authorization', `bearer ${token}`);
+    res.setHeader('authorization', `bearer ${token}`);
     return res;
   }
 
@@ -44,7 +44,7 @@ class TokenUtils {
       httpOnly: true,
       signed: true,
     });
-    res.setHeader('Authorization', 'bearer  ');
+    res.setHeader('authorization', 'bearer  ');
     return res;
   }
 }

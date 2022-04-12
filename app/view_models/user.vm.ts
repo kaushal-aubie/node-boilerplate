@@ -64,7 +64,7 @@ class UserSignupViewModel implements IUserSignupVM {
     this.email = user.email;
     this.firstName = user.firstName || null;
     this.lastName = user.lastName || null;
-    this.mobile = user.mobile || null;
+    this.mobile = user.mobile || '';
     this.password = user.password;
     this.role = user.role || 'User'; // Default role is 'User';
   }

@@ -1,0 +1,39 @@
+type IUser {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String
+  mobile: String
+}
+
+type IRegisterResponse {
+  response: IUser
+}
+
+type ILoginResponse {
+  response: IUser
+  token: String
+}
+
+input IRegisterRequest {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  mobile: String = ""
+}
+
+input ILoginRequest {
+  email: String!
+  password: String!
+}
+
+type Query {
+  getUser: IUser
+}
+type Mutation {
+  login(input: ILoginRequest): ILoginResponse
+  register(input: IRegisterRequest): IRegisterResponse
+  logout: Boolean!
+}

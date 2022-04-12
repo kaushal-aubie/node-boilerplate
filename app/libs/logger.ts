@@ -13,11 +13,11 @@ class Logger {
   }
 
   public static info(...msg: unknown[]): void {
-    logger.info(msg);
+    logger.info(msg, true);
   }
 
   public static imp(...msg: unknown[]): void {
-    logger.imp(msg);
+    logger.imp(msg, true);
   }
 
   public static debug(...msg: unknown[]): void {

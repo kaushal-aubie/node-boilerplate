@@ -1,41 +1,77 @@
+import http from 'http';
+import {
+  ApolloServerPluginDrainHttpServer,
+  ApolloServerPluginLandingPageGraphQLPlayground,
+} from 'apollo-server-core';
+import type { ExpressContext } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import type { Express, Router } from 'express';
+import type { Express } from 'express';
 import express from 'express';
+import depthLimit from 'graphql-depth-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { envVars, ENV_MODE, paths, ROUTE_PREFIX } from '@/config';
+import { envVars, ENV_MODE, paths } from '@/config';
 import { DB } from '@/db';
 import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
 import * as Models from '@/models';
-import { ApiErrors } from '@/response_builder';
-import RootRouter from '@/routes';
+import { contextHandler, schema } from '@/modules';
 
 class App {
   public app: Express;
 
+  public apolloServer!: ApolloServer<ExpressContext>;
+
+  public httpServer: http.Server;
+
   public db: typeof DB;
 
-  public allRoutes: Router;
-
   public router = express.Router();
+
+  public graphQLPath = '/graphql';
 
   constructor() {
     this.app = express();
     this.db = DB;
-    this.allRoutes = RootRouter.createAllRoutes(this.router);
+    this.httpServer = http.createServer(this.app);
 
+    this.initializeApolloServer().catch(logger.err);
     this.initializeMiddleware();
-    this.initializeRoutes();
     this.initializeErrorHandling();
+    this.initializeRoutes();
+  }
+
+  public async initializeApolloServer() {
+    try {
+      this.apolloServer = new ApolloServer({
+        schema,
+        context: contextHandler,
+        introspection: envVars.env !== ENV_MODE.PRODUCTION, // these lines are required to use the gui
+        nodeEnv: envVars.env,
+        plugins: [
+          ApolloServerPluginLandingPageGraphQLPlayground,
+          ApolloServerPluginDrainHttpServer({ httpServer: this.httpServer }),
+        ],
+        validationRules: [depthLimit(7)],
+      });
+
+      // * You must await server.start() before calling server.applyMiddleware.
+      await this.apolloServer.start();
+      this.apolloServer.applyMiddleware({ app: this.app, path: this.graphQLPath });
+    } catch (err) {
+      logger.info('+-------------------------------------------------------------+');
+      logger.err('# Error while starting Initializing Apollo Server', err);
+      logger.info('+-------------------------------------------------------------+');
+    }
   }
 
   // * start express
   public listen() {
     try {
-      this.app.listen(envVars.port, () => {
+      this.httpServer.listen(envVars.port, () => {
         logger.imp('+-------------------------------------------------------------+');
         logger.imp(`Running in ${envVars.env} mode`);
         logger.imp(`Express server started on port: ${envVars.port}`);
@@ -128,14 +164,12 @@ class App {
         res.send('pong');
       });
 
-      this.app.use(ROUTE_PREFIX, this.allRoutes);
-
       // * To handle 404
-      this.app.use('*', (req, res) => {
-        const message = `Route with METHOD:${req.method} and URL:${req.baseUrl} not found`;
-        const err = ApiErrors.newNotFoundError(message);
-        ApiErrors.sendError(res, err);
-      });
+      // this.app.use('*', (req, res) => {
+      //   const message = `Route with METHOD:${req.method} and URL:${req.baseUrl} not found`;
+      //   const err = ApiErrors.newNotFoundError(message);
+      //   ApiErrors.sendError(res, err);
+      // });
     } catch (err) {
       logger.info('+-------------------------------------------------------------+');
       logger.err('# Error while initializing routes', err);

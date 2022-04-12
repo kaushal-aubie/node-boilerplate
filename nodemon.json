@@ -1,6 +1,6 @@
 {
   "watch": ["app"],
-  "ext": "ts,json",
+  "ext": "ts,json,gql",
   "ignore": ["app/**/*.spec.ts"],
-  "exec": "ts-node ./app/index.ts"
+  "exec": "tsnd -r tsconfig-paths/register app/server.ts --env=development"
 }

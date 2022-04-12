@@ -9,16 +9,16 @@ class UserService {
    */
   public static getUserById = async (userId: string): Promise<IResultAndError<User | null>> => {
     try {
-      logger.info('==> 1:: Finding User in DB');
+      logger.info('SERVICE ==> 1:: Finding User in DB');
       const user = await User.findOne({ where: { id: userId } });
       if (!user || !user.id) {
-        logger.info('==> 2:: User Is Not Found');
+        logger.info('SERVICE ==> 2:: User Is Not Found');
         return {
           result: null,
           error: ApiErrors.newBadRequestError('User Not Found'),
         };
       }
-      logger.info('==> 2:: User Data Fetched');
+      logger.info('SERVICE ==> 2:: User Data Fetched');
       return { result: user, error: null };
     } catch (err) {
       logger.err('# Error while getting a user by id in a UserService.getUserById()', err);
@@ -37,16 +37,16 @@ class UserService {
     } | null>
   > => {
     try {
-      logger.info('==> 1:: Fetching Users in DB');
+      logger.info('SERVICE ==> 1:: Fetching Users in DB');
       const user = await User.findAndCountAll();
       if (!user) {
-        logger.info('==> 2:: Users Not Found');
+        logger.info('SERVICE ==> 2:: Users Not Found');
         return {
           result: null,
           error: ApiErrors.newBadRequestError('Users Not Found'),
         };
       }
-      logger.info('==> 2:: Users Data Fetched');
+      logger.info('SERVICE ==> 2:: Users Data Fetched');
       return { result: user, error: null };
     } catch (err) {
       logger.err('# Error while getting all users in a UserService.getAllUsers()', err);

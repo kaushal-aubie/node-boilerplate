@@ -1,0 +1,22 @@
+type IUser {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String
+  mobile: String
+}
+
+type IGetAllUsersResponse {
+  rows: [IUser]
+  count: Int!
+}
+
+input IGetOneRequest {
+  id: String!
+}
+
+type Query {
+  getAllUsers: IGetAllUsersResponse!
+  getOne(input: IGetOneRequest): IUser
+}
