@@ -1,39 +1,40 @@
 import Joi from 'joi';
+import { ISchema } from '@/interfaces';
 import { ValidationUtils } from '@/utils';
 
 class AuthValidation {
-  register: { body: Joi.ObjectSchema };
+  register: ISchema;
 
-  login: { body: Joi.ObjectSchema };
+  login: ISchema;
 
-  logout: { body: Joi.ObjectSchema };
+  logout: ISchema;
 
-  authenticate: { body: Joi.ObjectSchema };
+  authenticate: ISchema;
 
   constructor() {
     this.register = {
-      body: Joi.object().keys({
+      input: Joi.object().keys({
         email: Joi.string().required().email(),
         password: Joi.string().required().custom(ValidationUtils.passwordValidate),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
-        mobile: Joi.number().required(),
+        mobile: Joi.number().allow(null),
       }),
     };
 
     this.login = {
-      body: Joi.object().keys({
+      input: Joi.object().keys({
         email: Joi.string().required().email(),
         password: Joi.string().required(),
       }),
     };
 
     this.logout = {
-      body: Joi.object().keys({}),
+      input: Joi.object().keys({}),
     };
 
     this.authenticate = {
-      body: Joi.object().keys({}),
+      input: Joi.object().keys({}),
     };
   }
 }

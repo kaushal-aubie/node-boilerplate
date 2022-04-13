@@ -9,7 +9,7 @@ class AuthService {
     try {
       logger.info('==> 1:: Checking if user exist with that email or not');
       // Unique user check
-      const isExist = await User.findOne({ where: { email: user.email } });
+      const isExist = await User.query().findOne({ email: user.email });
       if (isExist && isExist.id) {
         return {
           result: null,
@@ -26,8 +26,8 @@ class AuthService {
       const password = await Bcrypt.encode(user.password);
       logger.info('==> 3:: Password encryption done');
 
-      const createRes = await User.create({ ...user, password });
-      if (!createRes || !createRes.get('id')) {
+      const createRes = await User.query().insert({ ...user, password });
+      if (!createRes || !createRes.id) {
         logger.info('==> 4:: User Creation Failed');
         return {
           result: null,
@@ -50,7 +50,7 @@ class AuthService {
     try {
       logger.info('==> 1:: Finding User in DB');
       // finding user in db by email id
-      const user = await User.findOne({ where: { email } });
+      const user = await User.query().findOne({ email });
       logger.info('==> 2:: User Data Fetched');
       if (!user || !user.id) {
         logger.info('==> 2.1 :: User Is Not Found');
@@ -62,7 +62,7 @@ class AuthService {
 
       logger.info('==> 3:: Comparing Current Password with user one');
       // comparing password
-      const hash = user.get('password');
+      const hash = user.password;
       if (!hash) {
         logger.info('==> 3.1 :: Hash is undefined/null');
         return {

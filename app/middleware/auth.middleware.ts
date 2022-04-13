@@ -1,4 +1,6 @@
+import { ApolloError } from 'apollo-server-core';
 import type { NextFunction, Request, Response } from 'express';
+import { IContext } from '@/interfaces';
 import { Jwt, logger } from '@/libs';
 import { User } from '@/models';
 import { ApiErrors } from '@/response_builder';
@@ -12,7 +14,7 @@ export default class AuthMiddleware {
    * @param {NextFunction} next
    * @returns Request with User Object
    */
-  public static async isAuthenticated(req: Request, res: Response, next: NextFunction) {
+  public static async isAuthenticatedd(req: Request, res: Response, next: NextFunction) {
     try {
       const token = TokenUtils.getToken(req);
       if (!token) {
@@ -21,7 +23,7 @@ export default class AuthMiddleware {
         return;
       }
       const tokenVerificationRes = await Jwt.verify(token);
-      const user = await User.findByPk(tokenVerificationRes.user_id);
+      const user = await User.query().findById(tokenVerificationRes.user_id);
       if (!user || !user.id) {
         const er = ApiErrors.newNotAuthorizedError('Not authorized');
         ApiErrors.sendError(res, er);
@@ -36,4 +38,35 @@ export default class AuthMiddleware {
       ApiErrors.sendError(res, er);
     }
   }
+
+  /**
+   ** Checks whether user is Authenticated or not
+   * Continues to the next resolver is true
+   *
+   * @param {Function} next next resolver function to run
+   */
+  public static isAuthenticated =
+    <T, U, V>(next: (_parent: T, _args: U, context: IContext) => V) =>
+    (_parent: T, _args: U, context: IContext): V => {
+      logger.info('AUTHENTICATION ==> Authenticating a user');
+      if (!context.user) {
+        throw new ApolloError('Not Authenticated');
+      }
+      return next(_parent, _args, context);
+    };
+
+  /**
+   ** Checks whether user is Authenticated or not
+   * Continues to the next resolver is true
+   * @param {String} role role to check for
+   * @param {Function} next next resolver function to run
+   */
+  // public static isAuthorized =
+  //   (role: string, next: (_parent: null, _args: null, context: IContext) => void) =>
+  //   (_parent: null, _args: null, context: IContext) => {
+  //     if (!context.user?.role !== role) {
+  //       throw new ApolloError('Not Authorized');
+  //     }
+  //     next(_parent, _args, context);
+  //   };
 }

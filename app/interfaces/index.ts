@@ -1,3 +1,4 @@
 export * from './result_and_error';
 export * from './routes';
 export * from './graphql';
+export * from './schema';

@@ -1,14 +1,9 @@
-import type { NextFunction, Request, Response } from 'express';
+import { ApolloError } from 'apollo-server-core';
 import Joi from 'joi';
+import { IContext, ISchema } from '@/interfaces';
 import { logger } from '@/libs';
 import { ApiErrors } from '@/response_builder';
 import { Pick } from '@/utils';
-
-type ISchema = {
-  body?: Joi.ObjectSchema;
-  query?: Joi.ObjectSchema;
-  params?: Joi.ObjectSchema;
-};
 
 class ValidateMiddleware {
   /**
@@ -16,26 +11,27 @@ class ValidateMiddleware {
    * @param {ISchema} schema
    */
   public static validate =
-    (schema: ISchema) => (req: Request, res: Response, next: NextFunction) => {
+    <T, U, V>(schema: ISchema, next: (_parent: T, _args: U, context: IContext) => V) =>
+    (_parent: T, _args: U, context: IContext): V => {
       try {
-        const validSchema = Pick(schema, ['params', 'query', 'body']);
-        const object = Pick(req, Object.keys(validSchema));
+        logger.info('VALIDATE ==> Validating a input');
+        const validSchema = Pick(schema, ['input']);
+        const object = Pick(_args, Object.keys(validSchema));
         const { error, value } = Joi.compile(validSchema)
           .prefs({ errors: { label: 'key' }, abortEarly: false })
           .validate(object);
 
         if (error) {
+          logger.info(error);
           const errorMessage = error.details.map((details) => details.message).join(', ');
-          const er = ApiErrors.newBadRequestError(errorMessage);
-          ApiErrors.sendError(res, er);
-          return;
+          throw new ApolloError(errorMessage);
         }
-        Object.assign(req, value);
-        next();
+        Object.assign(context.req, value);
+        return next(_parent, _args, context);
       } catch (err) {
         logger.err('# Error while validating in ValidateMiddleware.validate()', err);
         const er = ApiErrors.newInternalServerError('Something went wrong during Validation');
-        ApiErrors.sendError(res, er);
+        throw new ApolloError(er.message);
       }
     };
 }

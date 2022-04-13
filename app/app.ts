@@ -17,7 +17,6 @@ import { envVars, ENV_MODE, paths } from '@/config';
 import { DB } from '@/db';
 import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
-import * as Models from '@/models';
 import { contextHandler, schema } from '@/modules';
 
 class App {
@@ -53,6 +52,8 @@ class App {
         nodeEnv: envVars.env,
         plugins: [
           ApolloServerPluginLandingPageGraphQLPlayground,
+
+          // Proper shutdown for the HTTP server.
           ApolloServerPluginDrainHttpServer({ httpServer: this.httpServer }),
         ],
         validationRules: [depthLimit(7)],
@@ -87,9 +88,7 @@ class App {
   public setUpDatabase() {
     try {
       this.db.init();
-      Models.default.setupModelsRelation();
-      this.db.sync({ alter: false }).catch(logger.err);
-      this.db.connect().catch(logger.err);
+      this.db.connect();
     } catch (err) {
       logger.info('+-------------------------------------------------------------+');
       logger.err('# Error while setting up Database', err);

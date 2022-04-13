@@ -9,7 +9,7 @@ class UserController {
   /**
    ** Get a user by ID.
    */
-  public static async getOne(_source: null, { input }: IGetOneRequest, { services }: IContext) {
+  public static async getOne(_source: unknown, { input }: IGetOneRequest, { services }: IContext) {
     try {
       logger.info('CONTROLLER ==> 1:: Inside UserController.getOne()');
       logger.info('CONTROLLER ==> 2:: Finding User in DB');
@@ -25,7 +25,7 @@ class UserController {
   /**
    ** Get all users.
    */
-  public static async getAllUsers(_source: null, _args: null, { services }: IContext) {
+  public static async getAllUsers(_source: unknown, _args: unknown, { services }: IContext) {
     try {
       logger.info('CONTROLLER ==> 1:: Inside UserController.getAllUsers()');
       logger.info('CONTROLLER ==> 2:: Finding Users in DB');

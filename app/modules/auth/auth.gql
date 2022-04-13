@@ -21,7 +21,7 @@ input IRegisterRequest {
   lastName: String!
   email: String!
   password: String!
-  mobile: String = ""
+  mobile: String = null
 }
 
 input ILoginRequest {

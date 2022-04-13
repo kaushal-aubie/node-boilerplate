@@ -1,19 +1,20 @@
 import Joi from 'joi';
+import { ISchema } from '@/interfaces';
 
 class UserValidation {
-  getOne: { params: Joi.ObjectSchema };
+  getOne: ISchema;
 
-  getAll: { body: Joi.ObjectSchema };
+  getAll: ISchema;
 
   constructor() {
     this.getOne = {
-      params: Joi.object().keys({
+      input: Joi.object().keys({
         id: Joi.number().required(),
       }),
     };
 
     this.getAll = {
-      body: Joi.object().keys({}),
+      input: Joi.object().keys({}),
     };
   }
 }

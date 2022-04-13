@@ -15,8 +15,6 @@ class AuthController {
     try {
       logger.info('CONTROLLER ==> 1:: Inside AuthController.getUser()');
       const user = new UserSignupViewModel(input as IUserSignupVM);
-      logger.info('user', user);
-
       const registerRes = await services.authService.register(user);
       if (registerRes.error) {
         throw new ApolloError(registerRes.error.message);
@@ -70,7 +68,7 @@ class AuthController {
   /**
    ** To get Logged in User Details.
    */
-  public static getUser(_source: null, _args: null, { user }: IContext) {
+  public static getUser(_source: unknown, _args: unknown, { user }: IContext) {
     try {
       logger.info('CONTROLLER ==> 1:: Inside AuthController.getUser()');
       if (!user) return null;
@@ -86,7 +84,7 @@ class AuthController {
   /**
    ** logout's a user.
    */
-  public static logout(_source: null, _args: null, { res }: IContext) {
+  public static logout(_source: unknown, _args: unknown, { res }: IContext) {
     try {
       TokenUtils.clearToken(res);
       return true;

@@ -10,10 +10,10 @@ const contextHandler = async ({ req, res }: { req: Request; res: Response }): Pr
   let user: User | null = null;
   if (token) {
     const tokenVerificationRes = await Jwt.verify(token);
-    user = await User.findByPk(tokenVerificationRes.user_id);
+    user = (await User.query().findById(tokenVerificationRes.user_id)) as User | null;
   }
   return {
-    user,
+    user: user ?? null,
     req,
     res,
     ip: req.ip || (req.socket || {}).remoteAddress || '',

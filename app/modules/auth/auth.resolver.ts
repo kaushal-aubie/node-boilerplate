@@ -1,22 +1,28 @@
 import { IResolvers } from '@graphql-tools/utils';
+import { authMiddleware, validate } from '@/middleware';
 import authController from './auth.controller';
+import authValidation from './auth.validation';
 
+const { isAuthenticated } = authMiddleware;
 const authResolver: IResolvers = {
   Query: {
     /**
-     * * Get Logged In Users
+     ** Get Logged In Users
+     * @Protected
      * @input null
      * @return IUser
      */
-    getUser: authController.getUser,
+    getUser: isAuthenticated(authController.getUser),
   },
   Mutation: {
     /**
-     * * Get One User
+     ** Get One User
+     * @validated
+     * @Protected
      * @input ILoginRequest
      * @return ILoginResponse
      */
-    login: authController.login,
+    login: validate(authValidation.login, authController.login),
 
     /**
      * * Logout's a User
@@ -26,11 +32,12 @@ const authResolver: IResolvers = {
     logout: authController.logout,
 
     /**
-     * * Registers a User
+     ** Registers a User
+     * @validated
      * @input IRegisterRequest
      * @return IRegisterResponse
      */
-    register: authController.register,
+    register: validate(authValidation.register, authController.register),
   },
 };
 export default authResolver;
