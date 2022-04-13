@@ -1,7 +1,7 @@
 import { ApolloError } from 'apollo-server-core';
 import { IContext } from '@/interfaces';
 import { Jwt, logger } from '@/libs';
-import { ApiErrors } from '@/response_builder';
+import { apiErrorTypes } from '@/response_builder';
 import { TokenUtils } from '@/utils';
 import type { IUserSignupVM, IUserVM } from '@/viewModels';
 import { UserSignupViewModel, UserViewModel } from '@/viewModels';
@@ -17,13 +17,13 @@ class AuthController {
       const user = new UserSignupViewModel(input as IUserSignupVM);
       const registerRes = await services.authService.register(user);
       if (registerRes.error) {
-        throw new ApolloError(registerRes.error.message);
+        throw new ApolloError(apiErrorTypes.INTERNAL_SERVER_ERROR);
       }
       logger.info('CONTROLLER ==> 2:: User Registered Successfully()');
       return { response: registerRes.result };
     } catch (error) {
       logger.err('# ERROR :: Inside AuthController.getUser()', error);
-      throw new ApolloError(error as never);
+      throw new ApolloError(apiErrorTypes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -41,7 +41,7 @@ class AuthController {
 
       const loginRes = await services.authService.login(email, password);
       if (loginRes.error) {
-        throw new ApolloError(loginRes.error.message);
+        throw new ApolloError(apiErrorTypes.INTERNAL_SERVER_ERROR);
       }
 
       logger.info('CONTROLLER ==> 2:: Login API Successful, User fetched');
@@ -53,15 +53,15 @@ class AuthController {
       });
 
       if (!token) {
-        const er = ApiErrors.newInternalServerError('Something went wrong');
-        throw new ApolloError(er.message);
+        // const er = ApiErrors.newInternalServerError('Something went wrong');
+        throw new ApolloError(apiErrorTypes.INTERNAL_SERVER_ERROR);
       }
       logger.info('CONTROLLER ==> 3:: JWT Token Generated');
       TokenUtils.setToken(req, res, token);
       return { response: userVM, token };
     } catch (error) {
       logger.err('# ERROR ==> :: Inside AuthController.login()', error);
-      throw new ApolloError(error as never);
+      throw new ApolloError(apiErrorTypes.INTERNAL_SERVER_ERROR);
     }
   }
 

@@ -2,7 +2,7 @@ import { ApolloError } from 'apollo-server-express';
 import type { Request, Response } from 'express';
 import { IContext } from '@/interfaces';
 import { logger } from '@/libs';
-import { ApiErrors, ApiResponse } from '@/response_builder';
+import { ApiErrors, apiErrorTypes, ApiResponse } from '@/response_builder';
 import { IGetOneRequest } from './user.types';
 
 class UserController {
@@ -18,7 +18,7 @@ class UserController {
       return userRes.result;
     } catch (error) {
       logger.err('# ERROR :: Inside UserController.getOne()', error);
-      throw new ApolloError(error as never);
+      throw new ApolloError(apiErrorTypes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -34,7 +34,7 @@ class UserController {
       return userRes.result;
     } catch (error) {
       logger.err('# ERROR :: Inside UserController.getOne()', error);
-      throw new ApolloError(error as never);
+      throw new ApolloError(apiErrorTypes.INTERNAL_SERVER_ERROR);
     }
   }
 

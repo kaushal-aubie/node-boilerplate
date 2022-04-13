@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import { GraphQLError } from 'graphql';
 import HttpStatusCodes from 'http-status-codes';
 
 enum apiErrorTypes {
@@ -9,14 +10,14 @@ enum apiErrorTypes {
   NOT_AUTHENTICATED = 'NOT_AUTHENTICATED',
 }
 
-export interface IApiError {
+export interface IApiError extends Partial<GraphQLError> {
   type: apiErrorTypes;
   message: string;
   status: number;
   success: boolean;
 }
 
-export default class ApiErrors extends Error {
+export default class ApiErrors extends GraphQLError {
   /**
    ** Throws new InternalServerError
    * @param {string} message

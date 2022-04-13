@@ -2,7 +2,7 @@ import { ApolloError } from 'apollo-server-core';
 import Joi from 'joi';
 import { IContext, ISchema } from '@/interfaces';
 import { logger } from '@/libs';
-import { ApiErrors } from '@/response_builder';
+import { ApiErrors, apiErrorTypes } from '@/response_builder';
 import { Pick } from '@/utils';
 
 class ValidateMiddleware {
@@ -23,8 +23,8 @@ class ValidateMiddleware {
 
         if (error) {
           logger.info(error);
-          const errorMessage = error.details.map((details) => details.message).join(', ');
-          throw new ApolloError(errorMessage);
+          // const errorMessage = error.details.map((details) => details.message).join(', ');
+          throw new ApolloError(apiErrorTypes.INPUT_VALIDATION_ERROR);
         }
         Object.assign(context.req, value);
         return next(_parent, _args, context);

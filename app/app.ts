@@ -18,6 +18,7 @@ import { DB } from '@/db';
 import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
 import { contextHandler, schema } from '@/modules';
+import { formatError } from '@/response_builder';
 
 class App {
   public app: Express;
@@ -50,6 +51,7 @@ class App {
         context: contextHandler,
         introspection: envVars.env !== ENV_MODE.PRODUCTION, // these lines are required to use the gui
         nodeEnv: envVars.env,
+        formatError,
         plugins: [
           ApolloServerPluginLandingPageGraphQLPlayground,
 

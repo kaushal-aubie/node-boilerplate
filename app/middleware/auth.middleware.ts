@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { IContext } from '@/interfaces';
 import { Jwt, logger } from '@/libs';
 import { User } from '@/models';
-import { ApiErrors } from '@/response_builder';
+import { ApiErrors, apiErrorTypes } from '@/response_builder';
 import { TokenUtils } from '@/utils';
 
 export default class AuthMiddleware {
@@ -50,7 +50,7 @@ export default class AuthMiddleware {
     (_parent: T, _args: U, context: IContext): V => {
       logger.info('AUTHENTICATION ==> Authenticating a user');
       if (!context.user) {
-        throw new ApolloError('Not Authenticated');
+        throw new ApolloError(apiErrorTypes.NOT_AUTHENTICATED);
       }
       return next(_parent, _args, context);
     };
