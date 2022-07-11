@@ -1,13 +1,5 @@
 import HttpStatusCodes from 'http-status-codes';
-
-enum apiErrorTypes {
-  INPUT_VALIDATION_ERROR = 'INPUT_VALIDATION_ERROR',
-  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
-  BAD_REQUEST = 'BAD_REQUEST',
-  NOT_FOUND = 'NOT_FOUND',
-  UNAUTHORIZED = 'UNAUTHORIZED',
-  NOT_AUTHENTICATED = 'NOT_AUTHENTICATED',
-}
+import { apiErrorTypes } from './api_errors';
 
 const errorTypes = {
   [apiErrorTypes.BAD_REQUEST]: {

@@ -2,14 +2,14 @@ import type { Response } from 'express';
 import { GraphQLError } from 'graphql';
 import HttpStatusCodes from 'http-status-codes';
 
-enum apiErrorTypes {
+export enum apiErrorTypes {
+  INPUT_VALIDATION_ERROR = 'INPUT_VALIDATION_ERROR',
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
   BAD_REQUEST = 'BAD_REQUEST',
   NOT_FOUND = 'NOT_FOUND',
   UNAUTHORIZED = 'UNAUTHORIZED',
   NOT_AUTHENTICATED = 'NOT_AUTHENTICATED',
 }
-
 export interface IApiError extends Partial<GraphQLError> {
   type: apiErrorTypes;
   message: string;
@@ -97,5 +97,19 @@ export default class ApiErrors extends GraphQLError {
     res.status(error.status);
     res.json(error);
     return res;
+  }
+
+  /**
+   ** Throws new NoAccessError
+   * @param {string} message
+   * @returns  IApiError
+   */
+  public static createError(type: apiErrorTypes, message: string): IApiError {
+    return {
+      type,
+      message,
+      status: HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      success: false,
+    };
   }
 }

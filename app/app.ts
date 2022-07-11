@@ -11,13 +11,14 @@ import cors from 'cors';
 import type { Express } from 'express';
 import express from 'express';
 import depthLimit from 'graphql-depth-limit';
+import { applyMiddleware } from 'graphql-middleware';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { envVars, ENV_MODE, paths } from '@/config';
 import { DB } from '@/db';
 import { logger } from '@/libs';
 import { errorMiddleware } from '@/middleware';
-import { contextHandler, schema } from '@/modules';
+import { contextHandler, permissions, schema } from '@/modules';
 import { formatError } from '@/response_builder';
 
 class App {
@@ -47,7 +48,7 @@ class App {
   public async initializeApolloServer() {
     try {
       this.apolloServer = new ApolloServer({
-        schema,
+        schema: applyMiddleware(schema, permissions),
         context: contextHandler,
         introspection: envVars.env !== ENV_MODE.PRODUCTION, // these lines are required to use the gui
         nodeEnv: envVars.env,
