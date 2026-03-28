@@ -5,7 +5,6 @@ import { jsonContent } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
 import { blogs } from '@/db/schema';
 import { messageResponseSchema, notFoundSchema } from '@/lib/app/stoker';
-import { BLOG_LIST_CACHE_KEY } from '@/lib/cache/blog-cache';
 import { CACHE_NAMESPACE } from '@/lib/cache/namespaces';
 import { requireAuth } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
@@ -60,7 +59,7 @@ export const handler: APIHandler<typeof route> = async (c) => {
   }
 
   const cache = c.get('cache').namespace(CACHE_NAMESPACE.blogs);
-  await cache.deleteMany({ keys: [BLOG_LIST_CACHE_KEY, String(id)] });
+  await cache.deleteMany({ keys: ['list', String(id)] });
 
   return c.json({ message: 'blog_deleted' }, HttpStatusCodes.OK);
 };

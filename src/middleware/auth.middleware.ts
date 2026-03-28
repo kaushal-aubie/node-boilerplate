@@ -4,8 +4,9 @@ import type { User } from '@/db/schema';
 import { users } from '@/db/schema';
 import { getTokenFromRequest } from '@/lib/auth/cookie-auth';
 import { verifyAccessToken } from '@/lib/auth/jwt';
+import { cacheGetOrSet } from '@/lib/cache/cache';
 import { CACHE_NAMESPACE } from '@/lib/cache/namespaces';
-import { reviveUser } from '@/lib/cache/revive';
+import { coerceCreatedUpdated, toUtcIsoString } from '@/lib/date';
 import type { ApiEnv } from '@/types/api-env';
 
 const USER_CACHE_TTL = '5m' as const;
@@ -25,19 +26,24 @@ export const requireAuth = createMiddleware<ApiEnv>(async (c, next) => {
     const cache = c.get('cache').namespace(CACHE_NAMESPACE.users);
     const key = String(id);
 
-    let user: User | undefined = await cache.get<User>({ key });
-    if (user) {
-      user = reviveUser(user);
-    } else {
-      const [row] = await db.select().from(users).where(eq(users.id, id)).limit(1);
-      if (!row) {
-        return c.json({ message: 'Unauthorized' }, 401);
-      }
-      await cache.set({ key, value: row, ttl: USER_CACHE_TTL });
-      user = row;
+    const user = await cacheGetOrSet<User | undefined>(cache, {
+      key,
+      ttl: USER_CACHE_TTL,
+      factory: async (ctx) => {
+        const [row] = await db.select().from(users).where(eq(users.id, id)).limit(1);
+        if (!row) {
+          ctx.skip();
+          return undefined;
+        }
+        return row;
+      },
+    });
+
+    if (!user) {
+      return c.json({ message: 'Unauthorized' }, 401);
     }
 
-    c.set('user', user);
+    c.set('user', coerceCreatedUpdated(user));
     await next();
     return;
   } catch {
@@ -52,7 +58,7 @@ export function toPublicUser(u: User) {
     lastName: u.lastName ?? null,
     email: u.email,
     mobile: u.mobile ?? null,
-    createdAt: u.createdAt.toISOString(),
-    updatedAt: u.updatedAt.toISOString(),
+    createdAt: toUtcIsoString(u.createdAt),
+    updatedAt: toUtcIsoString(u.updatedAt),
   };
 }

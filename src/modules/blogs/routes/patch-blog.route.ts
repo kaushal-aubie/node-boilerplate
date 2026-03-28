@@ -5,8 +5,8 @@ import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
 import { blogs, selectBlogSchema, updateBlogSchema } from '@/db/schema';
 import { messageResponseSchema, notFoundSchema } from '@/lib/app/stoker';
-import { BLOG_LIST_CACHE_KEY } from '@/lib/cache/blog-cache';
 import { CACHE_NAMESPACE } from '@/lib/cache/namespaces';
+import { utcNow } from '@/lib/date';
 import { requireAuth } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
 
@@ -59,7 +59,7 @@ export const handler: APIHandler<typeof route> = async (c) => {
     .update(blogs)
     .set({
       ...body,
-      updatedAt: new Date(),
+      updatedAt: utcNow(),
     })
     .where(and(eq(blogs.id, id), eq(blogs.authorId, user.id)))
     .returning();
@@ -69,7 +69,7 @@ export const handler: APIHandler<typeof route> = async (c) => {
   }
 
   const cache = c.get('cache').namespace(CACHE_NAMESPACE.blogs);
-  await cache.deleteMany({ keys: [BLOG_LIST_CACHE_KEY, String(id)] });
+  await cache.deleteMany({ keys: ['list', String(id)] });
 
   return c.json(row, HttpStatusCodes.OK);
 };

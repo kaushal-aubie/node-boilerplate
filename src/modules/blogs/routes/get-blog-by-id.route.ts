@@ -5,10 +5,12 @@ import { jsonContent } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
 import { type Blog, blogs, selectBlogSchema } from '@/db/schema';
 import { notFoundSchema } from '@/lib/app/stoker';
-import { BLOG_CACHE_TTL } from '@/lib/cache/blog-cache';
+import { cacheGetOrSet } from '@/lib/cache/cache';
 import { CACHE_NAMESPACE } from '@/lib/cache/namespaces';
-import { reviveBlog } from '@/lib/cache/revive';
+import { coerceCreatedUpdated } from '@/lib/date';
 import type { APIHandler } from '@/types/api-env';
+
+const blogCacheTtl = '2m' as const;
 
 export const route = createRoute({
   method: 'get',
@@ -31,15 +33,21 @@ export const handler: APIHandler<typeof route> = async (c) => {
   const cache = c.get('cache').namespace(CACHE_NAMESPACE.blogs);
   const key = String(id);
 
-  const row: Blog | undefined = await cache.get<Blog>({ key });
-  if (row) {
-    return c.json(reviveBlog(row), HttpStatusCodes.OK);
-  }
+  const row = await cacheGetOrSet<Blog | undefined>(cache, {
+    key,
+    ttl: blogCacheTtl,
+    factory: async (ctx) => {
+      const [dbRow] = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
+      if (!dbRow) {
+        ctx.skip();
+        return undefined;
+      }
+      return dbRow;
+    },
+  });
 
-  const [dbRow] = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
-  if (!dbRow) {
+  if (!row) {
     return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
-  await cache.set({ key, value: dbRow, ttl: BLOG_CACHE_TTL });
-  return c.json(dbRow, HttpStatusCodes.OK);
+  return c.json(coerceCreatedUpdated(row), HttpStatusCodes.OK);
 };
