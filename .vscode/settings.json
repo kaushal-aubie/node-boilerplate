@@ -51,7 +51,7 @@
     "spreadsheetml",
     "tsx"
   ],
-  "workbench.colorTheme": "Night Owl",
+  "workbench.colorTheme": "Cursor Dark",
   "workbench.iconTheme": "symbols",
   "breadcrumbs.enabled": true,
   "npm.runSilent": true,
