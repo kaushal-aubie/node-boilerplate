@@ -1,20 +1,18 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "baseUrl": "./",
-    "typeRoots": ["./node_modules/@types", "./app/types"],
-    "target": "ES2020",
-    "lib": ["es2015"],
+    "rootDir": "src",
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "outDir": "dist",
-    "module": "commonjs",
+    "module": "CommonJS",
     "strict": true,
     "pretty": true,
     "declaration": false,
     "sourceMap": true,
-    "inlineSources": true,
     "types": ["node"],
-    "stripInternal": true,
-    "allowJs": true,
-
     "moduleResolution": "node",
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -24,24 +22,13 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/config": ["./app/config/index"],
-      "@/controllers": ["./app/controllers/index"],
-      "@/db": ["./app/db/index"],
-      "@/libs": ["./app/libs/index"],
-      "@/middleware": ["./app/middleware/index"],
-      "@/response_builder": ["./app/response_builder/index"],
-      "@/views/*": ["./app/views/*"],
-      "@/utils": ["./app/utils/index"],
-      "@/models": ["./app/db/models/index"],
-      "@/routes": ["./app/routes/index"],
-      "@/services": ["./app/services/index"],
-      "@/interfaces": ["./app/interfaces/index"],
-      "@/viewModels": ["./app/view_models/index"],
-      "@/validations": ["./app/validations/index"]
+      "@/*": ["./src/*"]
     },
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
-  "include": ["app/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

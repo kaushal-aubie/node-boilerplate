@@ -1,0 +1,40 @@
+/**
+ * OpenAPI + Scalar setup inspired by
+ * https://github.com/w3cj/hono-open-api-starter/blob/main/src/lib/configure-open-api.ts
+ */
+import type { OpenAPIHono } from '@hono/zod-openapi';
+import { Scalar } from '@scalar/hono-api-reference';
+import type { Hono } from 'hono';
+import { ROUTE_PREFIX } from '@/config/constants';
+import type { ApiEnv } from '@/types/api-env';
+import packageJSON from '../../package.json';
+
+const openApiDocPath = '/doc';
+
+export function configureOpenAPI(api: OpenAPIHono<ApiEnv>, root: Hono) {
+  api.doc31(openApiDocPath, {
+    openapi: '3.1.0',
+    info: {
+      version: packageJSON.version,
+      title: packageJSON.name,
+      description: packageJSON.description || 'REST API',
+    },
+    servers: [{ url: ROUTE_PREFIX, description: 'API v1' }],
+  });
+
+  const specUrl = `${ROUTE_PREFIX}${openApiDocPath}`;
+
+  root.get(
+    '/reference',
+    Scalar({
+      url: specUrl,
+      theme: 'kepler',
+      layout: 'classic',
+      defaultHttpClient: {
+        targetKey: 'js',
+        clientKey: 'fetch',
+      },
+      pageTitle: `${packageJSON.name} · API`,
+    }),
+  );
+}
