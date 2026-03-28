@@ -7,7 +7,7 @@ import { Scalar } from '@scalar/hono-api-reference';
 import type { Hono } from 'hono';
 import { ROUTE_PREFIX } from '@/config/constants';
 import type { ApiEnv } from '@/types/api-env';
-import packageJSON from '../../package.json';
+import packageJSON from '../../../package.json';
 
 const openApiDocPath = '/doc';
 

@@ -2,7 +2,7 @@ import '@/config/load-env';
 
 import path from 'node:path';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import { DatabaseClient } from './database-client';
+import { DatabaseClient } from '@/lib/infra/database-client';
 
 async function main() {
   const database = new DatabaseClient();

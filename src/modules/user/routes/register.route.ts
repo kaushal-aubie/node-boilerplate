@@ -4,8 +4,8 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
 import { type RegisterBody, registerBodySchema, selectUserPublicSchema, users } from '@/db/schema';
-import { hashPassword } from '@/lib/bcrypt';
-import { messageResponseSchema } from '@/lib/stoker';
+import { messageResponseSchema } from '@/lib/app/stoker';
+import { hashPassword } from '@/lib/crypto/bcrypt';
 import { toPublicUser } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
 

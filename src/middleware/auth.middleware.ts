@@ -2,8 +2,8 @@ import { eq } from 'drizzle-orm';
 import { createMiddleware } from 'hono/factory';
 import type { User } from '@/db/schema';
 import { users } from '@/db/schema';
-import { getTokenFromRequest } from '@/lib/cookie-auth';
-import { verifyAccessToken } from '@/lib/jwt';
+import { getTokenFromRequest } from '@/lib/auth/cookie-auth';
+import { verifyAccessToken } from '@/lib/auth/jwt';
 import type { ApiEnv } from '@/types/api-env';
 
 export const requireAuth = createMiddleware<ApiEnv>(async (c, next) => {

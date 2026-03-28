@@ -2,7 +2,7 @@ import { createRoute } from '@hono/zod-openapi';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
 import { selectUserPublicSchema } from '@/db/schema';
-import { messageResponseSchema } from '@/lib/stoker';
+import { messageResponseSchema } from '@/lib/app/stoker';
 import { requireAuth, toPublicUser } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
 

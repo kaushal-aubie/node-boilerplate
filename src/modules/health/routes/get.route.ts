@@ -13,6 +13,7 @@ const healthResponseSchema = z
     status: z.literal(HttpStatusPhrases.OK),
     database: statusEnum,
     redis: statusEnum,
+    cache: statusEnum,
   })
   .openapi('HealthResponse');
 
@@ -28,9 +29,11 @@ export const route = createRoute({
 export const handler: APIHandler<typeof route> = async (c) => {
   const db = c.get('db');
   const redis = c.get('redis');
+  const cache = c.get('cache');
 
   let databaseStatus: z.infer<typeof healthResponseSchema>['database'] = HttpStatusPhrases.OK;
   let redisStatus: z.infer<typeof healthResponseSchema>['redis'] = HttpStatusPhrases.OK;
+  let cacheStatus: z.infer<typeof healthResponseSchema>['cache'] = HttpStatusPhrases.OK;
 
   try {
     await db.select({ one: sql`1` }).from(users).limit(1);
@@ -44,11 +47,18 @@ export const handler: APIHandler<typeof route> = async (c) => {
     redisStatus = HttpStatusPhrases.INTERNAL_SERVER_ERROR;
   }
 
+  try {
+    await cache.has({ key: '__health:probe' });
+  } catch {
+    cacheStatus = HttpStatusPhrases.INTERNAL_SERVER_ERROR;
+  }
+
   return c.json(
     {
       status: HttpStatusPhrases.OK,
       database: databaseStatus,
       redis: redisStatus,
+      cache: cacheStatus,
     },
     HttpStatusCodes.OK,
   );

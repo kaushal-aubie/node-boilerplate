@@ -6,8 +6,8 @@ import notFound from 'stoker/middlewares/not-found';
 import stokerOnError from 'stoker/middlewares/on-error';
 import { ENV_MODE, ROUTE_PREFIX } from '@/config/constants';
 import { envVars } from '@/config/env';
-import { configureOpenAPI } from '@/lib/configure-open-api';
-import { createApiRouter } from '@/lib/create-api-router';
+import { configureOpenAPI } from '@/lib/app/configure-open-api';
+import { createApiRouter } from '@/lib/app/create-api-router';
 import { logger } from '@/lib/logger';
 import { registerBlogRoutes } from '@/modules/blogs/route';
 import { registerHealthRoutes } from '@/modules/health/route';
@@ -20,6 +20,7 @@ export function createApp(deps: AppDependencies) {
   api.use('*', async (c, next) => {
     c.set('db', deps.database.db);
     c.set('redis', deps.redis.client);
+    c.set('cache', deps.cache.bento.use());
     await next();
   });
 

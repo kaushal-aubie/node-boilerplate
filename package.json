@@ -41,6 +41,7 @@
     "@hono/zod-openapi": "^1.1.5",
     "@scalar/hono-api-reference": "^0.10.4",
     "bcrypt": "^6.0.0",
+    "bentocache": "^1.6.1",
     "command-line-args": "^6.0.2",
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.1",

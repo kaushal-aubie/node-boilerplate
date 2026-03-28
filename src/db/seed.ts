@@ -1,8 +1,8 @@
 import '@/config/load-env';
 import { eq } from 'drizzle-orm';
-import { DatabaseClient } from '@/db/database-client';
 import { users } from '@/db/schema';
-import { hashPassword } from '@/lib/bcrypt';
+import { hashPassword } from '@/lib/crypto/bcrypt';
+import { DatabaseClient } from '@/lib/infra/database-client';
 
 async function main() {
   const database = new DatabaseClient();

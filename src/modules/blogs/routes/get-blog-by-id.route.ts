@@ -4,7 +4,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
 import { blogs, selectBlogSchema } from '@/db/schema';
-import { notFoundSchema } from '@/lib/stoker';
+import { notFoundSchema } from '@/lib/app/stoker';
 import type { APIHandler } from '@/types/api-env';
 
 export const route = createRoute({

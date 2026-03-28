@@ -4,7 +4,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
 import { blogs, selectBlogSchema } from '@/db/schema';
-import { messageResponseSchema } from '@/lib/stoker';
+import { messageResponseSchema } from '@/lib/app/stoker';
 import { requireAuth } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
 

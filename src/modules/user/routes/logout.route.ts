@@ -1,8 +1,8 @@
 import { createRoute } from '@hono/zod-openapi';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
-import { clearAuthCookie } from '@/lib/cookie-auth';
-import { messageResponseSchema } from '@/lib/stoker';
+import { messageResponseSchema } from '@/lib/app/stoker';
+import { clearAuthCookie } from '@/lib/auth/cookie-auth';
 import { requireAuth } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
 

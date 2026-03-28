@@ -4,10 +4,10 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
 import { type LoginBody, loginBodySchema, selectUserPublicSchema, users } from '@/db/schema';
-import { comparePassword } from '@/lib/bcrypt';
-import { setAuthCookie } from '@/lib/cookie-auth';
-import { createAccessToken } from '@/lib/jwt';
-import { messageResponseSchema } from '@/lib/stoker';
+import { messageResponseSchema } from '@/lib/app/stoker';
+import { setAuthCookie } from '@/lib/auth/cookie-auth';
+import { createAccessToken } from '@/lib/auth/jwt';
+import { comparePassword } from '@/lib/crypto/bcrypt';
 import type { APIHandler } from '@/types/api-env';
 
 const loginResponseSchema = z
