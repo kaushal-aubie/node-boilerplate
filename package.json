@@ -3,8 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",
+  "packageManager": "pnpm@10.11.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "bcrypt",
+      "esbuild"
+    ]
+  },
   "scripts": {
-    "commit": "npx gitmoji -c",
+    "bootstrap": "node scripts/bootstrap.mjs",
+    "commit": "pnpm exec gitmoji -c",
     "build-image": "docker build -f docker/Dockerfile -t node-app .",
     "docker:up": "docker-compose -f docker/docker-compose.yml up -d",
     "docker:stop": "docker-compose -f docker/docker-compose.yml stop",
@@ -16,7 +24,7 @@
     "docker:restart": "docker-compose -f docker/docker-compose.yml restart",
     "docker:exec": "docker exec -it app sh",
     "docker:logs:follow": "docker logs --tail 20 app --follow",
-    "docker:seed": "docker exec -t app npm run seed:prod",
+    "docker:seed": "docker exec -t app pnpm run seed:prod",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "kill-process": "kill $(lsof -ti:5000)",
@@ -26,7 +34,7 @@
     "check:fix": "biome check --write .",
     "check-types": "tsc --pretty --noEmit",
     "prepare": "husky",
-    "check-all": "biome check . && npm run check-types && npm run build",
+    "check-all": "biome check . && pnpm run check-types && pnpm run build",
     "lint": "biome check .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",

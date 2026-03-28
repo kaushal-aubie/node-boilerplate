@@ -1,15 +1,15 @@
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 import { envVars } from '@/config/env';
 import { logger } from '@/lib/logger';
 
 const algorithm: jwt.Algorithm = 'HS256';
 
 export function createAccessToken(userId: number): string {
-  const exp = envVars.JWT_EXPIRES_IN || '1h';
-  return jwt.sign({ user_id: String(userId) }, envVars.JWT_SECRET, {
+  const options: SignOptions = {
     algorithm,
-    expiresIn: exp,
-  });
+    expiresIn: (envVars.JWT_EXPIRES_IN || '1h') as SignOptions['expiresIn'],
+  };
+  return jwt.sign({ user_id: String(userId) }, envVars.JWT_SECRET, options);
 }
 
 export function verifyAccessToken(token: string): Promise<{ user_id: string }> {

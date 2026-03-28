@@ -23,12 +23,12 @@
 
 ## Quick-start
 
-1.  Make sure that you have Node.js v12.x.x and npm v5 or above installed.
+1.  Use **Node.js 22+** and **pnpm**. Enable Corepack (ships with Node): `corepack enable && corepack prepare pnpm@10.11.0 --activate`
 2.  Clone this repo using `git clone https://github.com/kaushal-aubie/node-boilerplate.git <YOUR_PROJECT_NAME>`
 3.  Move to the appropriate directory: `cd <YOUR_PROJECT_NAME>`.<br />
-4.  Run `npm run install` in order to install dependencies.<br />
-    _At this point you can run `npm run dev` to see the app running at `http://localhost:5000`._
-5.  Got to `http://localhost:5000/ping` to receive a pong from the server.
+4.  Run **`pnpm bootstrap`** once: installs dependencies (runs Husky `prepare`), and creates `env/.env.development` from `.env.example` when missing. If pnpm reports ignored build scripts, run **`pnpm approve-builds`** and allow **bcrypt** (and **esbuild** if listed).<br />
+    _Then run `pnpm dev` — the app serves at `http://localhost:5000` (ensure Postgres and Redis match your env file)._
+5.  Open `http://localhost:5000/ping` to receive a pong from the server.
 
 Now you're ready to rumble!
 
@@ -99,35 +99,36 @@ Now you're ready to rumble!
 
 ## Scripts
 
-- `npm run docker:up` - Starts the Docker app.
-- `npm run docker:stop` - Stops the Docker app.
-- `npm run docker:down` - Stop the Docker Compose Process.
-- `npm run docker:remove-dangling` - Remove/Delete Dangling Images.
-- `npm run docker:compose` - Start the App.
-- `npm run docker:compose:d` - Start the App in detached mode.
-- `npm run docker:logs` - Start Logs in Docker for app.
-- `npm run docker:restart` - Restart the Docker app.
-- `npm run docker:exec` - Open path to the repo inside Docker as bash
-- `npm run docker:logs:follow` - Start Logs in Docker for app.
-- `npm run docker:seed` - To add dummy data in Database in development mode inside docker app.
-- `npm run start` - To run app in production mode.
-- `npm run dev` - To run app in development mode.
-- `npm run kill-process` - To kill process at running port.
-- `npm run build` - To build the code.
-- `npm run format` - To prettify code.
-- `npm run check-lint` - To check lint errors.
-- `npm run check-types` - To check typescript errors.
-- `npm run check-all` - To check lint,typescript and build errors.
-- `npm run commit` - To commit your changes.
-- `npm run seed` - To add dummy data in Database in development mode.
-- `npm run seed:prod` - To add dummy data in Database in production mode.
+- `pnpm bootstrap` - Install deps, Husky hooks, and create `env/.env.development` from `.env.example` (first-time setup).
+- `pnpm run docker:up` - Starts the Docker app.
+- `pnpm run docker:stop` - Stops the Docker app.
+- `pnpm run docker:down` - Stop the Docker Compose Process.
+- `pnpm run docker:remove-dangling` - Remove/Delete Dangling Images.
+- `pnpm run docker:compose` - Start the App.
+- `pnpm run docker:compose:d` - Start the App in detached mode.
+- `pnpm run docker:logs` - Start Logs in Docker for app.
+- `pnpm run docker:restart` - Restart the Docker app.
+- `pnpm run docker:exec` - Open path to the repo inside Docker as bash
+- `pnpm run docker:logs:follow` - Start Logs in Docker for app.
+- `pnpm run docker:seed` - To add dummy data in Database in development mode inside docker app.
+- `pnpm run start` - To run app in production mode.
+- `pnpm run dev` - To run app in development mode.
+- `pnpm run kill-process` - To kill process at running port.
+- `pnpm run build` - To build the code.
+- `pnpm run format` - To prettify code.
+- `pnpm run check` - To run Biome check.
+- `pnpm run check-types` - To check typescript errors.
+- `pnpm run check-all` - To check lint, typescript and build errors.
+- `pnpm run commit` - To commit your changes (gitmoji).
+- `pnpm run seed` - To add dummy data in Database in development mode.
+- `pnpm run seed:prod` - To add dummy data in Database in production mode.
 
 ## Git Commitization
 
 Configuring the gitmoji only once
 
 ```bash
-> npx gitmoji -g
+> pnpm dlx gitmoji-cli -g
 > ? Enable automatic "git add ." (y/N) N
 > ? Select how emojis should be used in commits (Use arrow keys)
 	  :smile:
@@ -139,7 +140,7 @@ Configuring the gitmoji only once
 Commit workflow
 
 ```bash
-npm run commit
+pnpm run commit
 
 Step 1: Choose a gitmoji from the list
 

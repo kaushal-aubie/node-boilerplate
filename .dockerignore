@@ -4,6 +4,7 @@ yarn-error*.log
 .git
 .gitignore
 npm-debug.log
+pnpm-debug.log*
 Dockerfile
 .dockerignore
 package-lock.json

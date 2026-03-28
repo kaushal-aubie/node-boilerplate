@@ -2,14 +2,16 @@ FROM node:22-alpine
 
 LABEL name="Node Backend"
 
+RUN corepack enable && corepack prepare pnpm@10.11.0 --activate
+
 WORKDIR /backend
 
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 COPY . .
-RUN npm run build
+RUN pnpm run build
 
 EXPOSE 5000
 
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "run", "start"]
