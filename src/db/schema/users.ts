@@ -16,7 +16,7 @@ export const users = pgTable('users', {
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 
-const userSelect = createSelectSchema(users);
+export const userSelect = createSelectSchema(users);
 
 const insertUser = createInsertSchema(users, {
   email: () => z.email(),

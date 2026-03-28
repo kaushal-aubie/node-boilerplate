@@ -1,4 +1,5 @@
 import { integer, pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 import { users } from './users';
 
 export const blogs = pgTable('blogs', {
@@ -14,3 +15,7 @@ export const blogs = pgTable('blogs', {
 
 export type Blog = typeof blogs.$inferSelect;
 export type NewBlog = typeof blogs.$inferInsert;
+
+export const selectBlogSchema = createSelectSchema(blogs);
+export const insertBlogSchema = createInsertSchema(blogs);
+export const updateBlogSchema = createUpdateSchema(blogs);

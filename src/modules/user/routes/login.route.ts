@@ -1,4 +1,4 @@
-import { createRoute, type OpenAPIHono, z } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 import { eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
@@ -8,22 +8,17 @@ import { type LoginBody, loginBodySchema, selectUserPublicSchema, users } from '
 import { comparePassword } from '@/lib/bcrypt';
 import { messageResponseSchema } from '@/lib/constants';
 import { setAuthCookie } from '@/lib/cookie-auth';
-import { parseResponse } from '@/lib/json-response';
 import { createAccessToken } from '@/lib/jwt';
-import { toPublicUser } from '@/middleware/auth.middleware';
-import type { ApiEnv } from '@/types/api-env';
+import type { APIHandler } from '@/types/api-env';
 
-export const loginResponseSchema = z
+const loginResponseSchema = z
   .object({
-    message: z.string(),
-    data: z.object({
-      user: selectUserPublicSchema,
-      token: z.string(),
-    }),
+    user: selectUserPublicSchema,
+    token: z.string(),
   })
   .openapi('LoginResponse');
 
-const route = createRoute({
+export const route = createRoute({
   method: 'post',
   path: '/auth/login',
   tags: ['Auth'],
@@ -41,31 +36,20 @@ const route = createRoute({
   },
 });
 
-export function registerAuthLoginRoute(app: OpenAPIHono<ApiEnv>) {
-  app.openapi(route, async (c) => {
-    const body = c.req.valid('json') as LoginBody;
+export const handler: APIHandler<typeof route> = async (c) => {
+  const body = c.req.valid('json') as LoginBody;
 
-    const [user] = await db.select().from(users).where(eq(users.email, body.email)).limit(1);
-    if (!user?.password) {
-      return c.json({ message: 'Invalid credentials' }, 400);
-    }
+  const [user] = await db.select().from(users).where(eq(users.email, body.email)).limit(1);
+  if (!user?.password) {
+    return c.json({ message: 'Invalid credentials' }, 400);
+  }
 
-    const match = await comparePassword(body.password, user.password);
-    if (!match) {
-      return c.json({ message: "Credentials don't match" }, 401);
-    }
+  const match = await comparePassword(body.password, user.password);
+  if (!match) {
+    return c.json({ message: "Credentials don't match" }, 401);
+  }
 
-    const token = createAccessToken(user.id);
-    await setAuthCookie(c, token);
-    return c.json(
-      parseResponse(loginResponseSchema, {
-        message: 'User has logged in successfully',
-        data: {
-          user: toPublicUser(user),
-          token,
-        },
-      }),
-      200,
-    );
-  });
-}
+  const token = createAccessToken(user.id);
+  await setAuthCookie(c, token);
+  return c.json({ user, token }, HttpStatusCodes.OK);
+};

@@ -1,41 +1,21 @@
-import { createRoute, type OpenAPIHono, type RouteHandler, z } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 import { desc } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
 import { db } from '@/db/client';
-import { blogs } from '@/db/schema';
-import { parseResponse } from '@/lib/json-response';
-import type { ApiEnv } from '@/types/api-env';
-import { selectBlogSchema } from '../select-blog.schema';
-import { toPublicBlog } from '../to-public-blog';
+import { blogs, selectBlogSchema } from '@/db/schema';
+import type { APIHandler } from '@/types/api-env';
 
-const listResponseSchema = z
-  .object({
-    message: z.string(),
-    data: z.array(selectBlogSchema),
-  })
-  .openapi('BlogListResponse');
-
-const route = createRoute({
+export const route = createRoute({
   method: 'get',
   path: '/blogs',
   tags: ['Blogs'],
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(listResponseSchema, 'All blogs'),
+    [HttpStatusCodes.OK]: jsonContent(z.array(selectBlogSchema), 'All blogs'),
   },
 });
 
-const handler: RouteHandler<typeof route, ApiEnv> = async (c) => {
+export const handler: APIHandler<typeof route> = async (c) => {
   const rows = await db.select().from(blogs).orderBy(desc(blogs.createdAt));
-  return c.json(
-    parseResponse(listResponseSchema, {
-      message: 'Blogs',
-      data: rows.map(toPublicBlog),
-    }),
-    200,
-  );
+  return c.json(rows, HttpStatusCodes.OK);
 };
-
-export function registerBlogsListRoute(app: OpenAPIHono<ApiEnv>) {
-  app.openapi(route, handler);
-}

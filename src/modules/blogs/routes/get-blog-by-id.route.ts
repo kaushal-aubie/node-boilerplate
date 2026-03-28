@@ -1,17 +1,14 @@
-import { createRoute, type OpenAPIHono, type RouteHandler } from '@hono/zod-openapi';
+import { createRoute } from '@hono/zod-openapi';
 import { eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
 import { db } from '@/db/client';
-import { blogs } from '@/db/schema';
+import { blogs, selectBlogSchema } from '@/db/schema';
 import { notFoundSchema } from '@/lib/constants';
-import { parseResponse } from '@/lib/json-response';
-import type { ApiEnv } from '@/types/api-env';
-import { selectBlogSchema } from '../select-blog.schema';
-import { toPublicBlog } from '../to-public-blog';
+import type { APIHandler } from '@/types/api-env';
 
-const route = createRoute({
+export const route = createRoute({
   method: 'get',
   path: '/blogs/{id}',
   tags: ['Blogs'],
@@ -26,21 +23,11 @@ const route = createRoute({
   },
 });
 
-const handler: RouteHandler<typeof route, ApiEnv> = async (c) => {
+export const handler: APIHandler<typeof route> = async (c) => {
   const { id } = c.req.valid('param');
   const [row] = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
   if (!row) {
-    return c.json({ message: 'Blog not found' }, 404);
+    return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
-  return c.json(
-    parseResponse(selectBlogSchema, {
-      message: 'Blog',
-      data: toPublicBlog(row),
-    }),
-    200,
-  );
+  return c.json(row, HttpStatusCodes.OK);
 };
-
-export function registerBlogsGetRoute(app: OpenAPIHono<ApiEnv>) {
-  app.openapi(route, handler);
-}

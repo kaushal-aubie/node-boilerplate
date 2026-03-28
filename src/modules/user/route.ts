@@ -1,11 +1,12 @@
 import type { OpenAPIHono } from '@hono/zod-openapi';
 import type { ApiEnv } from '@/types/api-env';
-import { registerAuthLoginRoute } from './routes/login.route';
-import { registerAuthLogoutRoute } from './routes/logout.route';
-import { registerAuthRegisterRoute } from './routes/register.route';
+import * as login from './routes/login.route';
+import * as logout from './routes/logout.route';
+import * as register from './routes/register.route';
 
 export function registerUserRoutes(app: OpenAPIHono<ApiEnv>) {
-  registerAuthRegisterRoute(app);
-  registerAuthLoginRoute(app);
-  registerAuthLogoutRoute(app);
+  app
+    .openapi(register.route, register.handler)
+    .openapi(logout.route, logout.handler)
+    .openapi(login.route, login.handler);
 }

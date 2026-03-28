@@ -1,4 +1,4 @@
-import { createRoute, type OpenAPIHono, type RouteHandler, z } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 import { and, eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
@@ -6,9 +6,8 @@ import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
 import { db } from '@/db/client';
 import { blogs } from '@/db/schema';
 import { messageResponseSchema, notFoundSchema } from '@/lib/constants';
-import { parseResponse } from '@/lib/json-response';
 import { requireAuth } from '@/middleware/auth.middleware';
-import type { ApiEnv } from '@/types/api-env';
+import type { APIHandler } from '@/types/api-env';
 
 const deleteResponseSchema = z
   .object({
@@ -16,7 +15,7 @@ const deleteResponseSchema = z
   })
   .openapi('BlogDeleteResponse');
 
-const route = createRoute({
+export const route = createRoute({
   method: 'delete',
   path: '/blogs/{id}',
   tags: ['Blogs'],
@@ -34,19 +33,19 @@ const route = createRoute({
   },
 });
 
-const handler: RouteHandler<typeof route, ApiEnv> = async (c) => {
+export const handler: APIHandler<typeof route> = async (c) => {
   const user = c.get('user');
   if (!user) {
-    return c.json({ message: 'Unauthorized' }, 401);
+    return c.json({ message: 'unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
   }
   const { id } = c.req.valid('param');
 
   const [existing] = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
   if (!existing) {
-    return c.json({ message: 'Blog not found' }, 404);
+    return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
   if (existing.authorId !== user.id) {
-    return c.json({ message: 'Forbidden' }, 403);
+    return c.json({ message: 'forbidden' }, HttpStatusCodes.FORBIDDEN);
   }
 
   const deleted = await db
@@ -55,12 +54,8 @@ const handler: RouteHandler<typeof route, ApiEnv> = async (c) => {
     .returning({ id: blogs.id });
 
   if (deleted.length === 0) {
-    return c.json({ message: 'Blog not found' }, 404);
+    return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
 
-  return c.json(parseResponse(deleteResponseSchema, { message: 'Blog deleted' }), 200);
+  return c.json({ message: 'blog_deleted' }, HttpStatusCodes.OK);
 };
-
-export function registerBlogsDeleteRoute(app: OpenAPIHono<ApiEnv>) {
-  app.openapi(route, handler);
-}
