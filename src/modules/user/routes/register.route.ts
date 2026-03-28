@@ -6,7 +6,7 @@ import { createErrorSchema } from 'stoker/openapi/schemas';
 import { db } from '@/db/client';
 import { type RegisterBody, registerBodySchema, selectUserPublicSchema, users } from '@/db/schema';
 import { hashPassword } from '@/lib/bcrypt';
-import { messageResponseSchema } from '@/lib/constants';
+import { messageResponseSchema } from '@/lib/stoker';
 import { toPublicUser } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
 

@@ -5,7 +5,7 @@ import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
 import { db } from '@/db/client';
 import { blogs, selectBlogSchema, updateBlogSchema } from '@/db/schema';
-import { messageResponseSchema, notFoundSchema } from '@/lib/constants';
+import { messageResponseSchema, notFoundSchema } from '@/lib/stoker';
 import { requireAuth } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
 

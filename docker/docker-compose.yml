@@ -1,38 +1,46 @@
-version: '3.3'
+version: "3.3"
 
 services:
-  app:
-    container_name: app
-    command: npm run start
-    stdin_open: true
-    # restart: always
+  # app:
+  #   container_name: app
+  #   command: npm run start
+  #   stdin_open: true
+  #   # restart: always
+  #   # env_file: ../env/production.env
+  #   image: node-app
+  #   build:
+  #     context: ../
+  #     dockerfile: ./docker/Dockerfile
+  #   ports:
+  #     - 8080:5000
+  #     # - ['${PORT}:${PORT}']
+  #   # links:
+  #   #   - db
+  #   depends_on:
+  #     - db
+
+  hono-db:
+    container_name: hono-db
     # env_file: ../env/production.env
-    image: node-app
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
-    ports:
-      - 8080:5000
-      # - ['${PORT}:${PORT}']
-    # links:
-    #   - db
-    depends_on:
-      - db
-  db:
-    container_name: db
-    # env_file: ../env/production.env
-    # env_file: production.env
-    image: 'postgres'
+    image: "postgres"
     ports:
       - 4321:5432
       # - ${DB_PORT}:5432
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=mydb
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     volumes:
-      - data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
+
+  hono-redis:
+    container_name: hono-redis
+    image: redis-7-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
 
 volumes:
-  # nodemodules: {}
-  data:
+  db_data:
+  redis_data:

@@ -5,7 +5,7 @@ import { jsonContent } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
 import { db } from '@/db/client';
 import { blogs, selectBlogSchema } from '@/db/schema';
-import { notFoundSchema } from '@/lib/constants';
+import { notFoundSchema } from '@/lib/stoker';
 import type { APIHandler } from '@/types/api-env';
 
 export const route = createRoute({

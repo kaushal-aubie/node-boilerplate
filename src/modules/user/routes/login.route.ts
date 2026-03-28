@@ -6,9 +6,9 @@ import { createErrorSchema } from 'stoker/openapi/schemas';
 import { db } from '@/db/client';
 import { type LoginBody, loginBodySchema, selectUserPublicSchema, users } from '@/db/schema';
 import { comparePassword } from '@/lib/bcrypt';
-import { messageResponseSchema } from '@/lib/constants';
 import { setAuthCookie } from '@/lib/cookie-auth';
 import { createAccessToken } from '@/lib/jwt';
+import { messageResponseSchema } from '@/lib/stoker';
 import type { APIHandler } from '@/types/api-env';
 
 const loginResponseSchema = z

@@ -2,12 +2,9 @@ import path from 'node:path';
 import dotenv from 'dotenv';
 import { defineConfig } from 'drizzle-kit';
 
-const envFile =
-  process.env.NODE_ENV === 'production'
-    ? path.join(process.cwd(), 'env', 'production.env')
-    : path.join(process.cwd(), 'env', 'development.env');
-
-dotenv.config({ path: envFile });
+dotenv.config({
+  path: path.join(process.cwd(), 'env', `.env.${process.env.NODE_ENV ?? 'development'}`),
+});
 
 function databaseUrl(): string {
   const u = process.env.DATABASE_URL;
