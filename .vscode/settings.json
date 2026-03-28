@@ -52,7 +52,7 @@
     "tsx"
   ],
   "workbench.colorTheme": "Night Owl",
-  "workbench.iconTheme": "material-icon-theme",
+  "workbench.iconTheme": "symbols",
   "breadcrumbs.enabled": true,
   "npm.runSilent": true,
   "explorer.confirmDragAndDrop": false,
