@@ -6,30 +6,19 @@ import notFound from 'stoker/middlewares/not-found';
 import stokerOnError from 'stoker/middlewares/on-error';
 import { ENV_MODE, ROUTE_PREFIX } from '@/config/constants';
 import { envVars } from '@/config/env';
-import { configureOpenAPI } from '@/lib/app/configure-open-api';
-import { createApiRouter } from '@/lib/app/create-api-router';
+import { configureOpenAPI, createApiRouter } from '@/lib/app';
 import { logger } from '@/lib/logger';
-import { registerBlogRoutes } from '@/modules/blogs/route';
-import { registerHealthRoutes } from '@/modules/health/route';
-import { registerUserRoutes } from '@/modules/user/route';
+import { registerRoutes } from '@/modules/routes';
 import type { AppDependencies } from '@/types/app-dependencies';
+import { setContext } from './middleware/set-context';
 
 export function createApp(deps: AppDependencies) {
   const api = createApiRouter().basePath(ROUTE_PREFIX);
 
-  api.use('*', async (c, next) => {
-    c.set('db', deps.database.db);
-    c.set('redis', deps.redis.client);
-    c.set('cache', deps.cache.bento.use());
-    await next();
-  });
-
-  registerHealthRoutes(api);
-  registerUserRoutes(api);
-  registerBlogRoutes(api);
+  api.use('*', setContext(deps));
+  registerRoutes(api);
 
   const root = new Hono();
-
   root.use(compress());
   root.use(
     '*',

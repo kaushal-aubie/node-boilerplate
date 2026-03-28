@@ -3,7 +3,7 @@ import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
 import { selectUserSchema } from '@/db/schema';
 import { messageResponseSchema } from '@/lib/app/stoker';
-import { requireAuth, toPublicUser } from '@/middleware/auth.middleware';
+import { requireAuth, toPublicUser } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
 
 /** OpenAPI + JSON shape for authenticated user responses (no password; ISO timestamps). */

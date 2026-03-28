@@ -1,5 +1,4 @@
 import { createRoute, z } from '@hono/zod-openapi';
-import { eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
@@ -7,7 +6,7 @@ import { createErrorSchema } from 'stoker/openapi/schemas';
 import { users } from '@/db/schema';
 import { messageResponseSchema } from '@/lib/app/stoker';
 import { hashPassword } from '@/lib/crypto/bcrypt';
-import { toPublicUser } from '@/middleware/auth.middleware';
+import { toPublicUser } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
 import { userPublicSchema } from './me.route';
 
@@ -40,24 +39,20 @@ export const route = createRoute({
 
 export const handler: APIHandler<typeof route> = async (c) => {
   const body = c.req.valid('json');
-  const db = c.get('db');
+  const usersRepo = c.get('repo').users;
 
-  const existing = await db.select().from(users).where(eq(users.email, body.email)).limit(1);
-  if (existing[0]) {
+  if (await usersRepo.existsByEmail(body.email)) {
     return c.json({ message: `User already exists for email ${body.email}` }, 400);
   }
 
   const passwordHash = await hashPassword(body.password);
-  const [created] = await db
-    .insert(users)
-    .values({
-      firstName: body.firstName,
-      lastName: body.lastName,
-      email: body.email,
-      password: passwordHash,
-      mobile: body.mobile,
-    })
-    .returning();
+  const created = await usersRepo.create({
+    firstName: body.firstName,
+    lastName: body.lastName,
+    email: body.email,
+    password: passwordHash,
+    mobile: body.mobile,
+  });
 
   if (!created) {
     return c.json({ message: 'Registration failed' }, 400);

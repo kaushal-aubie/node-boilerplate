@@ -24,6 +24,9 @@ dev: ## Run API in dev (tsx watch)
 build: ## Compile TypeScript to dist/
 	pnpm run build
 
+format: ## Format code
+	pnpm run format
+
 check: ## Biome check
 	pnpm run check
 

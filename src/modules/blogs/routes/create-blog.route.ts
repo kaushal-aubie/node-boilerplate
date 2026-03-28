@@ -5,8 +5,7 @@ import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
 import { blogs, selectBlogSchema } from '@/db/schema';
 import { messageResponseSchema } from '@/lib/app/stoker';
-import { CACHE_NAMESPACE } from '@/lib/cache/namespaces';
-import { requireAuth } from '@/middleware/auth.middleware';
+import { requireAuth } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
 
 const insertBlogBodySchema = createInsertSchema(blogs, {
@@ -50,22 +49,15 @@ export const handler: APIHandler<typeof route> = async (c) => {
     return c.json({ message: 'unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
   }
   const body = c.req.valid('json');
-  const db = c.get('db');
-
-  const [row] = await db
-    .insert(blogs)
-    .values({
-      title: body.title,
-      content: body.content,
-      authorId: user.id,
-    })
-    .returning();
+  const row = await c.get('repo').blogs.create({
+    title: body.title,
+    content: body.content,
+    authorId: user.id,
+  });
 
   if (!row) {
     return c.json({ message: 'create_failed' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
   }
 
-  const cache = c.get('cache').namespace(CACHE_NAMESPACE.blogs);
-  await cache.delete({ key: 'list' });
   return c.json(row, HttpStatusCodes.CREATED);
 };

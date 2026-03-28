@@ -1,12 +1,9 @@
 import { createRoute, z } from '@hono/zod-openapi';
-import { and, eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
-import { blogs } from '@/db/schema';
 import { messageResponseSchema, notFoundSchema } from '@/lib/app/stoker';
-import { CACHE_NAMESPACE } from '@/lib/cache/namespaces';
-import { requireAuth } from '@/middleware/auth.middleware';
+import { requireAuth } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
 
 const deleteResponseSchema = z
@@ -39,9 +36,9 @@ export const handler: APIHandler<typeof route> = async (c) => {
     return c.json({ message: 'unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
   }
   const { id } = c.req.valid('param');
-  const db = c.get('db');
+  const repo = c.get('repo').blogs;
 
-  const [existing] = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
+  const existing = await repo.findById(id);
   if (!existing) {
     return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
@@ -49,17 +46,10 @@ export const handler: APIHandler<typeof route> = async (c) => {
     return c.json({ message: 'forbidden' }, HttpStatusCodes.FORBIDDEN);
   }
 
-  const deleted = await db
-    .delete(blogs)
-    .where(and(eq(blogs.id, id), eq(blogs.authorId, user.id)))
-    .returning({ id: blogs.id });
-
-  if (deleted.length === 0) {
+  const ok = await repo.deleteByAuthor(id, user.id);
+  if (!ok) {
     return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
-
-  const cache = c.get('cache').namespace(CACHE_NAMESPACE.blogs);
-  await cache.deleteMany({ keys: ['list', String(id)] });
 
   return c.json({ message: 'blog_deleted' }, HttpStatusCodes.OK);
 };

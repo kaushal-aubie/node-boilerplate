@@ -1,13 +1,10 @@
 import { createRoute } from '@hono/zod-openapi';
-import { and, eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
-import { blogs, selectBlogSchema, updateBlogSchema } from '@/db/schema';
+import { selectBlogSchema, updateBlogSchema } from '@/db/schema';
 import { messageResponseSchema, notFoundSchema } from '@/lib/app/stoker';
-import { CACHE_NAMESPACE } from '@/lib/cache/namespaces';
-import { utcNow } from '@/lib/date';
-import { requireAuth } from '@/middleware/auth.middleware';
+import { requireAuth } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
 
 const patchBlogBodySchema = updateBlogSchema
@@ -45,9 +42,9 @@ export const handler: APIHandler<typeof route> = async (c) => {
   }
   const { id } = c.req.valid('param');
   const body = c.req.valid('json');
-  const db = c.get('db');
+  const repo = c.get('repo').blogs;
 
-  const [existing] = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
+  const existing = await repo.findById(id);
   if (!existing) {
     return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
@@ -55,21 +52,11 @@ export const handler: APIHandler<typeof route> = async (c) => {
     return c.json({ message: 'forbidden' }, HttpStatusCodes.FORBIDDEN);
   }
 
-  const [row] = await db
-    .update(blogs)
-    .set({
-      ...body,
-      updatedAt: utcNow(),
-    })
-    .where(and(eq(blogs.id, id), eq(blogs.authorId, user.id)))
-    .returning();
+  const row = await repo.updateByAuthor(id, user.id, body);
 
   if (!row) {
     return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
-
-  const cache = c.get('cache').namespace(CACHE_NAMESPACE.blogs);
-  await cache.deleteMany({ keys: ['list', String(id)] });
 
   return c.json(row, HttpStatusCodes.OK);
 };

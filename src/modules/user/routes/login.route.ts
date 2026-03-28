@@ -1,14 +1,13 @@
 import { createRoute, z } from '@hono/zod-openapi';
-import { eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
-import { selectUserSchema, users } from '@/db/schema';
+import { selectUserSchema } from '@/db/schema';
 import { messageResponseSchema } from '@/lib/app/stoker';
 import { setAuthCookie } from '@/lib/auth/cookie-auth';
 import { createAccessToken } from '@/lib/auth/jwt';
 import { comparePassword } from '@/lib/crypto/bcrypt';
-import { toPublicUser } from '@/middleware/auth.middleware';
+import { toPublicUser } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
 import { userPublicSchema } from './me.route';
 
@@ -46,9 +45,7 @@ export const route = createRoute({
 
 export const handler: APIHandler<typeof route> = async (c) => {
   const body = c.req.valid('json');
-  const db = c.get('db');
-
-  const [user] = await db.select().from(users).where(eq(users.email, body.email)).limit(1);
+  const user = await c.get('repo').users.findByEmail(body.email);
   if (!user?.password) {
     return c.json({ message: 'Invalid credentials' }, 400);
   }

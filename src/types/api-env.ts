@@ -3,6 +3,7 @@ import type { CacheProvider } from 'bentocache/types';
 import type Redis from 'ioredis';
 import type { User } from '@/db/schema';
 import type { AppDatabase } from '@/lib/infra/database-client';
+import type { AppRepo } from '@/modules/repo';
 
 export type ApiEnv = {
   Variables: {
@@ -10,6 +11,7 @@ export type ApiEnv = {
     db: AppDatabase;
     redis: Redis;
     cache: CacheProvider;
+    repo: AppRepo;
   };
 };
 
