@@ -99,18 +99,11 @@ Now you're ready to rumble!
 
 ## Scripts
 
+- `make help` — Docker (`docker-up`, `docker-down`, `docker-build`), `db-reset`, `clean`, and common `pnpm` tasks.
 - `pnpm bootstrap` - Install deps, Husky hooks, and create `env/.env.development` from `.env.example` (first-time setup).
-- `pnpm run docker:up` - Starts the Docker app.
-- `pnpm run docker:stop` - Stops the Docker app.
-- `pnpm run docker:down` - Stop the Docker Compose Process.
-- `pnpm run docker:remove-dangling` - Remove/Delete Dangling Images.
-- `pnpm run docker:compose` - Start the App.
-- `pnpm run docker:compose:d` - Start the App in detached mode.
-- `pnpm run docker:logs` - Start Logs in Docker for app.
-- `pnpm run docker:restart` - Restart the Docker app.
-- `pnpm run docker:exec` - Open path to the repo inside Docker as bash
-- `pnpm run docker:logs:follow` - Start Logs in Docker for app.
-- `pnpm run docker:seed` - To add dummy data in Database in development mode inside docker app.
+- `make docker-up` / `make docker-down` - Start or stop local Compose services (`docker/docker-compose.yml`).
+- `make docker-build` - Build the app image (`docker/Dockerfile`, tag `node-app`).
+- `make db-reset` - Fresh DB volumes, start Compose, run migrations.
 - `pnpm run start` - To run app in production mode.
 - `pnpm run dev` - To run app in development mode.
 - `pnpm run kill-process` - To kill process at running port.
@@ -121,7 +114,6 @@ Now you're ready to rumble!
 - `pnpm run check-all` - To check lint, typescript and build errors.
 - `pnpm run commit` - Interactive [Conventional Commits](https://www.conventionalcommits.org/) (Commitizen); plain `git commit` is validated by commitlint on the hook.
 - `pnpm run seed` - To add dummy data in Database in development mode.
-- `pnpm run seed:prod` - To add dummy data in Database in production mode.
 
 ## Commits
 
