@@ -1,5 +1,5 @@
 import type { AddressInfo } from 'node:net';
-import { ENV_MODE, ROUTE_PREFIX } from '@/config/constants';
+import { API_BASE_PATH, API_VERSION_V1, ENV_MODE } from '@/config/constants';
 
 const c = {
   reset: '\x1b[0m',
@@ -53,10 +53,10 @@ export function writeStartupBanner(opts: StartupBannerOptions): void {
 
   const local = `http://127.0.0.1:${port}`;
   const loopback = `http://localhost:${port}`;
-  const api = `${local}${ROUTE_PREFIX}`;
-  const health = `${api}/health`;
-  const openApi = `${local}${ROUTE_PREFIX}/doc`;
-  const scalar = `${local}/reference`;
+  const api = `${local}${API_BASE_PATH}`;
+  const health = `${local}${API_BASE_PATH}/${API_VERSION_V1}/health`;
+  const openApi = `${local}${API_BASE_PATH}/doc`;
+  const scalar = `${local}/docs`;
 
   const envColor =
     nodeEnv === ENV_MODE.PRODUCTION ? c.magenta : nodeEnv === ENV_MODE.TEST ? c.cyan : c.green;

@@ -7,9 +7,8 @@ import { messageResponseSchema } from '@/lib/app/stoker';
 import { setAuthCookie } from '@/lib/auth/cookie-auth';
 import { createAccessToken } from '@/lib/auth/jwt';
 import { comparePassword } from '@/lib/crypto/bcrypt';
-import { toPublicUser } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
-import { userPublicSchema } from './me.route';
+import { toPublicUser, userPublicSchema } from '../user.dto';
 
 const loginBodySchema = z
   .object({

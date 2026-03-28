@@ -5,7 +5,7 @@
 import type { OpenAPIHono } from '@hono/zod-openapi';
 import { Scalar } from '@scalar/hono-api-reference';
 import type { Hono } from 'hono';
-import { ROUTE_PREFIX } from '@/config/constants';
+import { API_BASE_PATH } from '@/config/constants';
 import type { ApiEnv } from '@/types/api-env';
 import packageJSON from '../../../package.json';
 
@@ -19,14 +19,14 @@ export function configureOpenAPI(api: OpenAPIHono<ApiEnv>, root: Hono) {
       title: packageJSON.name,
       description: packageJSON.description || 'REST API',
     },
-    // Path keys already include `ROUTE_PREFIX` from OpenAPIHono `basePath`; do not repeat it in `servers`.
+    // Path keys already include `API_BASE_PATH` from OpenAPIHono `basePath`; do not repeat it in `servers`.
     servers: [{ url: '/', description: 'API v1' }],
   });
 
-  const specUrl = `${ROUTE_PREFIX}${openApiDocPath}`;
+  const specUrl = `${API_BASE_PATH}${openApiDocPath}`;
 
   root.get(
-    '/reference',
+    '/docs',
     Scalar({
       url: specUrl,
       theme: 'default',

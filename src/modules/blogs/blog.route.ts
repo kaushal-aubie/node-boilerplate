@@ -1,16 +1,18 @@
 import type { OpenAPIHono } from '@hono/zod-openapi';
+import { API_VERSION_V1 } from '@/config/constants';
+import { withApiVersion } from '@/lib/app/versioned-route';
 import type { ApiEnv } from '@/types/api-env';
-import * as create from './routes/create-blog.route';
-import * as remove from './routes/delete-blog.route';
-import * as get from './routes/get-blog-by-id.route';
-import * as list from './routes/list-blog.route';
-import * as patch from './routes/patch-blog.route';
+import * as create from './v1/create-blog.route';
+import * as remove from './v1/delete-blog.route';
+import * as get from './v1/get-blog-by-id.route';
+import * as list from './v1/list-blog.route';
+import * as patch from './v1/patch-blog.route';
 
 export function registerBlogRoutes(app: OpenAPIHono<ApiEnv>) {
   app
-    .openapi(list.route, list.handler)
-    .openapi(get.route, get.handler)
-    .openapi(create.route, create.handler)
-    .openapi(patch.route, patch.handler)
-    .openapi(remove.route, remove.handler);
+    .openapi(withApiVersion(API_VERSION_V1, list.route), list.handler)
+    .openapi(withApiVersion(API_VERSION_V1, get.route), get.handler)
+    .openapi(withApiVersion(API_VERSION_V1, create.route), create.handler)
+    .openapi(withApiVersion(API_VERSION_V1, patch.route), patch.handler)
+    .openapi(withApiVersion(API_VERSION_V1, remove.route), remove.handler);
 }

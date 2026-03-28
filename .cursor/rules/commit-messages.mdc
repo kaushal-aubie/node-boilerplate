@@ -1,0 +1,16 @@
+---
+description: Git commit messages — Conventional Commits and commitlint alignment
+alwaysApply: true
+---
+
+# Commit messages
+
+When writing or suggesting a git commit message for this repo:
+
+- Use **Conventional Commits**: `type(optional-scope): subject`
+- **Types** (common): `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `perf`, `ci`, `build`, `revert`
+- **Subject line** (header): single line, max **120** characters; imperative mood (e.g. "Add", not "Added")
+- **Body** (optional): blank line after subject. Commitlint does not enforce line length on the body (so Git/Cursor-generated single-line bodies pass); shorter lines are still nicer in `git log`
+- **Subject case**: any case is allowed (this project disables strict subject-case in commitlint)
+
+Validate with `pnpm exec commitlint --edit` if needed; hooks run on commit.

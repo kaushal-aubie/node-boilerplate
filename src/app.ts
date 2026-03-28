@@ -4,7 +4,7 @@ import { cors } from 'hono/cors';
 import { secureHeaders } from 'hono/secure-headers';
 import notFound from 'stoker/middlewares/not-found';
 import stokerOnError from 'stoker/middlewares/on-error';
-import { ENV_MODE, ROUTE_PREFIX } from '@/config/constants';
+import { API_BASE_PATH, ENV_MODE } from '@/config/constants';
 import { envVars } from '@/config/env';
 import { configureOpenAPI, createApiRouter } from '@/lib/app';
 import { logger } from '@/lib/logger';
@@ -13,7 +13,7 @@ import type { AppDependencies } from '@/types/app-dependencies';
 import { setContext } from './middleware/set-context';
 
 export function createApp(deps: AppDependencies) {
-  const api = createApiRouter().basePath(ROUTE_PREFIX);
+  const api = createApiRouter().basePath(API_BASE_PATH);
 
   api.use('*', setContext(deps));
   registerRoutes(api);

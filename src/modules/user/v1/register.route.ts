@@ -6,9 +6,8 @@ import { createErrorSchema } from 'stoker/openapi/schemas';
 import { users } from '@/db/schema';
 import { messageResponseSchema } from '@/lib/app/stoker';
 import { hashPassword } from '@/lib/crypto/bcrypt';
-import { toPublicUser } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
-import { userPublicSchema } from './me.route';
+import { toPublicUser, userPublicSchema } from '../user.dto';
 
 const registerBodySchema = createInsertSchema(users, {
   email: () => z.email(),

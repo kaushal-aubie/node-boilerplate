@@ -3,10 +3,11 @@ import { createInsertSchema } from 'drizzle-zod';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
-import { blogs, selectBlogSchema } from '@/db/schema';
+import { blogs } from '@/db/schema';
 import { messageResponseSchema } from '@/lib/app/stoker';
 import { requireAuth } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
+import { blogPublicSchema, toPublicBlog } from '../blog.dto';
 
 const insertBlogBodySchema = createInsertSchema(blogs, {
   title: (s) => s.min(1).max(512),
@@ -26,12 +27,12 @@ export const route = createRoute({
   tags: ['Blogs'],
   summary: 'Create blog',
   description: 'Creates a new blog owned by the authenticated user.',
-  middleware: [requireAuth] as const,
+  middleware: [requireAuth],
   request: {
     body: jsonContentRequired(insertBlogBodySchema, 'New blog'),
   },
   responses: {
-    [HttpStatusCodes.CREATED]: jsonContent(selectBlogSchema, 'Created'),
+    [HttpStatusCodes.CREATED]: jsonContent(blogPublicSchema, 'Created'),
     [HttpStatusCodes.BAD_REQUEST]: jsonContent(messageResponseSchema, 'Bad request'),
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
       messageResponseSchema,
@@ -61,5 +62,5 @@ export const handler: APIHandler<typeof route> = async (c) => {
     return c.json({ message: 'create_failed' }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
   }
 
-  return c.json(row, HttpStatusCodes.CREATED);
+  return c.json(toPublicBlog(row), HttpStatusCodes.CREATED);
 };

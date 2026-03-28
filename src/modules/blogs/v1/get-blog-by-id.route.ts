@@ -2,10 +2,9 @@ import { createRoute } from '@hono/zod-openapi';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
-import { selectBlogSchema } from '@/db/schema';
 import { notFoundSchema } from '@/lib/app/stoker';
-import { coerceCreatedUpdated } from '@/lib/date';
 import type { APIHandler } from '@/types/api-env';
+import { blogPublicSchema, toPublicBlog } from '../blog.dto';
 
 export const route = createRoute({
   method: 'get',
@@ -15,7 +14,7 @@ export const route = createRoute({
   description: 'Returns a single blog by its identifier. Uses cache when available.',
   request: { params: IdParamsSchema },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(selectBlogSchema, 'Blog'),
+    [HttpStatusCodes.OK]: jsonContent(blogPublicSchema, 'Blog'),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, 'Not found'),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(IdParamsSchema),
@@ -31,5 +30,5 @@ export const handler: APIHandler<typeof route> = async (c) => {
   if (!row) {
     return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
-  return c.json(coerceCreatedUpdated(row), HttpStatusCodes.OK);
+  return c.json(toPublicBlog(row), HttpStatusCodes.OK);
 };

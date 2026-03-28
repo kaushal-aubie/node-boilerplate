@@ -1,38 +1,33 @@
-import { createRoute } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
-import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
+import { jsonContent } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
-import { selectBlogSchema, updateBlogSchema } from '@/db/schema';
 import { messageResponseSchema, notFoundSchema } from '@/lib/app/stoker';
 import { requireAuth } from '@/middleware/auth-check';
 import type { APIHandler } from '@/types/api-env';
 
-const patchBlogBodySchema = updateBlogSchema
-  .partial()
-  .refine((val: Record<string, unknown>) => Object.keys(val).length > 0, {
-    message: 'No updates provided',
+const deleteResponseSchema = z
+  .object({
+    message: z.string(),
   })
-  .openapi('BlogPatchBody');
+  .openapi('BlogDeleteResponse');
 
 export const route = createRoute({
-  method: 'patch',
+  method: 'delete',
   path: '/blogs/{id}',
   tags: ['Blogs'],
-  summary: 'Update blog',
-  description: 'Partially updates a blog. Only the author may modify it.',
-  middleware: [requireAuth] as const,
-  request: {
-    params: IdParamsSchema,
-    body: jsonContentRequired(patchBlogBodySchema, 'Blog updates'),
-  },
+  summary: 'Delete blog',
+  description: 'Permanently deletes a blog. Only the author may delete it.',
+  middleware: [requireAuth],
+  request: { params: IdParamsSchema },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(selectBlogSchema, 'Updated'),
+    [HttpStatusCodes.OK]: jsonContent(deleteResponseSchema, 'Deleted'),
     [HttpStatusCodes.UNAUTHORIZED]: jsonContent(messageResponseSchema, 'Unauthorized'),
     [HttpStatusCodes.FORBIDDEN]: jsonContent(messageResponseSchema, 'Forbidden'),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, 'Not found'),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(patchBlogBodySchema).or(createErrorSchema(IdParamsSchema)),
-      'Validation error(s)',
+      createErrorSchema(IdParamsSchema),
+      'Invalid id',
     ),
   },
 });
@@ -40,10 +35,9 @@ export const route = createRoute({
 export const handler: APIHandler<typeof route> = async (c) => {
   const user = c.get('user');
   if (!user) {
-    return c.json({ message: 'Unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
+    return c.json({ message: 'unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
   }
   const { id } = c.req.valid('param');
-  const body = c.req.valid('json');
   const repo = c.get('repo').blogs;
 
   const existing = await repo.findById(id);
@@ -54,11 +48,10 @@ export const handler: APIHandler<typeof route> = async (c) => {
     return c.json({ message: 'forbidden' }, HttpStatusCodes.FORBIDDEN);
   }
 
-  const row = await repo.updateByAuthor(id, user.id, body);
-
-  if (!row) {
+  const ok = await repo.deleteByAuthor(id, user.id);
+  if (!ok) {
     return c.json({ message: 'blog_not_found' }, HttpStatusCodes.NOT_FOUND);
   }
 
-  return c.json(row, HttpStatusCodes.OK);
+  return c.json({ message: 'blog_deleted' }, HttpStatusCodes.OK);
 };
