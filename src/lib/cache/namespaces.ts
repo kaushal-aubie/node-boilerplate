@@ -1,3 +1,5 @@
+import { CacheProvider } from 'bentocache/types';
+
 /**
  * BentoCache namespace segments — use with {@link CacheProvider.namespace}.
  */

@@ -68,6 +68,5 @@ export const handler: APIHandler<typeof route> = async (c) => {
 
   const cache = c.get('cache').namespace(CACHE_NAMESPACE.blogs);
   await cache.delete({ key: BLOG_LIST_CACHE_KEY });
-
   return c.json(row, HttpStatusCodes.CREATED);
 };

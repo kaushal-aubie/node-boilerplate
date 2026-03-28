@@ -32,7 +32,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:push": "drizzle-kit push",
-    "seed": "tsx src/db/seed.ts"
+    "seed": "tsx src/db/seed.ts",
+    "worker": "tsx src/worker/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -42,6 +43,7 @@
     "@scalar/hono-api-reference": "^0.10.4",
     "bcrypt": "^6.0.0",
     "bentocache": "^1.6.1",
+    "bullmq": "^5.71.1",
     "command-line-args": "^6.0.2",
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.1",
