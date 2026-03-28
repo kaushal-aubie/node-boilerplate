@@ -24,6 +24,9 @@ dev: ## Kill process at PORT then run API in dev (tsx watch)
 
 build: ## Compile TypeScript to dist/
 	@pnpm run build
+	
+commit: ## Commit changes
+	@pnpm run commit
 
 format: ## Format code
 	@pnpm run format

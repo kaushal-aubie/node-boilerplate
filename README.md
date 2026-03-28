@@ -1,219 +1,67 @@
-<img src="https://repository-images.githubusercontent.com/162537377/9c807700-9828-11ea-8a3b-47411956130e" alt="react boilerplate banner" align="center" />
+# node-boilerplate
 
-<!-- <img src="https://camo.githubusercontent.com/bc9c0841cf049b82998b297cdd159f89fe5cecbc29c645ed1a90a0a25f201cb5/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f6d61782f323634302f312a4a6e2d4b51384d706e484255585a47333463706961412e706e67" alt="react boilerplate banner
-" align="center" /> -->
-<br />
+Opinionated **Node.js** API starter: **Hono**, **Drizzle ORM** (PostgreSQL), **Redis** (cache / BullMQ), **Zod** + OpenAPI docs, **Biome**, **TypeScript**, **Husky** + **commitlint**.
 
-<div align="center"><strong>Start a new application in seconds!
-</strong></div>
-<div align="center">A highly scalable, configurable, performant with best practices</div>
+## Requirements
 
-<br />
+- **Node.js 22+**
+- **pnpm** (see `packageManager` in `package.json`)
 
-# Table of contents
+## Quick start
 
-- [Table of contents](#table-of-contents)
-  - [Quick-start](#quick-start)
-  - [Features](#features)
-  - [Configuration](#configuration)
-  - [Scripts](#scripts)
-  - [Commits](#commits)
-  - [Project structure](#project-structure)
-  - [Important Packages](#important-packages)
-    - [Server/Framework](#serverframework)
-    - [Middleware](#middleware)
-    - [Database](#database)
-    - [Eslint](#eslint)
-    - [Others](#others)
-  - [Authors](#authors)
+```bash
+corepack enable && corepack prepare pnpm@10.11.0 --activate
+git clone https://github.com/kaushal-aubie/node-boilerplate.git <YOUR_PROJECT>
+cd <YOUR_PROJECT>
+make bootstrap
+```
 
-## Quick-start
+`bootstrap` installs dependencies (Husky), and creates `env/.env.development` from `.env.example` when missing. If pnpm asks to approve build scripts, allow **bcrypt** (and **esbuild** if listed).
 
-1.  Use **Node.js 22+** and **pnpm**. Enable Corepack (ships with Node): `corepack enable && corepack prepare pnpm@10.11.0 --activate`
-2.  Clone this repo using `git clone https://github.com/kaushal-aubie/node-boilerplate.git <YOUR_PROJECT_NAME>`
-3.  Move to the appropriate directory: `cd <YOUR_PROJECT_NAME>`.<br />
-4.  Run **`pnpm bootstrap`** once: installs dependencies (runs Husky `prepare`), and creates `env/.env.development` from `.env.example` when missing. If pnpm reports ignored build scripts, run **`pnpm approve-builds`** and allow **bcrypt** (and **esbuild** if listed).<br />
-    _Then run `pnpm dev` — the app serves at `http://localhost:8000` (ensure Postgres and Redis match your env file)._
-5.  Open `http://localhost:8000/ping` to receive a pong from the server.
+Start the API:
 
-Now you're ready to rumble!
+```bash
+make dev
+```
 
-## Features
+- App: `http://localhost:8000` (see your env for host/port)
+- Health check: `GET http://localhost:8000/ping` → `pong`
+- API base: `/api` (routes use per-module versioning, e.g. `v1`)
 
-<dl>
-  <!-- <dt>Quick scaffolding</dt>
-  <dd>Create components, pages, stores and services - right from the CLI!</dd> -->
-
-  <dt>TypeScript</dt>
-  <dd>The best way to write modern applications. Code is easier to understand. It is now way more difficult to write invalid code as was the case in dynamically typed languages</dd>
-
-  <dt>Static code analysis</dt>
-  <dd>Focus on writing code, not formatting! Code formatter and linter keeps the code clean which makes work and communication with other developers more effective.</dd>
-
-  <dt>Next generation JavaScript</dt>
-  <dd>Use template strings, object destructuring, arrow functions,ES2017 latest features like Async/Await and more</dd>
-
-  <dt>Ready for any Environment</dt>
-  <dd>It is ready to work with any environment such as Development, Production and staging and all can have their different <span style="color: #e8cb7b">`.env`</span> files</dd>
-
-   <dt>Path alias</dt>
-  <dd>Create a path alias in <span style="color: #e8cb7b">`tsconfig.json`</span> and it will allow to find a file or resource located in a different directory or folder from the place where the shortcut is located.</dd>
-
-  <dt>Docker Support</dt>
-  <dd>Comes with a Dockerfile and docker compose file</dd>
-
-  <dt>Compression</dt>
-   <dd>Gzip compression with compression</dd>
-
-  <dt>Git Hooks</dt>
-  <dd>Awesome Command line Git Commitization integrated with husky</dd>
-
-  <dt>Logging</dt>
-  <dd>Jet Logger For great logging and morgan added for api request logging</dd>
-
-  <dt>Validation</dt>
-  <dd>Request data validation using JOI</dd>
-
-  <dt>Security</dt>
-  <dd>set security HTTP headers using helmet</dd>
-
-  <dt>CORS</dt>
-  <dd>Included CORS</dd>
-
-  <dt>Email helper</dt>
-  <dd>Email helper ready just to import and use</dd>
-
-  <dt>File Upload helper</dt>
-  <dd>File Upload helper ready to just import and use</dd>
-
-  <dt>Response Structure</dt>
-  <dd>Pre-defined response structures with proper status codes.
-</dd>
-
-</dl>
-
-## Configuration
-
-- Docker Compose File `docker/docker-compose.yml`
-- DockerFile `docker/Dockerfile`
-- Prettier config `/.prettierc`.
-- Typescript config `/tsconfig.json`.
-- ESLint config `/.eslintrc.js`.
-- Commitlint config `/commitlint.config.js`.
-- Husky config `/.husky`.
-- VScode config `/.vscode`.
+Ensure **PostgreSQL** and **Redis** match `env/.env.development`.
 
 ## Scripts
 
-- `make help` — Docker (`docker-up`, `docker-down`, `docker-build`), `db-reset`, `clean`, and common `pnpm` tasks.
-- `pnpm bootstrap` - Install deps, Husky hooks, and create `env/.env.development` from `.env.example` (first-time setup).
-- `make docker-up` / `make docker-down` - Start or stop local Compose services (`docker/docker-compose.yml`).
-- `make docker-build` - Build the app image (`docker/Dockerfile`, tag `node-app`).
-- `make db-reset` - Fresh DB volumes, start Compose, run migrations.
-- `pnpm run start` - To run app in production mode.
-- `pnpm run dev` - To run app in development mode.
-- `pnpm run kill-process` - To kill process at running port.
-- `pnpm run build` - To build the code.
-- `pnpm run format` - To prettify code.
-- `pnpm run check` - To run Biome check.
-- `pnpm run check-types` - To check typescript errors.
-- `pnpm run check-all` - To check lint, typescript and build errors.
-- `pnpm run commit` - Interactive [Conventional Commits](https://www.conventionalcommits.org/) (Commitizen); plain `git commit` is validated by commitlint on the hook.
-- `pnpm run seed` - To add dummy data in Database in development mode.
+| Command | Purpose |
+|--------|---------|
+| `make dev` | Dev server (`tsx watch`) |
+| `make build` | Compile to `dist/` |
+| `make start` | Run compiled app |
+| `make check` / `make check-all` | Biome (+ types + build for `check-all`) |
+| `make db:migrate` / `make db:generate` / `make db:studio` | Drizzle migrations & tooling |
+| `make seed` | Seed DB (development) |
+| `make commit` | Commitizen (conventional commits) |
 
-## Commits
+**Drizzle:** `drizzle.config.ts` enables **`strict: true`** so `drizzle-kit` prompts on ambiguous diffs (e.g. column renames). Without it, Kit may generate **drop + add** instead of **rename**, which **drops data**. Do not disable `strict` in production workflows.
 
-- **Interactive:** `pnpm run commit` runs [Commitizen](https://github.com/commitizen/cz-cli) with the conventional changelog adapter so messages match [commitlint](https://commitlint.js.org/) (same rules as the Husky `commit-msg` hook).
-- **Cursor / CLI:** Use `git commit -m "type(scope): subject"` with types such as `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `perf`, `ci`, `build`, or `revert`. The hook runs `commitlint` on the message file.
+Docker helpers: see `Makefile` (`make help`).
 
-## Project structure
+## Project layout
 
-```
-├───.husky                  # Husky hooks
-│───.vscode                 # VS Code Settings
-│─── docker                 # Docker configs
-│─── dist                   # Production Build
-│─── env                    # Environment files
-│─── src\
-│    |--config\             # Environment variables and configuration related things
-│    |--controllers\        # Route controllers (controller layer)
-│    |--db\                 # Database Configuration
-│    |--middlewares\        # Custom express middlewares
-│    |--interfaces\         # All Shared Global Interfaces
-│    |--libs\               # External Libs Config
-│    |--models\             # Sequelize models (data layer)
-│    |--routes\             # Routes
-│    |--services\           # Business logic (service layer)
-│    |--utils\              # Utility classes and functions
-│    |--validations\        # Request data validation schemas
-│    |--response_builder\   # Generic Response Builder logic
-│    |--seeds\              # Dummy Data Generation Files
-│    |--types\              # Global Typescript Types Definitions
-│    |--app.ts              # Express app
-│    |--server.ts           # App entry point
-│
-├── .gitignore              # git ignore
-├── .dockerignore           # docker ignore
-├── .prettierrc             # Prettier Config
-├── .commitlint.config.js   # Commitlint Configuration
-├── nodemon.json            # nodemon config
-├── package.json            # blue print of app
-├── package-lock.json       # package lock file for bindings of packages
-├── private.pem             # pem file for JWT
-├── README.md               # Readme File
-└── tsconfig.json           # Type Script Configuration File
-```
+| Path | Role |
+|------|------|
+| `src/server.ts` | HTTP server entry |
+| `src/app.ts` | Hono app: CORS, logging, API mount, `/ping` |
+| `src/modules/` | Feature modules (routes, repos, DTOs) |
+| `src/db/` | Drizzle schema, migrate, seed |
+| `src/lib/` | App helpers (OpenAPI, auth, cache, infra) |
+| `src/middleware/` | Cross-cutting middleware |
+| `docker/` | Dockerfile & Compose |
 
-## Important Packages
+## Cursor
 
-### Server/Framework
+This repo includes **`.cursor/rules/`** (project conventions) and **`.cursor/skills/`** (workflows for routes, DB). Open them in Cursor to align the agent with this codebase.
 
-- [`express`](https://www.npmjs.com/package/express) - Fast, unopinionated, minimalist web framework
+## License
 
-### Middleware
-
-- [`compression`](https://www.npmjs.com/package/compression) - Node.js compression middleware
-- [`cookie-parser`](https://www.npmjs.com/package/cookie-parser) - Parse HTTP request cookies
-- [`cors`](https://www.npmjs.com/package/cors) - Node.js CORS middleware
-- [`morgan`](https://www.npmjs.com/package/morgan) - HTTP request logger middleware for node.js
-- [`helmet`](https://www.npmjs.com/package/helmet) - Help secure Express/Connect apps with various HTTP headers
-
-### Database
-
-- [`pg`](https://www.npmjs.com/package/pg) - PostgreSQL client - pure javascript & libpq with the same API
-- [`pg-hstore`](https://www.npmjs.com/package/@storybook/pg-hstore) - A module for serializing and deserializing JSON data into hstore format
-- [`sequelize`](https://www.npmjs.com/package/sequelize) - Sequelize is a promise-based Node.js ORM tool for Postgres, MySQL, MariaDB, SQLite, Microsoft SQL Server, Amazon Redshift and Snowflake’s Data Cloud. It features solid transaction support, relations, eager and lazy loading, read replication and more.
-
-### Eslint
-
-- [`eslint-config-prettier`](https://www.npmjs.com/package/eslint-config-prettier) - Turns off all rules that are unnecessary or might conflict with Prettier.
-- [`eslint-import-resolver-typescript`](https://www.npmjs.com/package/eslint-import-resolver-typescript) -TypeScript .ts .tsx module resolver for `eslint-plugin-import`.
-- [`eslint-config-airbnb-base`](https://www.npmjs.com/package/eslint-plugin-babel) - an eslint rule plugin companion to babel-eslint.
-- [`eslint-plugin-import`](https://www.npmjs.com/package/eslint-plugin-import) - This plugin intends to support linting of ES2015+ (ES6+) import/export syntax, and prevent issues with misspelling of file paths and import names.
-- [`eslint-config-airbnb-base`](https://www.npmjs.com/package/eslint-config-airbnb-base) - Airbnb's base JS ESLint config, following our styleguide
-- [`eslint-plugin-prettier`](https://www.npmjs.com/package/eslint-plugin-prettier) - Runs prettier as an eslint rule.
-- [`@typescript-eslint/eslint-plugin`](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin) - TypeScript plugin for ESLint.
-- [`@typescript-eslint/parser`](https://www.npmjs.com/package/@typescript-eslint/parser) - An ESLint custom parser which leverages TypeScript ESTree.
-
-### Others
-
-- [`command-line-args`](https://www.npmjs.com/package/command-line-args) - A mature, feature-complete library to parse command-line options.
-- [`bcrypt`](https://www.npmjs.com/package/bcrypt) - A bcrypt(encryption) library for NodeJS.
-- [`dotenv`](https://www.npmjs.com/package/dotenv) - Loads environment variables from .env file
-- [`jet-logger`](https://www.npmjs.com/package/jet-logger) - A super quick, easy to setup logging tool for NodeJS/TypeScript.
-- [`joi`](https://www.npmjs.com/package/joi) - Object schema validation
-- [`jsonwebtoken`](https://www.npmjs.com/package/jsonwebtoken) - JSON Web Token implementation (symmetric and asymmetric)
-
-## Authors
-
-<!-- Authors:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/kaushalshah98">
-      <img src="https://avatars.githubusercontent.com/u/78411438?v=4" style="border-radius: 50%" width="80px;" alt="Kaushal Shah"/>
-      <br />
-      <sub><b>Kaushal Shah</b></td><td align="center">
-  </tr>
-  </table>
+ISC

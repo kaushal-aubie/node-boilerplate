@@ -26,4 +26,6 @@ export default defineConfig({
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: { url: databaseUrl() },
+  // Prompt on ambiguous diffs (e.g. column renames). Without strict, Kit may emit drop+add and lose data.
+  strict: true,
 });

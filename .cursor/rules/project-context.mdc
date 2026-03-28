@@ -1,0 +1,16 @@
+---
+description: Stack and entrypoints for this API boilerplate
+alwaysApply: true
+---
+
+# Project context
+
+- **Runtime**: Node.js 22+; **package manager**: pnpm (version in `package.json`).
+- **HTTP**: [Hono](https://hono.dev/) + [@hono/zod-openapi](https://github.com/honojs/middleware/tree/main/packages/zod-openapi); API base path `/api`. Stoker utilities for OpenAPI defaults and HTTP helpers.
+- **DB**: PostgreSQL via [Drizzle ORM](https://orm.drizzle.team/); schema in `src/db/schema/`. Migrations: `pnpm db:generate` then `pnpm db:migrate`. **`drizzle.config.ts` must keep `strict: true`** so Kit prompts on ambiguous changes (e.g. renames); otherwise diffs can become drop+add and **lose column data**.
+- **Cache / queues**: Redis; BullMQ worker entry `pnpm worker` (`src/worker/`).
+- **Validation**: Zod (routes + OpenAPI); auth uses JWT/cookies—see `src/lib/auth/` and `src/middleware/auth-check.ts`.
+- **Lint/format**: Biome (`pnpm check`, `pnpm format`). Typecheck: `pnpm check-types`.
+- **Commits**: Conventional Commits; see the separate commit-messages rule.
+
+Prefer small, focused changes; match existing patterns in `src/modules/*` and `src/lib/app/`.

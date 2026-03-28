@@ -1,0 +1,15 @@
+---
+description: Patterns for Hono OpenAPI modules, routes, and handlers
+globs: src/modules/**/*.ts
+alwaysApply: false
+---
+
+# API modules
+
+- **Registration**: New features export `registerXRoutes(app: OpenAPIHono<ApiEnv>)` and are wired in `src/modules/routes.ts`.
+- **Versioning**: Use `withApiVersion(API_VERSION_V1, route)` from `@/lib/app/versioned-route` when mounting routes in `*.route.ts` aggregator files.
+- **Per-route file**: Export named `route` (`createRoute({...})`) and `handler` (`APIHandler<typeof route>`). Use `stoker` OpenAPI helpers for request/response schemas and status codes.
+- **Data layer**: Prefer repos in `*.repo.ts` and thin handlers; shared types/DTOs in `*.dto.ts`.
+- **Env and deps**: Handlers receive context from `setContext` middleware; use `c.get('user')` only after `requireAuth` when applicable.
+
+When adding responses, keep OpenAPI schemas aligned with actual JSON bodies so Scalar/docs stay accurate.
