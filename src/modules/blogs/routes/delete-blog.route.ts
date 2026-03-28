@@ -16,6 +16,8 @@ export const route = createRoute({
   method: 'delete',
   path: '/blogs/{id}',
   tags: ['Blogs'],
+  summary: 'Delete blog',
+  description: 'Permanently deletes a blog. Only the author may delete it.',
   middleware: [requireAuth] as const,
   request: { params: IdParamsSchema },
   responses: {

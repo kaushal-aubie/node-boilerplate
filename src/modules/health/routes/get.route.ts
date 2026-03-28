@@ -1,6 +1,6 @@
 import { createRoute, z } from '@hono/zod-openapi';
-import HttpStatusCodes from 'stoker/http-status-codes';
-import HttpStatusPhrases from 'stoker/http-status-phrases';
+import * as HttpStatusCodes from 'stoker/http-status-codes';
+import * as HttpStatusPhrases from 'stoker/http-status-phrases';
 import { jsonContent } from 'stoker/openapi/helpers';
 import type { APIHandler } from '@/types/api-env';
 
@@ -19,6 +19,8 @@ export const route = createRoute({
   method: 'get',
   path: '/health',
   tags: ['Health'],
+  summary: 'Health check',
+  description: 'Reports readiness of the app, database, Redis, and cache layers.',
   responses: {
     [HttpStatusCodes.OK]: jsonContent(healthResponseSchema, 'Service health'),
   },
@@ -45,7 +47,8 @@ export const handler: APIHandler<typeof route> = async (c) => {
 
   try {
     await health.probeCache();
-  } catch {
+  } catch (err) {
+    console.error(err);
     cacheStatus = HttpStatusPhrases.INTERNAL_SERVER_ERROR;
   }
 

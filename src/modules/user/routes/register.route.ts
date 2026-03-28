@@ -24,6 +24,8 @@ export const route = createRoute({
   method: 'post',
   path: '/auth/register',
   tags: ['Auth'],
+  summary: 'Register',
+  description: 'Creates a new user account with the given profile fields.',
   request: {
     body: jsonContentRequired(registerBodySchema, 'Registration payload'),
   },

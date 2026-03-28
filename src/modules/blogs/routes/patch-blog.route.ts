@@ -18,6 +18,8 @@ export const route = createRoute({
   method: 'patch',
   path: '/blogs/{id}',
   tags: ['Blogs'],
+  summary: 'Update blog',
+  description: 'Partially updates a blog. Only the author may modify it.',
   middleware: [requireAuth] as const,
   request: {
     params: IdParamsSchema,

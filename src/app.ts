@@ -45,16 +45,17 @@ export function createApp(deps: AppDependencies) {
     });
   });
 
+  const exposeDocs =
+    envVars.NODE_ENV !== ENV_MODE.PRODUCTION || process.env.ENABLE_API_DOCS === 'true';
+  // Before `root.route`: Hono snapshots sub-app routes at mount; `doc31` must exist first.
+  if (exposeDocs) {
+    configureOpenAPI(api, root);
+  }
+
   root.route('/', api);
 
   root.get('/', (c) => c.json({ message: 'Server working successfully' }));
   root.get('/ping', (c) => c.text('pong'));
-
-  const exposeDocs =
-    envVars.NODE_ENV !== ENV_MODE.PRODUCTION || process.env.ENABLE_API_DOCS === 'true';
-  if (exposeDocs) {
-    configureOpenAPI(api, root);
-  }
 
   root.notFound(notFound);
 

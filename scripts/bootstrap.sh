@@ -77,7 +77,7 @@ fi
 banner
 
 step_header 1 "Install packages & Git hooks"
-pnpm install || fail "\`pnpm install\` failed"
+pnpm --silent install || fail "\`pnpm install\` failed"
 ok "\`pnpm install\` finished"
 note_husky
 
@@ -86,5 +86,5 @@ ensure_env
 
 echo ""
 echo "${A_GREEN}${A_BOLD}Bootstrap complete.${A_RESET}"
-echo "${A_DIM}Next:${A_RESET} ${A_CYAN}pnpm dev${A_RESET}  ${A_DIM}(ensure Postgres & Redis match env/)${A_RESET}"
+echo "${A_DIM}Next:${A_RESET} ${A_CYAN}make dev${A_RESET}  ${A_DIM}(ensure Postgres & Redis match env/)${A_RESET}"
 echo ""

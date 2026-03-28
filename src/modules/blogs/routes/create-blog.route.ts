@@ -24,6 +24,8 @@ export const route = createRoute({
   method: 'post',
   path: '/blogs',
   tags: ['Blogs'],
+  summary: 'Create blog',
+  description: 'Creates a new blog owned by the authenticated user.',
   middleware: [requireAuth] as const,
   request: {
     body: jsonContentRequired(insertBlogBodySchema, 'New blog'),

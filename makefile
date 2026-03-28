@@ -1,5 +1,5 @@
 COMPOSE_FILE := docker/docker-compose.yml
-COMPOSE := docker-compose -f $(COMPOSE_FILE)
+COMPOSE := docker-compose -f $(COMPOSE_FILE) --env-file env/.env.development
 IMAGE_NAME := node-app
 DOCKERFILE := docker/Dockerfile
 
@@ -13,31 +13,32 @@ help: ## List Make targets
 	@grep -E '^[a-zA-Z0-9_.-]+:.*?## ' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
 bootstrap: ## First-time setup (deps, husky, env file)
-	pnpm run bootstrap
+	@pnpm --silent run bootstrap
 
 install: ## Install dependencies
-	pnpm install
+	@pnpm --silent install
 
-dev: ## Run API in dev (tsx watch)
-	pnpm run dev
+dev: ## Kill process at PORT then run API in dev (tsx watch)
+	@pnpm --silent run kill-process || true
+	@pnpm --silent run dev
 
 build: ## Compile TypeScript to dist/
-	pnpm run build
+	@pnpm run build
 
 format: ## Format code
-	pnpm run format
+	@pnpm run format
 
 check: ## Biome check
-	pnpm run check
+	@pnpm run check
 
 check-all: ## Lint, types, and build
-	pnpm run check-all
+	@pnpm run check-all
 
 clean: ## Remove dist/ build output
-	rm -rf dist
+	@rm -rf dist
 
 docker-up: ## Start Compose (db, redis, …) detached
-	$(COMPOSE) up -d
+	$(COMPOSE) up
 
 docker-down: ## Stop Compose and remove containers (keeps volumes)
 	$(COMPOSE) down
@@ -52,13 +53,16 @@ db-reset: ## Compose down -v, start stack, wait, run migrations
 	pnpm run db:migrate
 
 db-migrate: ## Run Drizzle migrations
-	pnpm run db:migrate
+	@pnpm run db:migrate
 
 db-generate: ## drizzle-kit generate
-	pnpm run db:generate
+	@pnpm run db:generate
 
 db-push: ## drizzle-kit push
-	pnpm run db:push
+	@pnpm run db:push
 
+db-studio: ## drizzle-kit studio
+	@pnpm run db:studio
+	
 seed: ## Dev seed (host)
-	pnpm run seed
+	@pnpm run seed

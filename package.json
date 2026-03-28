@@ -19,8 +19,8 @@
     "bootstrap": "bash scripts/bootstrap.sh",
     "commit": "pnpm exec cz",
     "start": "node dist/server.js",
-    "dev": "tsx watch src/server.ts",
-    "kill-process": "kill $(lsof -ti:5000)",
+    "dev": "tsx watch src/server.ts --clear-screen=false",
+    "kill-process": "sh scripts/kill-port.sh",
     "build": "tsc && tsc-alias -p tsconfig.json",
     "format": "biome format --write .",
     "check": "biome check .",
@@ -31,6 +31,7 @@
     "lint": "biome check .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
+    "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push",
     "seed": "tsx src/db/seed.ts",
     "worker": "tsx src/worker/index.ts"

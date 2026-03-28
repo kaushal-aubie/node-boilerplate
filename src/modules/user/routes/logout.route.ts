@@ -10,6 +10,8 @@ export const route = createRoute({
   method: 'post',
   path: '/auth/logout',
   tags: ['Auth'],
+  summary: 'Log out',
+  description: 'Clears the auth cookie for the current session.',
   middleware: [requireAuth] as const,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(messageResponseSchema, 'Logged out'),

@@ -9,6 +9,8 @@ export const route = createRoute({
   method: 'get',
   path: '/blogs',
   tags: ['Blogs'],
+  summary: 'List blogs',
+  description: 'Returns every blog post. Responses may be served from cache.',
   responses: {
     [HttpStatusCodes.OK]: jsonContent(z.array(selectBlogSchema), 'All blogs'),
   },

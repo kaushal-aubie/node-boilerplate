@@ -11,6 +11,8 @@ export const route = createRoute({
   method: 'get',
   path: '/blogs/{id}',
   tags: ['Blogs'],
+  summary: 'Get blog by ID',
+  description: 'Returns a single blog by its identifier. Uses cache when available.',
   request: { params: IdParamsSchema },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(selectBlogSchema, 'Blog'),

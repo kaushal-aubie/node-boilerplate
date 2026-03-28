@@ -19,7 +19,8 @@ export function configureOpenAPI(api: OpenAPIHono<ApiEnv>, root: Hono) {
       title: packageJSON.name,
       description: packageJSON.description || 'REST API',
     },
-    servers: [{ url: ROUTE_PREFIX, description: 'API v1' }],
+    // Path keys already include `ROUTE_PREFIX` from OpenAPIHono `basePath`; do not repeat it in `servers`.
+    servers: [{ url: '/', description: 'API v1' }],
   });
 
   const specUrl = `${ROUTE_PREFIX}${openApiDocPath}`;
@@ -28,8 +29,8 @@ export function configureOpenAPI(api: OpenAPIHono<ApiEnv>, root: Hono) {
     '/reference',
     Scalar({
       url: specUrl,
-      theme: 'kepler',
-      layout: 'classic',
+      theme: 'default',
+      layout: 'modern',
       defaultHttpClient: {
         targetKey: 'js',
         clientKey: 'fetch',

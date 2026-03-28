@@ -3,7 +3,7 @@ import { ENV_MODE } from './constants';
 
 const envSchema = z.object({
   NODE_ENV: z.enum([ENV_MODE.PRODUCTION, ENV_MODE.DEVELOPMENT, ENV_MODE.TEST]),
-  PORT: z.coerce.number().default(5000),
+  PORT: z.coerce.number().default(8000),
   COOKIE_SECRET: z.string().min(1),
   COOKIE_EXP: z.string().default('15'),
   JWT_EXPIRES_IN: z.string().default('1h'),

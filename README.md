@@ -12,14 +12,20 @@
 
 # Table of contents
 
-- [Quick-start](#quick-start)
-- [Features](#features)
-- [Configuration](#configuration)
-- [Scripts](#scripts)
-- [Git Commitization](#git-commitization)
-- [Project Structure](#project-structure)
-- [Important Packages](#important-packages)
-- [Authors](#authors)
+- [Table of contents](#table-of-contents)
+  - [Quick-start](#quick-start)
+  - [Features](#features)
+  - [Configuration](#configuration)
+  - [Scripts](#scripts)
+  - [Commits](#commits)
+  - [Project structure](#project-structure)
+  - [Important Packages](#important-packages)
+    - [Server/Framework](#serverframework)
+    - [Middleware](#middleware)
+    - [Database](#database)
+    - [Eslint](#eslint)
+    - [Others](#others)
+  - [Authors](#authors)
 
 ## Quick-start
 
@@ -27,8 +33,8 @@
 2.  Clone this repo using `git clone https://github.com/kaushal-aubie/node-boilerplate.git <YOUR_PROJECT_NAME>`
 3.  Move to the appropriate directory: `cd <YOUR_PROJECT_NAME>`.<br />
 4.  Run **`pnpm bootstrap`** once: installs dependencies (runs Husky `prepare`), and creates `env/.env.development` from `.env.example` when missing. If pnpm reports ignored build scripts, run **`pnpm approve-builds`** and allow **bcrypt** (and **esbuild** if listed).<br />
-    _Then run `pnpm dev` — the app serves at `http://localhost:5000` (ensure Postgres and Redis match your env file)._
-5.  Open `http://localhost:5000/ping` to receive a pong from the server.
+    _Then run `pnpm dev` — the app serves at `http://localhost:8000` (ensure Postgres and Redis match your env file)._
+5.  Open `http://localhost:8000/ping` to receive a pong from the server.
 
 Now you're ready to rumble!
 

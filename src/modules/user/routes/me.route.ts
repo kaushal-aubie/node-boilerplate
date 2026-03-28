@@ -19,6 +19,8 @@ export const route = createRoute({
   method: 'get',
   path: '/auth/me',
   tags: ['Auth'],
+  summary: 'Current user',
+  description: 'Returns the authenticated user (no password). Requires a valid session or token.',
   middleware: [requireAuth] as const,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(userPublicSchema, 'Current user'),

@@ -29,6 +29,8 @@ export const route = createRoute({
   method: 'post',
   path: '/auth/login',
   tags: ['Auth'],
+  summary: 'Log in',
+  description: 'Authenticates with email and password, sets a session cookie, and returns a JWT.',
   request: {
     body: jsonContentRequired(loginBodySchema, 'Credentials'),
   },

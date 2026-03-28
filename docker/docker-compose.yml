@@ -12,7 +12,7 @@ services:
   #     context: ../
   #     dockerfile: ./docker/Dockerfile
   #   ports:
-  #     - 8080:5000
+  #     - 8080:8000
   #     # - ['${PORT}:${PORT}']
   #   # links:
   #   #   - db
@@ -22,7 +22,8 @@ services:
   hono-db:
     container_name: hono-db
     # env_file: ../env/production.env
-    image: "postgres"
+    image: "postgres:18-alpine"
+    restart: "no"
     ports:
       - 4321:5432
       # - ${DB_PORT}:5432
@@ -30,16 +31,29 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_HOST=${DB_HOST}
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  hono-redis:
-    container_name: hono-redis
+  hono_redis:
+    container_name: hono_redis
     image: redis:7-alpine
+    restart: "no"
     ports:
       - 6379:6379
     volumes:
       - redis_data:/data
+
+  hono-redis-commander:
+    container_name: hono-redis-commander
+    image: rediscommander/redis-commander:latest
+    environment:
+      REDIS_HOSTS: "local:hono_redis:6379"
+    restart: "no"
+    ports:
+      - 8081:8081
+    depends_on:
+      - hono_redis
 
 volumes:
   db_data:
