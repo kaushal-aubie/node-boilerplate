@@ -1,6 +1,5 @@
-import { z } from '@hono/zod-openapi';
 import { pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -16,35 +15,6 @@ export const users = pgTable('users', {
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 
-export const userSelect = createSelectSchema(users);
-
-const insertUser = createInsertSchema(users, {
-  email: () => z.email(),
-  password: (s) => s.min(8),
-});
-
-const registerBodyBase = insertUser.omit({ id: true, createdAt: true, updatedAt: true }).extend({
-  password: z.string().min(8),
-});
-
-/** API: register body (Drizzle insert minus server-managed fields). */
-export const registerBodySchema = registerBodyBase.openapi('RegisterBody');
-export type RegisterBody = z.infer<typeof registerBodyBase>;
-
-const loginBodyBase = z.object({
-  email: userSelect.shape.email,
-  password: z.string().min(1),
-});
-
-/** API: login body (email from row shape + password). */
-export const loginBodySchema = loginBodyBase.openapi('LoginBody');
-export type LoginBody = z.infer<typeof loginBodyBase>;
-
-/** Serialized user for JSON (no password; ISO date strings). */
-export const selectUserPublicSchema = userSelect
-  .omit({ password: true })
-  .extend({
-    createdAt: z.string(),
-    updatedAt: z.string(),
-  })
-  .openapi('UserPublic');
+export const selectUserSchema = createSelectSchema(users);
+export const insertUserSchema = createInsertSchema(users);
+export const updateUserSchema = createUpdateSchema(users);

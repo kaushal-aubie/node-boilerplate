@@ -3,16 +3,25 @@ import { eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
-import { type LoginBody, loginBodySchema, selectUserPublicSchema, users } from '@/db/schema';
+import { selectUserSchema, users } from '@/db/schema';
 import { messageResponseSchema } from '@/lib/app/stoker';
 import { setAuthCookie } from '@/lib/auth/cookie-auth';
 import { createAccessToken } from '@/lib/auth/jwt';
 import { comparePassword } from '@/lib/crypto/bcrypt';
+import { toPublicUser } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
+import { userPublicSchema } from './me.route';
+
+const loginBodySchema = z
+  .object({
+    email: selectUserSchema.shape.email,
+    password: z.string().min(1),
+  })
+  .openapi('LoginBody');
 
 const loginResponseSchema = z
   .object({
-    user: selectUserPublicSchema,
+    user: userPublicSchema,
     token: z.string(),
   })
   .openapi('LoginResponse');
@@ -36,7 +45,7 @@ export const route = createRoute({
 });
 
 export const handler: APIHandler<typeof route> = async (c) => {
-  const body = c.req.valid('json') as LoginBody;
+  const body = c.req.valid('json');
   const db = c.get('db');
 
   const [user] = await db.select().from(users).where(eq(users.email, body.email)).limit(1);
@@ -51,5 +60,5 @@ export const handler: APIHandler<typeof route> = async (c) => {
 
   const token = createAccessToken(user.id);
   await setAuthCookie(c, token);
-  return c.json({ user, token }, HttpStatusCodes.OK);
+  return c.json({ user: toPublicUser(user), token }, HttpStatusCodes.OK);
 };

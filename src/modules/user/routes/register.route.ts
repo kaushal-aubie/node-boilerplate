@@ -1,13 +1,25 @@
-import { createRoute } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 import { eq } from 'drizzle-orm';
+import { createInsertSchema } from 'drizzle-zod';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
-import { type RegisterBody, registerBodySchema, selectUserPublicSchema, users } from '@/db/schema';
+import { users } from '@/db/schema';
 import { messageResponseSchema } from '@/lib/app/stoker';
 import { hashPassword } from '@/lib/crypto/bcrypt';
 import { toPublicUser } from '@/middleware/auth.middleware';
 import type { APIHandler } from '@/types/api-env';
+import { userPublicSchema } from './me.route';
+
+const registerBodySchema = createInsertSchema(users, {
+  email: () => z.email(),
+  password: (s) => s.min(8),
+})
+  .omit({ id: true, createdAt: true, updatedAt: true })
+  .extend({
+    password: z.string().min(8),
+  })
+  .openapi('RegisterBody');
 
 export const route = createRoute({
   method: 'post',
@@ -17,7 +29,7 @@ export const route = createRoute({
     body: jsonContentRequired(registerBodySchema, 'Registration payload'),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(selectUserPublicSchema, 'Registered'),
+    [HttpStatusCodes.OK]: jsonContent(userPublicSchema, 'Registered'),
     [HttpStatusCodes.BAD_REQUEST]: jsonContent(messageResponseSchema, 'Bad request'),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(registerBodySchema),
@@ -27,7 +39,7 @@ export const route = createRoute({
 });
 
 export const handler: APIHandler<typeof route> = async (c) => {
-  const body = c.req.valid('json') as RegisterBody;
+  const body = c.req.valid('json');
   const db = c.get('db');
 
   const existing = await db.select().from(users).where(eq(users.email, body.email)).limit(1);

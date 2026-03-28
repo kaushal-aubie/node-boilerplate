@@ -119,52 +119,14 @@ Now you're ready to rumble!
 - `pnpm run check` - To run Biome check.
 - `pnpm run check-types` - To check typescript errors.
 - `pnpm run check-all` - To check lint, typescript and build errors.
-- `pnpm run commit` - To commit your changes (gitmoji).
+- `pnpm run commit` - Interactive [Conventional Commits](https://www.conventionalcommits.org/) (Commitizen); plain `git commit` is validated by commitlint on the hook.
 - `pnpm run seed` - To add dummy data in Database in development mode.
 - `pnpm run seed:prod` - To add dummy data in Database in production mode.
 
-## Git Commitization
+## Commits
 
-Configuring the gitmoji only once
-
-```bash
-> pnpm dlx gitmoji-cli -g
-> ? Enable automatic "git add ." (y/N) N
-> ? Select how emojis should be used in commits (Use arrow keys)
-	  :smile:
-	❯ 😄
-> ? Enable signed commits (y/N) N
-> ? Enable scope prompt (Y/n) Y
-```
-
-Commit workflow
-
-```bash
-pnpm run commit
-
-Step 1: Choose a gitmoji from the list
-
-? Choose a gitmoji: (Use arrow keys or type to search)
-> 🎨  - Improve structure / format of the code.
-  ⚡️  - Improve performance.
-  🔥  - Remove code or files.
-  🐛  - Fix a bug.
-  🚑️  - Critical hotfix.
-  ✨  - Introduce new features.
-  📝  - Add or update documentation.
-(Move up and down to reveal more choices)
-
-Step 2: Add a scope, title and message
-
-? Choose a gitmoji: 🎨  - Improve structure / format of the code.
-? Enter the scope of current changes: hello
-? Enter the commit title [5/48]: title
-? Enter the commit message: message
-
-Now it will run lint, types and build scripts if everything is ok, changes will be committed
-
-Git commit message format will be :- git commit -m ":gitmoji: title" -m "message"
-```
+- **Interactive:** `pnpm run commit` runs [Commitizen](https://github.com/commitizen/cz-cli) with the conventional changelog adapter so messages match [commitlint](https://commitlint.js.org/) (same rules as the Husky `commit-msg` hook).
+- **Cursor / CLI:** Use `git commit -m "type(scope): subject"` with types such as `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `perf`, `ci`, `build`, or `revert`. The hook runs `commitlint` on the message file.
 
 ## Project structure
 
