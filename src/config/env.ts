@@ -16,6 +16,12 @@ const envSchema = z.object({
   DB_HOST: z.string().min(1),
   DATABASE_URL: z.string().optional(),
 
+  REDIS_URL: z.string().optional(),
+  REDIS_HOST: z.string().default('localhost'),
+  REDIS_PORT: z.coerce.number().default(6379),
+  REDIS_PASSWORD: z.string().optional().default(''),
+  REDIS_DB: z.coerce.number().default(0),
+
   SMTP_HOST: z.string().optional(),
   SMTP_PORT: z.coerce.number().optional(),
   SMTP_USERNAME: z.string().optional(),

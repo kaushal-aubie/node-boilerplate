@@ -3,7 +3,6 @@ import { eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
-import { db } from '@/db/client';
 import { type RegisterBody, registerBodySchema, selectUserPublicSchema, users } from '@/db/schema';
 import { hashPassword } from '@/lib/bcrypt';
 import { messageResponseSchema } from '@/lib/stoker';
@@ -29,6 +28,7 @@ export const route = createRoute({
 
 export const handler: APIHandler<typeof route> = async (c) => {
   const body = c.req.valid('json') as RegisterBody;
+  const db = c.get('db');
 
   const existing = await db.select().from(users).where(eq(users.email, body.email)).limit(1);
   if (existing[0]) {

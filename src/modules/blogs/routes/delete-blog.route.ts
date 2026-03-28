@@ -3,7 +3,6 @@ import { and, eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
-import { db } from '@/db/client';
 import { blogs } from '@/db/schema';
 import { messageResponseSchema, notFoundSchema } from '@/lib/stoker';
 import { requireAuth } from '@/middleware/auth.middleware';
@@ -39,6 +38,7 @@ export const handler: APIHandler<typeof route> = async (c) => {
     return c.json({ message: 'unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
   }
   const { id } = c.req.valid('param');
+  const db = c.get('db');
 
   const [existing] = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
   if (!existing) {

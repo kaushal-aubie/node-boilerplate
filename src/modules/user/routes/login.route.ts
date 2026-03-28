@@ -3,7 +3,6 @@ import { eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
-import { db } from '@/db/client';
 import { type LoginBody, loginBodySchema, selectUserPublicSchema, users } from '@/db/schema';
 import { comparePassword } from '@/lib/bcrypt';
 import { setAuthCookie } from '@/lib/cookie-auth';
@@ -38,6 +37,7 @@ export const route = createRoute({
 
 export const handler: APIHandler<typeof route> = async (c) => {
   const body = c.req.valid('json') as LoginBody;
+  const db = c.get('db');
 
   const [user] = await db.select().from(users).where(eq(users.email, body.email)).limit(1);
   if (!user?.password) {

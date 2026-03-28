@@ -3,7 +3,6 @@ import { and, eq } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas';
-import { db } from '@/db/client';
 import { blogs, selectBlogSchema, updateBlogSchema } from '@/db/schema';
 import { messageResponseSchema, notFoundSchema } from '@/lib/stoker';
 import { requireAuth } from '@/middleware/auth.middleware';
@@ -44,6 +43,7 @@ export const handler: APIHandler<typeof route> = async (c) => {
   }
   const { id } = c.req.valid('param');
   const body = c.req.valid('json');
+  const db = c.get('db');
 
   const [existing] = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
   if (!existing) {

@@ -12,9 +12,16 @@ import { logger } from '@/lib/logger';
 import { registerBlogRoutes } from '@/modules/blogs/route';
 import { registerHealthRoutes } from '@/modules/health/route';
 import { registerUserRoutes } from '@/modules/user/route';
+import type { AppDependencies } from '@/types/app-dependencies';
 
-export function createApp() {
+export function createApp(deps: AppDependencies) {
   const api = createApiRouter().basePath(ROUTE_PREFIX);
+
+  api.use('*', async (c, next) => {
+    c.set('db', deps.database.db);
+    c.set('redis', deps.redis.client);
+    await next();
+  });
 
   registerHealthRoutes(api);
   registerUserRoutes(api);

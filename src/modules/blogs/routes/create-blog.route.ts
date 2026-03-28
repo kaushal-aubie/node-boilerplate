@@ -3,7 +3,6 @@ import { createInsertSchema } from 'drizzle-zod';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createErrorSchema } from 'stoker/openapi/schemas';
-import { db } from '@/db/client';
 import { blogs, selectBlogSchema } from '@/db/schema';
 import { messageResponseSchema } from '@/lib/stoker';
 import { requireAuth } from '@/middleware/auth.middleware';
@@ -50,6 +49,7 @@ export const handler: APIHandler<typeof route> = async (c) => {
     return c.json({ message: 'unauthorized' }, HttpStatusCodes.UNAUTHORIZED);
   }
   const body = c.req.valid('json');
+  const db = c.get('db');
 
   const [row] = await db
     .insert(blogs)

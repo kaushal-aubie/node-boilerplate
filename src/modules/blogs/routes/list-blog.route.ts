@@ -2,7 +2,6 @@ import { createRoute, z } from '@hono/zod-openapi';
 import { desc } from 'drizzle-orm';
 import * as HttpStatusCodes from 'stoker/http-status-codes';
 import { jsonContent } from 'stoker/openapi/helpers';
-import { db } from '@/db/client';
 import { blogs, selectBlogSchema } from '@/db/schema';
 import type { APIHandler } from '@/types/api-env';
 
@@ -16,6 +15,7 @@ export const route = createRoute({
 });
 
 export const handler: APIHandler<typeof route> = async (c) => {
+  const db = c.get('db');
   const rows = await db.select().from(blogs).orderBy(desc(blogs.createdAt));
   return c.json(rows, HttpStatusCodes.OK);
 };

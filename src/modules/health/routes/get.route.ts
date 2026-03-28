@@ -3,14 +3,16 @@ import { sql } from 'drizzle-orm';
 import HttpStatusCodes from 'stoker/http-status-codes';
 import HttpStatusPhrases from 'stoker/http-status-phrases';
 import { jsonContent } from 'stoker/openapi/helpers';
-import { db } from '@/db/client';
 import { users } from '@/db/schema';
 import type { APIHandler } from '@/types/api-env';
+
+const statusEnum = z.enum([HttpStatusPhrases.OK, HttpStatusPhrases.INTERNAL_SERVER_ERROR]);
 
 const healthResponseSchema = z
   .object({
     status: z.literal(HttpStatusPhrases.OK),
-    database: z.enum([HttpStatusPhrases.OK, HttpStatusPhrases.INTERNAL_SERVER_ERROR]),
+    database: statusEnum,
+    redis: statusEnum,
   })
   .openapi('HealthResponse');
 
@@ -24,7 +26,11 @@ export const route = createRoute({
 });
 
 export const handler: APIHandler<typeof route> = async (c) => {
+  const db = c.get('db');
+  const redis = c.get('redis');
+
   let databaseStatus: z.infer<typeof healthResponseSchema>['database'] = HttpStatusPhrases.OK;
+  let redisStatus: z.infer<typeof healthResponseSchema>['redis'] = HttpStatusPhrases.OK;
 
   try {
     await db.select({ one: sql`1` }).from(users).limit(1);
@@ -32,10 +38,17 @@ export const handler: APIHandler<typeof route> = async (c) => {
     databaseStatus = HttpStatusPhrases.INTERNAL_SERVER_ERROR;
   }
 
+  try {
+    await redis.ping();
+  } catch {
+    redisStatus = HttpStatusPhrases.INTERNAL_SERVER_ERROR;
+  }
+
   return c.json(
     {
       status: HttpStatusPhrases.OK,
       database: databaseStatus,
+      redis: redisStatus,
     },
     HttpStatusCodes.OK,
   );
